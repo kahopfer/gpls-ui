@@ -1,0 +1,345 @@
+public currentXpos: number;
+  public doc: jsPDF;
+
+  constructor(
+    private apiHelper:ApiHelper,
+    private datePipe:DatePipe,
+    private currencyPipe:CurrencyPipe
+  ) {
+    this.currentXpos = 0;
+    /**
+     * default size is 215.9mm x 279.4mm, all x/y coords are in mm
+     * @type {"jspdf".jsPDF}
+     */
+    this.doc = new jsPDF();
+  }
+
+  generatePdf(job: Job) {
+    this.doc = new jsPDF();
+
+    // Set default PDF settings
+    this.doc.setFontSize(10);
+    this.doc.setFontStyle('helvetica');
+
+    //Build the PDF
+    this.addHeader();
+    this.addCustomer(job);
+    this.addLocation(job);
+    this.addLineItems(job);
+    this.addSignature(job);
+    this.addTerms(job);
+    this.addFooter();
+
+    // Save the PDF
+    let pdfName = 'Job_'+job.id+".pdf";
+    this.doc.save(pdfName);
+  }
+
+  generateWorkOrderPdf(job: Job) {
+    this.doc = new jsPDF();
+
+    console.log('print work order PDF');
+    console.log(job);
+
+    //Same default settings
+    this.doc.setFontSize(10);
+    this.doc.setFontStyle('helvetica');
+
+    //Build PDF
+    this.addHeader();
+    this.addCustomer(job);
+    this.addLocation(job);
+    this.addLineItems(job);
+    if (job.workDetail) {
+      for (let field in job.workDetail) {
+        if (job.workDetail[field] == null) {
+          job.workDetail[field] = "";
+        }
+      }
+      this.addWorkDetails(job.workDetail);
+    }
+    this.addFooter();
+
+    let pdfName = 'WorkOrder_'+job.sageJobMap.workOrderNumber+".pdf";
+    this.doc.save(pdfName);
+  }
+
+  private addHeader() {
+    let logoData = this.getLogoData();
+    this.doc.addImage(logoData, 'JPEG', 0, 0, 55, 25);
+    this.doc.setFontStyle("bold");
+    let guaranteeData = this.getGuaranteeData();
+    this.doc.addImage(guaranteeData, 'JPEG', 183, 2, 25, 25);
+    // this.doc.text(60,10.5,tel);
+    this.doc.setFontSize(12);
+    let service = ConstantMan.MAM_INFO.SERVICE;
+    this.doc.text(52,19,service);
+    this.doc.setFontSize(10);
+    this.doc.setFontStyle("");
+  }
+
+  private addCustomer(job:Job) {
+    this.doc.setFontStyle("bold");
+    this.doc.text(5,30,"Customer:");
+    this.doc.setFontStyle("");
+    this.doc.text(5,35,job.customer.name);
+    let additionalAddress = (job.customer.address2 != null)? job.customer.address2 : "";
+    let customerAddress = job.customer.address1 + " " + additionalAddress;
+    this.doc.text(5,40,customerAddress);
+    let customerAddress2 = job.customer.city + ", " + job.customer.state + " " + job.customer.zip;
+    this.doc.text(5,45,customerAddress2);
+    let attnText = "ATTN: "+job.attn;
+    this.doc.text(5,50,attnText);
+    let phoneText = "Tel: "+job.phone;
+    this.doc.text(5,55,phoneText);
+    let emailText = "Email: "+job.email;
+    this.doc.text(5,60,emailText);
+  }
+
+  private addLocation(job:Job) {
+    this.doc.setFontStyle("bold");
+    this.doc.text(105,30,"Job Location:");
+    this.doc.setFontStyle("");
+    this.doc.text(105,35,job.location.name);
+    this.doc.text(105,40,job.location.address);
+    let locationAddress2 = job.location.city + ", " + job.location.state + " " + job.location.zip;
+    this.doc.text(105,45,locationAddress2);
+  }
+
+  private addLineItems(job:Job) {
+    let svc = this;
+    let today = new Date();
+    let todayFormatted = this.datePipe.transform(today);
+    this.currentXpos = 70; // initial X coordinate of line item content
+    this.doc.setFontStyle("bold");
+
+    if (job.jobType != ConstantMan.JOB_TYPES.WORK_ORDER) {
+      this.doc.text(5, this.currentXpos, "Proposed Work:");
+      this.doc.text(180, this.currentXpos, todayFormatted);
+      this.doc.setFontStyle("");
+      this.currentXpos += 4;
+      job.lineItems.forEach(function (lineItem, index) {
+        svc.addLineItem(lineItem, index+1);
+      });
+      let totalContractPrice = "Total Contract Price: " + this.currencyPipe.transform(job.total, 'USD', true);
+      this.doc.setFontStyle("bold");
+      this.doc.text(149, this.currentXpos, totalContractPrice);
+      this.currentXpos += 4;
+      this.doc.setFontStyle("italic");
+      this.doc.setFontSize(9);
+      this.doc.text(149, this.currentXpos, "Does Not Include Applicable Sales Tax");
+      this.doc.setFontStyle("");
+      this.doc.setFontSize(10);
+
+    } else { //Work Order
+      this.doc.text(5, this.currentXpos, "Work Items:");
+      this.doc.text(180, this.currentXpos, todayFormatted);
+      this.doc.setFontStyle("");
+      this.currentXpos += 4;
+      job.lineItems.forEach(function (workItem, index) {
+        svc.addWorkItem(workItem, index+1);
+      });
+      let totalContractHours = "Total Contract Hours: " + job.totalHours;
+      this.doc.setFontStyle("bold");
+      this.doc.text(157, this.currentXpos, totalContractHours);
+      this.doc.setFontStyle("");
+    }
+  }
+
+  private addTerms(job:Job) {
+    let svc = this;
+    this.currentXpos += 10;
+    this.newPageCheck(15);
+    this.doc.setFontStyle("bold");
+    this.doc.text(5,this.currentXpos,"Contract Terms and Conditions:");
+    this.doc.setFontStyle("");
+    this.doc.setFontSize(8);
+    let jsonTermMap = JSON.parse(job.termMap);
+    jsonTermMap.forEach(function(term) {
+      console.log(term);
+      svc.addTerm(term.term);
+    });
+    this.doc.setFontSize(8);
+  }
+
+  private addTerm(term:string) {
+    this.doc.setFontSize(8);
+    let lines:Array<string> = this.splitTextToLines(term,150);
+    let numLines = lines.length;
+    let termHeight = (numLines * 3.3) + 6;
+    this.newPageCheck(termHeight);
+    let startText = this.currentXpos + 6;
+    this.doc.text(10,startText,lines);
+    this.currentXpos += termHeight;
+    this.doc.line(35, this.currentXpos, 175, this.currentXpos);
+  }
+
+  private addWorkDetails(workDetails: WorkDetail) {
+    console.log(workDetails);
+    this.doc.setFontStyle("bold");
+    this.currentXpos += 6;
+    this.newPageCheck(50);
+    this.doc.text(5, this.currentXpos, "Work Details:");
+    this.currentXpos += 6;
+    let detailXpos = this.currentXpos;
+    this.doc.text(10, detailXpos, "On-Site Manager:");
+    this.doc.text(105, detailXpos, "Start Date:");
+    this.doc.text(160, detailXpos, "End Date:");
+    this.doc.setFontStyle("");
+    let infoXpos = this.currentXpos;
+    this.doc.text(39, infoXpos, workDetails.crew);
+    this.doc.text(123, infoXpos, workDetails.startDate);
+    this.doc.text(177, infoXpos, workDetails.endDate);
+    if (workDetails.constructionSiteFlag) {
+      detailXpos += 6;
+      this.doc.setFontStyle("bold");
+      this.doc.text(10, detailXpos, "Supplies Needed:");
+      infoXpos += 6;
+      this.doc.setFontStyle("");
+      this.doc.text(67, infoXpos, workDetails.suppliesTextField);
+    }
+
+    detailXpos += 12;
+    infoXpos += 18;
+    this.doc.setFontStyle("bold");
+    this.doc.text(10, detailXpos, "Building Manager");
+    this.doc.text(105, detailXpos, "Person to coordinate with");
+    this.doc.setFontStyle("");
+    this.doc.text(10, infoXpos, "Name: " + workDetails.buildingManager);
+    this.doc.text(105, infoXpos, "Name: " + workDetails.coordinateWithName);
+    infoXpos += 6;
+    this.doc.text(10, infoXpos, "Tel: " + workDetails.managerPhone);
+    this.doc.text(105, infoXpos, "Tel: " + workDetails.coordinateWithPhone);
+    infoXpos += 6;
+    this.doc.text(10, infoXpos, "Alt Tel: " + workDetails.managerAltPhone);
+    this.doc.text(105, infoXpos, "Alt Tel: " + workDetails.coordinateWithAltPhone);
+    infoXpos += 6;
+    this.doc.text(10, infoXpos, "Email: " + workDetails.managerEmail);
+    this.doc.text(105, infoXpos, "Email: " + workDetails.coordinateWithEmail);
+
+    detailXpos += 36;
+    infoXpos += 12;
+    this.doc.setFontStyle("bold");
+    this.doc.text(10, detailXpos, "Front Door Security #:");
+    this.doc.text(105, detailXpos, "Clearance Approved By:");
+    detailXpos += 6;
+    this.doc.text(10, detailXpos, "Elevator Security #:");
+    this.doc.text(105, detailXpos, "Approval Date:");
+    this.doc.setFontStyle("");
+    this.doc.text(46, infoXpos, workDetails.frontDoorSecurityNumber);
+    this.doc.text(144, infoXpos, workDetails.clearanceApprover);
+    infoXpos += 6;
+    this.doc.text(42, infoXpos, workDetails.elevatorSecurityNumber);
+    this.doc.text(130, infoXpos, workDetails.approveDate);
+
+    this.currentXpos = detailXpos + 10;
+  }
+
+  private addLineItem(lineItem:LineItem, index:number) {
+    let lines:Array<string> = this.splitTextToLines(lineItem.item,85);
+    let numLines = lines.length + 1;
+    let startRect = this.currentXpos;
+    let startInfo = startRect + 6;
+    let startText = startInfo + 5;
+    let rectWidth = 200;
+    let rectHeight = (numLines * 4) + 6;
+    let borderRadius = 3;
+    let quantity = "Quantity: " + lineItem.quantity;
+    let totalPrice = this.currencyPipe.transform(lineItem.total,'USD',true);
+    let individualPrice = lineItem.total / lineItem.quantity;
+    let eachPrice = this.currencyPipe.transform(individualPrice,'USD',true);
+    let lineItemHeight =  rectHeight + 5;
+    let rectMiddle = startRect + 1 + rectHeight/2;
+    this.newPageCheck(lineItemHeight);
+    console.log(lines);
+    this.doc.roundedRect(5,startRect,rectWidth,rectHeight,borderRadius,borderRadius,'S');
+    this.doc.text(15,startText,lines);
+    this.doc.setFontStyle("bold");
+    this.doc.text(10, rectMiddle, String(index));
+    this.doc.text(15,startInfo,quantity);
+    this.doc.text(160, startText, "Price Each:");
+    this.doc.text(160, startText+4,"Total Price:");
+    this.doc.setFontStyle("");
+    this.doc.text(182, startText, eachPrice);
+    this.doc.text(182, startText+4, totalPrice);
+    this.currentXpos += lineItemHeight;
+  }
+
+  private addWorkItem(workItem: LineItem, index:number) {
+    let lines:Array<string> = this.splitTextToLines(workItem.item,85);
+    let numLines = lines.length + 1;
+    let startRect = this.currentXpos;
+    let startInfo = startRect + 6;
+    let startText = startInfo + 5;
+    let rectWidth = 200;
+    let rectHeight = (numLines * 4) + 6;
+    let borderRadius = 3;
+    let quantity = "Quantity: " + workItem.quantity;
+    let totalHours = workItem.hours;
+    let eachHours = workItem.hours / workItem.quantity;
+    let workItemHeight = rectHeight + 5;
+    let rectMiddle = startRect + 1 + rectHeight/2;
+    this.newPageCheck(workItemHeight);
+    console.log(lines);
+    this.doc.roundedRect(5,startRect,rectWidth,rectHeight,borderRadius,borderRadius,'S');
+
+    this.doc.setFontStyle("bold");
+    this.doc.text(10, rectMiddle, String(index));
+    this.doc.text(15,startInfo,quantity);
+    this.doc.text(170, startText, "Hours Each:");
+    this.doc.text(170, startText+4,"Total Hours:");
+    this.doc.setFontStyle("");
+    this.doc.text(192, startText, String(eachHours));
+    this.doc.text(192, startText+4, String(totalHours));
+    this.doc.setFontStyle("");
+
+    this.doc.text(15,startText,lines);
+
+    this.currentXpos += workItemHeight;
+  }
+
+  private splitTextToLines(text:string,idealSplit:number): Array<string> {
+    var maxSplit = idealSplit + 5,
+      lineCounter = 0,
+      lineIndex = 0,
+      lines = [""],
+      ch, i;
+
+    for (i = 0; i < text.length; i++) {
+      ch = text[i];
+      if ((lineCounter >= idealSplit && ch === " ") || lineCounter >= maxSplit || ch == "\n") {
+        ch = "";
+        lineCounter = -1;
+        lineIndex++;
+        lines.push("");
+      }
+      lines[lineIndex] += ch;
+      lineCounter++;
+    }
+
+    return lines;
+  }
+
+  private newPageCheck(sectionHeight:number) {
+    let newXpos = this.currentXpos + sectionHeight;
+    console.log("currentXpos: "+this.currentXpos);
+    console.log("sectionHeigt: "+sectionHeight);
+    console.log("newXpos: "+newXpos);
+    if (newXpos > 275) {
+      this.addFooter();
+      this.doc.addPage();
+      this.currentXpos = 10;
+      console.log('breaking page');
+    }
+  }
+
+  private addFooter() {
+    this.doc.setFontStyle("bold");
+    this.doc.setFontSize(12);
+    this.doc.text(71.5, 281, ConstantMan.MAM_INFO.TEL);
+    this.doc.text(100.5, 281, ConstantMan.MAM_INFO.EMAIL);
+    this.doc.setFontSize(10);
+    this.doc.text(67.5, 285, ConstantMan.MAM_INFO.ADDRESS);
+    this.doc.setFontStyle("");
+    this.doc.text(42.5, 289, ConstantMan.MAM_INFO.LOCATIONS);
+  }

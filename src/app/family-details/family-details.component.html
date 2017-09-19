@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>{{family.familyName}}</h2>
+  <br>
+  <app-error-alert [status]="studentsStatus"></app-error-alert>
+  <div class="row justify-content-md-center">
+    <p-dataTable [value]="students" [(selection)]="selectedStudents" [loading]="studentsLoading"
+                 loadingIcon="fa-spinner">
+      <p-header>Students</p-header>
+      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+      <p-column field="fname" header="First Name"></p-column>
+      <p-column field="mi" header="Middle Initial"></p-column>
+      <p-column field="lname" header="Last Name"></p-column>
+      <p-footer></p-footer>
+    </p-dataTable>
+    <br>
+    <p-dataTable [value]="guardians" [(selection)]="selectedGuardians" [loading]="guardiansLoading"
+                 loadingIcon="fa-spinner">
+      <p-header>Guardians</p-header>
+      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+      <p-column field="fname" header="First Name"></p-column>
+      <p-column field="mi" header="Middle Initial"></p-column>
+      <p-column field="lname" header="Last Name"></p-column>
+      <p-column field="relationship" header="Relationship"></p-column>
+      <p-column field="primPhone" header="Primary Phone"></p-column>
+      <p-column field="secPhone" header="Secondary Phone"></p-column>
+      <p-footer></p-footer>
+    </p-dataTable>
+  </div>
+</div>

@@ -1,27 +1,43 @@
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {PageNotFoundComponent} from "./not-found.component";
-import {EmployeesComponent} from "./employees/employees.component";
-import {ParentListComponent} from "./parent-list/parent-list.component";
-import {ParentDetailsComponent} from "./parent-details/parent-details.component";
+import {LoginComponent} from "./login/login.component";
+import {AuthGuard} from "./guards/auth.guard";
+import {AdminGuard} from "./guards/admin.guard";
+import {UserListComponent} from "./user/user-list/user-list.component";
+import {AddUserComponent} from "./user/add-user/add-user.component";
+import {FamilyListComponent} from "./family-list/family-list.component";
+import {FamilyDetailsComponent} from "./family-details/family-details.component";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/parent-list',
+    redirectTo: '/family-list',
     pathMatch: 'full'
   },
   {
-    path: 'parent-list',
-    component: ParentListComponent
+    path: 'login',
+    component: LoginComponent
   },
   {
-    path: 'parent-details/:id',
-    component: ParentDetailsComponent
+    path: 'family-list',
+    component: FamilyListComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'employees',
-    component: EmployeesComponent
+    path: 'family-details/:id',
+    component: FamilyDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'create-user',
+    component: AddUserComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: '**',
@@ -30,8 +46,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

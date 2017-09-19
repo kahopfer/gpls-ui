@@ -1,0 +1,9 @@
+<div *ngIf="status != undefined
+&& null != status.success
+&& !status.success" class="alert alert-danger alert-dismissable fade show" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  There was a problem with your request
+  <div *ngIf="status.message != undefined"><strong>Error</strong>: {{status.message}}</div>
+</div>
