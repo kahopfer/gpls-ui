@@ -23,6 +23,7 @@ export class AuthenticationService {
     return this.loggedIn.asObservable();
   }
 
+  // TODO: Fix token authentication (token doesn't reset in request header after new user logs in)
   constructor(private http: Http) {
     // set token if saved in local storage
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -56,8 +57,6 @@ export class AuthenticationService {
         if (token) {
           // set token property
           this.token = token;
-
-          localStorage.removeItem('currentUser');
 
           // store username and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify({

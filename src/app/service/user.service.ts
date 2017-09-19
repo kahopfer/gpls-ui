@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
 
 @Injectable()
-export class UsersService {
+export class UserService {
   private token: string;
   private headers: Headers;
   private headers1: Headers;

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UsersService} from "../../service/users.service";
+import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
+import {Location} from '@angular/common';
 import {Status} from "../../error-alert/error-alert.component";
 import * as CryptoJS from 'crypto-js';
 
@@ -18,7 +19,7 @@ export class AddUserComponent implements OnInit {
   lastname: string;
   admin: string;
 
-  constructor(private userService: UsersService, private router: Router) {
+  constructor(private userService: UserService, private router: Router, private location: Location) {
     this.createUserStatus = {
       success: null,
       message: null
@@ -35,12 +36,16 @@ export class AddUserComponent implements OnInit {
 
     this.userService.createUser(this.username, this.encryptedPassword.toString(), this.firstname, this.lastname, this.admin).then(() => {
       this.createUserStatus.success = true;
-      this.router.navigate(['/users']);
+      // this.router.navigate(['/users']);
+      this.location.back();
     }).catch(err => {
       this.createUserStatus.success = false;
       this.createUserStatus.message = err;
     })
+  }
 
+  cancel() {
+    this.location.back();
   }
 
 }

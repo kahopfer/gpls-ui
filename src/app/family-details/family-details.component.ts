@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {DataService} from "../service/data.service";
 import {Status} from "../error-alert/error-alert.component";
-import {Location} from '@angular/common';
 import {Family} from "../models/family";
 import {Student} from "../models/student";
 import {Guardian} from "../models/guardian";
+import {FamilyService} from "../service/family.service";
+import {StudentService} from "../service/student.service";
+import {GuardianService} from "../service/guardian.service";
 
 @Component({
   selector: 'app-family-details',
@@ -27,7 +28,8 @@ export class FamilyDetailsComponent implements OnInit {
   studentsLoading: boolean = true;
   guardiansLoading: boolean = true;
 
-  constructor(private dataService: DataService, private route: ActivatedRoute, private location: Location) {
+  constructor(private familyService: FamilyService, private studentService: StudentService,
+              private guardianService: GuardianService, private route: ActivatedRoute) {
     this.studentsStatus = {
       success: null,
       message: null
@@ -47,7 +49,7 @@ export class FamilyDetailsComponent implements OnInit {
 
   getStudents(familyUnitID: string) {
     this.studentsLoading = true;
-    this.dataService.getStudents(familyUnitID).then(students => {
+    this.studentService.getStudents(familyUnitID).then(students => {
       this.students = students.json().students;
       this.studentsStatus.success = true;
     }).catch(err => {
@@ -59,7 +61,7 @@ export class FamilyDetailsComponent implements OnInit {
 
   getGuardians(familyUnitID: string) {
     this.guardiansLoading = true;
-    this.dataService.getGuardians(familyUnitID).then(guardians => {
+    this.guardianService.getGuardians(familyUnitID).then(guardians => {
       this.guardians = guardians.json().guardians;
       this.guardiansStatus.success = true;
     }).catch(err => {
@@ -70,7 +72,7 @@ export class FamilyDetailsComponent implements OnInit {
   }
 
   getFamily(id: number) {
-    this.dataService.getFamily(id).then(family => {
+    this.familyService.getFamily(id).then(family => {
       this.family = family.json();
     }).catch(err => {
       console.log(err);

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user";
 import {Status} from "../../error-alert/error-alert.component";
-import {UsersService} from "../../service/users.service";
+import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -16,7 +16,7 @@ export class UserListComponent implements OnInit {
   selectedUsers: User[];
   loading: boolean = true;
 
-  constructor(private usersService: UsersService, private router: Router) {
+  constructor(private usersService: UserService, private router: Router) {
     this.usersStatus = {
       success: null,
       message: null

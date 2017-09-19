@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {DataService} from "../service/data.service";
 import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../models/family";
+import {FamilyService} from "../service/family.service";
 
 @Component({
   selector: 'app-family-list',
@@ -16,7 +16,7 @@ export class FamilyListComponent implements OnInit {
   selectedFamily: Family;
   loading: boolean = false;
 
-  constructor(private dataService: DataService, private router: Router) {
+  constructor(private familyService: FamilyService, private router: Router) {
     this.familiesStatus = {
       success: null,
       message: null
@@ -30,7 +30,7 @@ export class FamilyListComponent implements OnInit {
 
   getFamilies(): void {
     this.loading = false;
-    this.dataService.getFamilies().then(families => {
+    this.familyService.getFamilies().then(families => {
       this.families = families.json().families;
       this.familiesStatus.success = true;
     }).catch(err => {

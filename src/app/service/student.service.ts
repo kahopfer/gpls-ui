@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
 
 @Injectable()
-export class DataService {
+export class StudentService {
   private token: string;
   private headers: Headers;
   private headers1: Headers;
@@ -21,29 +21,8 @@ export class DataService {
     this.headers1 = new Headers({'Accept': 'application/json', 'Content-Type': 'application/json'});
   }
 
-  getGuardians(familyUnitID: string): Promise<any> {
-    const url = `${this.gplsApiUrl}/guardians?familyUnitID=${familyUnitID}`;
-    return this.http.get(url, {headers: this.headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
   getStudents(familyUnitID: string): Promise<any> {
     const url = `${this.gplsApiUrl}/students?familyUnitID=${familyUnitID}`;
-    return this.http.get(url, {headers: this.headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  getFamilies(): Promise<any> {
-    const url = `${this.gplsApiUrl}/families`;
-    return this.http.get(url, {headers: this.headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  getFamily(id: number): Promise<any> {
-    const url = `${this.gplsApiUrl}/families/${id}`;
     return this.http.get(url, {headers: this.headers})
       .toPromise()
       .catch(this.handleError);
