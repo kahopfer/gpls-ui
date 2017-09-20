@@ -5,30 +5,34 @@ import {GPLS_API_URL} from "../app.constants";
 
 @Injectable()
 export class UserService {
-  private token: string;
-  private headers: Headers;
   private headers1: Headers;
   private gplsApiUrl: string;
 
   constructor(private http: Http) {
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.token = currentUser && currentUser.token;
-    this.headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.token
-    });
     this.gplsApiUrl = GPLS_API_URL;
     this.headers1 = new Headers({'Accept': 'application/json', 'Content-Type': 'application/json'});
   }
 
   getUsers(): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
     const url = `${this.gplsApiUrl}/users`;
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(url, {headers: headers})
       .toPromise()
       .catch(this.handleError);
   }
 
   createUser(username: string, password: string, firstname: string, lastname: string, admin: string): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
     const url = `${this.gplsApiUrl}/users`;
     if (JSON.parse(admin)) {
       return this.http.post(url, JSON.stringify({
@@ -40,7 +44,7 @@ export class UserService {
           'ROLE_USER',
           'ROLE_ADMIN'
         ]
-      }), {headers: this.headers})
+      }), {headers: headers})
         .toPromise()
         .catch(this.handleError);
     } else {
@@ -52,7 +56,7 @@ export class UserService {
         authorities: [
           'ROLE_USER'
         ]
-      }), {headers: this.headers})
+      }), {headers: headers})
         .toPromise()
         .catch(this.handleError);
     }

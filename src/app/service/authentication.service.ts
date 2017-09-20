@@ -9,6 +9,7 @@ import {GPLS_API_URL} from "../app.constants";
 export class AuthenticationService {
   // Used for correctly displaying the username in the navbar
   @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
+  // @Output() isAdmin: EventEmitter<any> = new EventEmitter();
 
   public token: string;
 
@@ -23,7 +24,6 @@ export class AuthenticationService {
     return this.loggedIn.asObservable();
   }
 
-  // TODO: Fix token authentication (token doesn't reset in request header after new user logs in)
   constructor(private http: Http) {
     // set token if saved in local storage
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -84,7 +84,6 @@ export class AuthenticationService {
       });
   }
 
-  // TODO: Make sure token is cleared on logout
   logout(): void {
     // clear token remove user from local storage to log user out
     this.loggedIn.next(false);
