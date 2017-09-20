@@ -62,6 +62,20 @@ export class UserService {
     }
   }
 
+  deleteUser(userToDelete: string): Promise<void> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const myUsername = currentUser && currentUser.username;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/users/userToDelete/${userToDelete}/myUsername/${myUsername}`;
+    return this.http.delete(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);

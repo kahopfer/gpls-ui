@@ -13,7 +13,7 @@ export class UserListComponent implements OnInit {
 
   users: User[] = [];
   usersStatus: Status;
-  selectedUsers: User[];
+  selectedUser: User;
   loading: boolean = true;
 
   constructor(private usersService: UserService, private router: Router) {
@@ -38,6 +38,16 @@ export class UserListComponent implements OnInit {
       this.usersStatus.message = err;
     });
     this.loading = false;
+  }
+
+  deleteSelectedUser(username: string): void {
+    this.usersService.deleteUser(username).then(() => {
+      this.usersStatus.success = true;
+      this.getUsers();
+    }).catch(err => {
+      this.usersStatus.success = false;
+      this.usersStatus.message = err;
+    })
   }
 
   goToCreateUserForm() {

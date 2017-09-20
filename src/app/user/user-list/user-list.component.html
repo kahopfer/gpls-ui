@@ -1,14 +1,15 @@
 <div class="container">
   <app-error-alert [status]="usersStatus"></app-error-alert>
   <div class="row justify-content-md-center">
-    <p-dataTable [value]="users" [(selection)]="selectedUsers" [loading]="loading" loadingIcon="fa-spinner">
+    <p-dataTable [value]="users" [(selection)]="selectedUser" [loading]="loading" loadingIcon="fa-spinner">
       <p-header>Current Users in the System</p-header>
-      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+      <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
       <p-column field="username" header="UserName"></p-column>
       <p-column field="firstname" header="First Name"></p-column>
       <p-column field="lastname" header="Last Name"></p-column>
       <p-footer>
         <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
+        <button type="button" class="btn btn-danger" (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User</button>
       </p-footer>
     </p-dataTable>
   </div>
