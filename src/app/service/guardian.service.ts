@@ -5,12 +5,10 @@ import {GPLS_API_URL} from "../app.constants";
 
 @Injectable()
 export class GuardianService {
-  private headers1: Headers;
   private gplsApiUrl: string;
 
   constructor(private http: Http) {
     this.gplsApiUrl = GPLS_API_URL;
-    this.headers1 = new Headers({'Accept': 'application/json', 'Content-Type': 'application/json'});
   }
 
   getGuardians(familyUnitID: string): Promise<any> {
