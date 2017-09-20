@@ -9,7 +9,9 @@ import {GPLS_API_URL} from "../app.constants";
 export class AuthenticationService {
   // Used for correctly displaying the username in the navbar
   @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
-  // @Output() isAdmin: EventEmitter<any> = new EventEmitter();
+
+  // Used for showing/hiding certain elements based upon the user group
+  @Output() getAdmin: EventEmitter<any> = new EventEmitter();
 
   public token: string;
 
@@ -54,6 +56,8 @@ export class AuthenticationService {
           }
         }
 
+        this.getAdmin.emit(admin);
+
         if (token) {
           // set token property
           this.token = token;
@@ -77,6 +81,7 @@ export class AuthenticationService {
           return true;
         } else {
           this.getLoggedInName.emit('');
+          this.getAdmin.emit(false);
 
           // return false to indicate failed login
           return false;
@@ -88,6 +93,7 @@ export class AuthenticationService {
     // clear token remove user from local storage to log user out
     this.loggedIn.next(false);
     this.getLoggedInName.emit('');
+    this.getAdmin.emit(false);
     this.token = null;
     localStorage.removeItem('currentUser');
   }

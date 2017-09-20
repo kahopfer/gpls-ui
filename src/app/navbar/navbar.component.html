@@ -21,7 +21,7 @@
           </button>
           <div class="dropdown-menu dropdown-menu-right">
             <button class="dropdown-item">Account Settings</button>
-            <button class="dropdown-item" [routerLink]="['users']">Manage Users</button>
+            <button *ngIf="admin == true" class="dropdown-item" [routerLink]="['users']">Manage Users</button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" [routerLink]="['login']">Log Out</button>
           </div>
