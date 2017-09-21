@@ -9,7 +9,7 @@
       <p-column field="lastname" header="Last Name"></p-column>
       <p-footer>
         <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
-        <button type="button" class="btn btn-danger" (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User</button>
+        <button type="button" class="btn btn-danger" [disabled]="selectedUser == null" (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User</button>
       </p-footer>
     </p-dataTable>
   </div>

@@ -16,13 +16,13 @@ import {ErrorAlertComponent} from './error-alert/error-alert.component';
 import {AdminGuard} from "./guards/admin.guard";
 import {UserService} from "./service/user.service";
 import {UserListComponent} from './user/user-list/user-list.component';
-import {UserDetailsComponent} from './user/user-details/user-details.component';
 import {AddUserComponent} from './user/add-user/add-user.component';
 import {FamilyListComponent} from './family-list/family-list.component';
 import {FamilyDetailsComponent} from './family-details/family-details.component';
 import {FamilyService} from "./service/family.service";
 import {StudentService} from "./service/student.service";
 import {GuardianService} from "./service/guardian.service";
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -32,10 +32,10 @@ import {GuardianService} from "./service/guardian.service";
     NavbarComponent,
     ErrorAlertComponent,
     UserListComponent,
-    UserDetailsComponent,
     AddUserComponent,
     FamilyListComponent,
-    FamilyDetailsComponent
+    FamilyDetailsComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

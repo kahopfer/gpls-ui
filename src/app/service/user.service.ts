@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
+import {User} from "../models/user";
 
 @Injectable()
 export class UserService {
@@ -51,6 +52,45 @@ export class UserService {
         password: password,
         firstname: firstname,
         lastname: lastname,
+        authorities: [
+          'ROLE_USER'
+        ]
+      }), {headers: headers})
+        .toPromise()
+        .catch(this.handleError);
+    }
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const userToUpdate = currentUser && currentUser.username;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+      'Old-Password': oldPassword
+    });
+    const url = `${this.gplsApiUrl}/users/userToUpdate/${userToUpdate}`;
+
+    if (currentUser.admin) {
+      return this.http.put(url, JSON.stringify({
+        username: currentUser.username,
+        password: newPassword,
+        firstname: currentUser.firstname,
+        lastname: currentUser.lastname,
+        authorities: [
+          'ROLE_USER',
+          'ROLE_ADMIN'
+        ]
+      }), {headers: headers})
+        .toPromise()
+        .catch(this.handleError);
+    } else {
+      return this.http.put(url, JSON.stringify({
+        username: currentUser.username,
+        password: newPassword,
+        firstname: currentUser.firstname,
+        lastname: currentUser.lastname,
         authorities: [
           'ROLE_USER'
         ]

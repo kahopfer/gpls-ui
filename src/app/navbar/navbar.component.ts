@@ -11,15 +11,18 @@ export class NavbarComponent implements OnInit {
   title = 'GPLS Before/After Care';
   isLoggedIn$: Observable<boolean>;
   username: string;
+  fullName: string;
   admin: boolean;
 
   constructor(private authService: AuthenticationService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    this.username = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
+    this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
+    this.username = currentUser && currentUser.username;
     this.admin = currentUser && currentUser.admin;
 
-    authService.getLoggedInName.subscribe(name => this.changeName(name));
+    authService.getLoggedInName.subscribe(name => this.changeFullName(name));
+    authService.getUsername.subscribe(username => this.changeUsername(username));
     authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
   }
 
@@ -27,11 +30,15 @@ export class NavbarComponent implements OnInit {
     this.isLoggedIn$ = this.authService.isLoggedIn;
   }
 
-  private changeName(name: string): void {
-    this.username = name;
+  private changeFullName(name: string): void {
+    this.fullName = name;
   }
 
   private changeAdmin(admin: boolean): void {
     this.admin = admin;
+  }
+
+  private changeUsername(username: string): void {
+    this.username = username;
   }
 }

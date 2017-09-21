@@ -13,6 +13,9 @@ export class AuthenticationService {
   // Used for showing/hiding certain elements based upon the user group
   @Output() getAdmin: EventEmitter<any> = new EventEmitter();
 
+  // Used for routing to correct profile link in navbar
+  @Output() getUsername: EventEmitter<any> = new EventEmitter();
+
   public token: string;
 
   // Used for showing the navbar when logged in and hiding it when logged out
@@ -77,9 +80,12 @@ export class AuthenticationService {
           // Used to display name on navbar
           this.getLoggedInName.emit(firstname + ' ' + lastname);
 
+          this.getUsername.emit(username);
+
           // return true to indicate successful login
           return true;
         } else {
+          this.getUsername.emit('');
           this.getLoggedInName.emit('');
           this.getAdmin.emit(false);
 
@@ -93,6 +99,7 @@ export class AuthenticationService {
     // clear token remove user from local storage to log user out
     this.loggedIn.next(false);
     this.getLoggedInName.emit('');
+    this.getUsername.emit('');
     this.getAdmin.emit(false);
     this.token = null;
     localStorage.removeItem('currentUser');
