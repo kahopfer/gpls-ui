@@ -5,11 +5,12 @@
       <h2>Current Profile</h2>
       <br>
       <app-error-alert [status]="changePasswordStatus"></app-error-alert>
+      <app-success-alert [status]="changePasswordStatus"></app-success-alert>
       <br>
       <p>First Name: {{firstname}}</p>
       <p>Last Name: {{lastname}}</p>
       <p>Username: {{username}}</p>
-      <form #changePasswordForm="ngForm" (ngSubmit)="changePassword()">
+      <form #changePasswordForm="ngForm" (ngSubmit)="changePassword(changePasswordForm)">
         <div class="form-group">
           <label for="oldPassword">Password</label>
           <input type="password" name="oldPassword" class="form-control" required id="oldPassword"

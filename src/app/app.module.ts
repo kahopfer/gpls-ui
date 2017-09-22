@@ -23,6 +23,7 @@ import {FamilyService} from "./service/family.service";
 import {StudentService} from "./service/student.service";
 import {GuardianService} from "./service/guardian.service";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { SuccessAlertComponent } from './success-alert/success-alert.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
     AddUserComponent,
     FamilyListComponent,
     FamilyDetailsComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    SuccessAlertComponent
   ],
   imports: [
     BrowserModule,
