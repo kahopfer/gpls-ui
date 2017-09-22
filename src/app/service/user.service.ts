@@ -86,7 +86,7 @@ export class UserService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     });
-    const url = `${this.gplsApiUrl}/users/userToDelete/${userToDelete}`;
+    const url = `${this.gplsApiUrl}/users/${userToDelete}`;
     return this.http.delete(url, {headers: headers})
       .toPromise()
       .catch(this.handleError);
