@@ -39,8 +39,9 @@ export class AddUserComponent implements OnInit {
       // this.router.navigate(['/users']);
       this.location.back();
     }).catch(err => {
+      console.log(err);
       this.createUserStatus.success = false;
-      this.createUserStatus.message = err;
+      this.createUserStatus.message = 'An error occurred while creating this user';
     })
   }
 

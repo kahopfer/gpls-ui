@@ -32,15 +32,9 @@ export class LoginComponent implements OnInit {
     this.encryptedPassword = CryptoJS.AES.encrypt(this.model.password, key, {iv: iv});
 
     this.authenticationService.login(this.model.username, this.encryptedPassword.toString())
-      .subscribe(result => {
-        if (result === true) {
+      .subscribe(() => {
           // login successful
           this.router.navigate(['/']);
-        } else {
-          // login failed
-          this.error = 'Username or password is incorrect';
-          this.loading = false;
-        }
       }, err => {
         if (err.status === 401) {
           this.error = 'Username or password is incorrect';

@@ -39,15 +39,10 @@ export class UserProfileComponent implements OnInit {
     const encryptedPasswordNew = CryptoJS.AES.encrypt(this.newPassword, key, {iv: iv});
 
     this.userService.changePassword(encodeURI(encryptedPasswordOld.toString()), encryptedPasswordNew.toString()).then(() => {
-      this.authService.login(this.username, encryptedPasswordNew.toString()).subscribe(result => {
-        if (result === true) {
+      this.authService.login(this.username, encryptedPasswordNew.toString()).subscribe(() => {
           this.changePasswordStatus.success = true;
           this.changePasswordStatus.message = 'You have successfully changed your password';
           changePasswordForm.resetForm();
-        } else {
-          this.changePasswordStatus.success = false;
-          this.changePasswordStatus.message = 'An error occurred while reauthorizing your account';
-        }
       }, err => {
         if (err.status === 401) {
           this.changePasswordStatus.success = false;
@@ -60,8 +55,14 @@ export class UserProfileComponent implements OnInit {
       })
 
     }).catch(err => {
-      this.changePasswordStatus.success = false;
-      this.changePasswordStatus.message = err;
+      if(err.status === 400) {
+        this.changePasswordStatus.success = false;
+        this.changePasswordStatus.message = 'Old password is incorrect';
+      } else {
+        console.log(err);
+        this.changePasswordStatus.success = false;
+        this.changePasswordStatus.message = 'An unexpected error occurred';
+      }
     })
   }
 }

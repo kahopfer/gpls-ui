@@ -34,8 +34,9 @@ export class FamilyListComponent implements OnInit {
       this.families = families.json().families;
       this.familiesStatus.success = true;
     }).catch(err => {
+      console.log(err);
       this.familiesStatus.success = false;
-      this.familiesStatus.message = err;
+      this.familiesStatus.message = 'An error occurred while getting the list of families';
     });
     this.loading = true;
   }

@@ -34,8 +34,9 @@ export class UserListComponent implements OnInit {
       this.users = users.json().users;
       this.usersStatus.success = true;
     }).catch(err => {
+      console.log(err);
       this.usersStatus.success = false;
-      this.usersStatus.message = err;
+      this.usersStatus.message = 'An error occurred while getting the list of users';
     });
     this.loading = false;
   }
@@ -45,8 +46,9 @@ export class UserListComponent implements OnInit {
       this.usersStatus.success = true;
       this.getUsers();
     }).catch(err => {
+      console.log(err);
       this.usersStatus.success = false;
-      this.usersStatus.message = err;
+      this.usersStatus.message = 'An error occurred while deleting the user ' + username;
     })
   }
 

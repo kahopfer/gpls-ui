@@ -41,7 +41,7 @@ export class AuthenticationService {
     }
   }
 
-  login(username: string, password: string): Observable<boolean> {
+  login(username: string, password: string) {
     const url = `${this.gplsApiUrl}/auth`;
     return this.http.post(url, JSON.stringify({username: username, password: password}), {headers: this.headers})
       .map((response: Response) => {
@@ -61,37 +61,25 @@ export class AuthenticationService {
 
         this.getAdmin.emit(admin);
 
-        if (token) {
-          // set token property
-          this.token = token;
+        // set token property
+        this.token = token;
 
-          // store username and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('currentUser', JSON.stringify({
-            username: username,
-            token: token,
-            firstname: firstname,
-            lastname: lastname,
-            admin: admin
-          }));
+        // store username and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('currentUser', JSON.stringify({
+          username: username,
+          token: token,
+          firstname: firstname,
+          lastname: lastname,
+          admin: admin
+        }));
 
-          // Used to show navbar
-          this.loggedIn.next(true);
+        // Used to show navbar
+        this.loggedIn.next(true);
 
-          // Used to display name on navbar
-          this.getLoggedInName.emit(firstname + ' ' + lastname);
+        // Used to display name on navbar
+        this.getLoggedInName.emit(firstname + ' ' + lastname);
 
-          this.getUsername.emit(username);
-
-          // return true to indicate successful login
-          return true;
-        } else {
-          this.getUsername.emit('');
-          this.getLoggedInName.emit('');
-          this.getAdmin.emit(false);
-
-          // return false to indicate failed login
-          return false;
-        }
+        this.getUsername.emit(username);
       });
   }
 

@@ -53,8 +53,9 @@ export class FamilyDetailsComponent implements OnInit {
       this.students = students.json().students;
       this.studentsStatus.success = true;
     }).catch(err => {
+      console.log(err);
       this.studentsStatus.success = false;
-      this.studentsStatus.message = err;
+      this.studentsStatus.message = 'An error occurred while loading the students';
     });
     this.studentsLoading = false;
   }
@@ -65,8 +66,9 @@ export class FamilyDetailsComponent implements OnInit {
       this.guardians = guardians.json().guardians;
       this.guardiansStatus.success = true;
     }).catch(err => {
+      console.log(err);
       this.guardiansStatus.success = false;
-      this.guardiansStatus.message = err;
+      this.guardiansStatus.message = 'An error occurred while loading the guardians';
     });
     this.guardiansLoading = false;
   }
