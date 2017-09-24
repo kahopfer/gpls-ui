@@ -46,9 +46,14 @@ export class UserListComponent implements OnInit {
       this.usersStatus.success = true;
       this.getUsers();
     }).catch(err => {
-      console.log(err);
-      this.usersStatus.success = false;
-      this.usersStatus.message = 'An error occurred while deleting the user ' + username;
+      if (err.status === 400) {
+        this.usersStatus.success = false;
+        this.usersStatus.message = 'You cannot delete yourself from the system';
+      } else {
+        console.log(err);
+        this.usersStatus.success = false;
+        this.usersStatus.message = 'An error occurred while deleting the user ' + username;
+      }
     })
   }
 
