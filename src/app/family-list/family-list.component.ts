@@ -4,6 +4,7 @@ import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../models/family";
 import {FamilyService} from "../service/family.service";
 import { ObjectID } from 'bson';
+import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
   selector: 'app-family-list',
@@ -16,8 +17,13 @@ export class FamilyListComponent implements OnInit {
   familiesStatus: Status;
   selectedFamily: Family;
   loading: boolean = false;
+  admin: boolean;
 
-  constructor(private familyService: FamilyService, private router: Router) {
+  constructor(private familyService: FamilyService, private authService: AuthenticationService, private router: Router) {
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.admin = currentUser && currentUser.admin;
+    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
+
     this.familiesStatus = {
       success: null,
       message: null
@@ -48,6 +54,10 @@ export class FamilyListComponent implements OnInit {
 
   goToEnrollFamilyForm() {
     this.router.navigate(['/enroll-family']);
+  }
+
+  private changeAdmin(admin: boolean): void {
+    this.admin = admin;
   }
 
 }

@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'enroll-family',
     component: EnrollFamilyComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'family-details/:id',
