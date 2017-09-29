@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../models/family";
 import {FamilyService} from "../service/family.service";
+import { ObjectID } from 'bson';
 
 @Component({
   selector: 'app-family-list',
@@ -43,6 +44,10 @@ export class FamilyListComponent implements OnInit {
 
   onRowSelect(event) {
     this.router.navigate(['family-details', event.data._id]);
+  }
+
+  goToEnrollFamilyForm() {
+    this.router.navigate(['/enroll-family']);
   }
 
 }

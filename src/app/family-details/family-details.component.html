@@ -10,6 +10,7 @@
       <p-column field="fname" header="First Name"></p-column>
       <p-column field="mi" header="Middle Initial"></p-column>
       <p-column field="lname" header="Last Name"></p-column>
+      <p-column field="notes" header="Notes"></p-column>
       <p-footer></p-footer>
     </p-dataTable>
     <br>
@@ -23,7 +24,9 @@
       <p-column field="relationship" header="Relationship"></p-column>
       <p-column field="primPhone" header="Primary Phone"></p-column>
       <p-column field="secPhone" header="Secondary Phone"></p-column>
-      <p-footer></p-footer>
+      <p-footer>
+        <app-back-button></app-back-button>
+      </p-footer>
     </p-dataTable>
   </div>
 </div>

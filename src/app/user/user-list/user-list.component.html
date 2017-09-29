@@ -11,6 +11,7 @@
       <p-footer>
         <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
         <button type="button" class="btn btn-danger" [disabled]="selectedUser == null" (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User</button>
+        <app-back-button></app-back-button>
       </p-footer>
     </p-dataTable>
   </div>

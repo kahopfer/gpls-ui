@@ -11,5 +11,8 @@
                (onRowSelect)="onRowSelect($event) " #dt>
     <p-header>Parents</p-header>
     <p-column field="familyName" header="Family Name"></p-column>
+    <p-footer>
+      <button type="button" class="btn btn-success" (click)="goToEnrollFamilyForm()">Enroll a New Family</button>
+    </p-footer>
   </p-dataTable>
 </div>

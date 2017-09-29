@@ -9,6 +9,7 @@ import {AddUserComponent} from "./user/add-user/add-user.component";
 import {FamilyListComponent} from "./family-list/family-list.component";
 import {FamilyDetailsComponent} from "./family-details/family-details.component";
 import {UserProfileComponent} from "./user/user-profile/user-profile.component";
+import {EnrollFamilyComponent} from "./enroll-family/enroll-family.component";
 
 const routes: Routes = [
   {
@@ -23,6 +24,11 @@ const routes: Routes = [
   {
     path: 'family-list',
     component: FamilyListComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'enroll-family',
+    component: EnrollFamilyComponent,
     canActivate: [AuthGuard]
   },
   {

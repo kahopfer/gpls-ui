@@ -1,0 +1,141 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-8 col-md-offset-2">
+      <h2>Enroll a New Family</h2>
+      <br>
+      <app-error-alert [status]="enrollFamilyStatus"></app-error-alert>
+      <br>
+      <form #enrollFamilyForm="ngForm" (ngSubmit)="enrollFamily()">
+        <h3>General Family Information</h3>
+        <div class="form-group">
+          <label for="familyname">Family Name</label>
+          <input type="text" name="firstname" class="form-control" required id="familyname" placeholder="Family Name"
+                 [(ngModel)]="familyName">
+        </div>
+
+
+        <h3>Students</h3>
+        <div class="form-group">
+          <label for="studentFname">First Name</label>
+          <input type="text" name="studentFname" class="form-control" required id="studentFname" placeholder="First Name"
+                 [(ngModel)]="studentFname">
+        </div>
+        <div class="form-group">
+          <label for="studentMi">Middle Initial</label>
+          <input type="text" name="studentMi" class="form-control" required id="studentMi" placeholder="Middle Initial"
+                 [(ngModel)]="studentMi">
+        </div>
+        <div class="form-group">
+          <label for="studentLname">Last Name</label>
+          <input type="text" name="studentLname" class="form-control" required id="studentLname" placeholder="Last Name"
+                 [(ngModel)]="studentLname">
+        </div>
+        <div class="form-group">
+          <label for="studentBirthDate">Birth Date</label>
+          <p-calendar name="studentBirthDate" id="studentBirthDate" [(ngModel)]="studentBirthDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2050"></p-calendar> {{studentBirthDate|date}}
+        </div>
+        <div class="form-group">
+          <label for="studentNotes">Notes</label>
+          <textarea type="text" name="studentNotes" class="form-control" id="studentNotes" placeholder="Write any special notes about the student here (optional)"
+                    [(ngModel)]="studentNotes"></textarea>
+        </div>
+
+
+        <h3>Guardians</h3>
+        <div class="form-group">
+          <label for="guardianFname">First Name</label>
+          <input type="text" name="guardianFname" class="form-control" required id="guardianFname" placeholder="First Name"
+                 [(ngModel)]="guardianFname">
+        </div>
+        <div class="form-group">
+          <label for="guardianMi">Middle Initial</label>
+          <input type="text" name="guardianMi" class="form-control" required id="guardianMi" placeholder="Middle Initial"
+                 [(ngModel)]="guardianMi">
+        </div>
+        <div class="form-group">
+          <label for="guardianLname">Last Name</label>
+          <input type="text" name="guardianLname" class="form-control" required id="guardianLname" placeholder="Last Name"
+                 [(ngModel)]="guardianLname">
+        </div>
+        <div class="form-group">
+          <label for="guardianRelationship">Relationship: </label>
+          <select name="guardianRelationship" class="custom-select" required id="guardianRelationship" [(ngModel)]="guardianRelationship">
+            <option></option>
+            <option value="Father">Father</option>
+            <option value="Mother">Mother</option>
+            <option value="Grandfather">Grandfather</option>
+            <option value="Grandmother">Grandmother</option>
+            <option value="Stepfather">Stepfather</option>
+            <option value="Stepmother">Stepmother</option>
+            <option value="Aunt">Aunt</option>
+            <option value="Uncle">Uncle</option>
+            <option value="Neighbor">Neighbor</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="guardianPrimPhone">Primary Phone</label>
+          <input type="text" name="guardianPrimPhone" class="form-control" required id="guardianPrimPhone" placeholder="Primary Phone"
+                 [(ngModel)]="guardianPrimPhone">
+        </div>
+        <div class="form-group">
+          <label for="guardianSecPhone">Secondary Phone</label>
+          <input type="text" name="guardianSecPhone" class="form-control" id="guardianSecPhone" placeholder="Secondary Phone (optional)"
+                 [(ngModel)]="guardianSecPhone">
+        </div>
+        <div class="form-group">
+          <label for="guardianEmail">Email</label>
+          <input type="text" name="guardianEmail" class="form-control" required id="guardianEmail" placeholder="Email"
+                 [(ngModel)]="guardianEmail">
+        </div>
+        <div class="form-group">
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!enrollFamilyForm.form.valid">Enroll Family</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </form>
+      <br>
+      <br>
+
+
+
+      <!--<form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm)">-->
+        <!--<div class="form-group">-->
+          <!--<label>Name</label>-->
+          <!--<input type="text" class="form-control" formControlName="name">-->
+          <!--<small *ngIf="!myForm.controls.name.valid" class="text-danger">-->
+            <!--Name is required (minimum 5 characters).-->
+          <!--</small>-->
+        <!--</div>-->
+        <!--&lt;!&ndash;addresses&ndash;&gt;-->
+        <!--<div formArrayName="addresses">-->
+          <!--<div *ngFor="let address of myForm.controls.addresses.controls; let i=index" class="panel panel-default">-->
+            <!--<div class="panel-heading">-->
+              <!--<span>Address {{i + 1}}</span>-->
+              <!--<span class="glyphicon glyphicon-remove pull-right" *ngIf="myForm.controls.addresses.controls.length > 1" (click)="removeAddress(i)"></span>-->
+            <!--</div>-->
+            <!--<div class="panel-body" [formGroupName]="i">-->
+              <!--<address [group]="myForm.controls.addresses.controls[i]"></address>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="margin-20">-->
+          <!--<a (click)="addAddress()" style="cursor: default">-->
+            <!--Add another address +-->
+          <!--</a>-->
+        <!--</div>-->
+
+        <!--<div class="margin-20">-->
+          <!--<button type="submit" class="btn btn-primary pull-right" [disabled]="!myForm.valid">Submit</button>-->
+        <!--</div>-->
+        <!--<div class="clearfix"></div>-->
+
+        <!--<div class="margin-20">-->
+          <!--<div>myForm details:-</div>-->
+          <!--<pre>Is myForm valid?: <br>{{myForm.valid | json}}</pre>-->
+          <!--<pre>form value: <br>{{myForm.value | json}}</pre>-->
+        <!--</div>-->
+      <!--</form>-->
+    </div>
+  </div>
+</div>

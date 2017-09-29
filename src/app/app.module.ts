@@ -2,11 +2,14 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BaseRequestOptions, HttpModule} from "@angular/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
-import {ButtonModule, DataTableModule, InputSwitchModule, InputTextModule, PasswordModule} from "primeng/primeng";
+import {
+  ButtonModule, CalendarModule, DataTableModule, InputSwitchModule, InputTextModule,
+  PasswordModule
+} from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from './login/login.component';
 import {AuthGuard} from "./guards/auth.guard";
@@ -24,6 +27,8 @@ import {StudentService} from "./service/student.service";
 import {GuardianService} from "./service/guardian.service";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { SuccessAlertComponent } from './success-alert/success-alert.component';
+import { BackButtonComponent } from './back-button/back-button.component';
+import { EnrollFamilyComponent } from './enroll-family/enroll-family.component';
 
 @NgModule({
   declarations: [
@@ -37,19 +42,23 @@ import { SuccessAlertComponent } from './success-alert/success-alert.component';
     FamilyListComponent,
     FamilyDetailsComponent,
     UserProfileComponent,
-    SuccessAlertComponent
+    SuccessAlertComponent,
+    BackButtonComponent,
+    EnrollFamilyComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     AppRoutingModule,
     DataTableModule,
     InputTextModule,
     PasswordModule,
     InputSwitchModule,
-    ButtonModule
+    ButtonModule,
+    CalendarModule
   ],
   providers: [
     AuthGuard,
