@@ -22,9 +22,6 @@ export class FamilyDetailsComponent implements OnInit {
   studentsStatus: Status;
   guardiansStatus: Status;
 
-  selectedStudents: Student[];
-  selectedGuardians: Guardian[];
-
   studentsLoading: boolean = true;
   guardiansLoading: boolean = true;
 

@@ -3,10 +3,9 @@
   <br>
   <app-error-alert [status]="studentsStatus"></app-error-alert>
   <div class="row justify-content-md-center">
-    <p-dataTable [value]="students" [(selection)]="selectedStudents" [loading]="studentsLoading"
+    <p-dataTable [value]="students"[loading]="studentsLoading"
                  loadingIcon="fa-spinner">
       <p-header>Students</p-header>
-      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
       <p-column field="fname" header="First Name"></p-column>
       <p-column field="mi" header="Middle Initial"></p-column>
       <p-column field="lname" header="Last Name"></p-column>
@@ -14,10 +13,9 @@
       <p-footer></p-footer>
     </p-dataTable>
     <br>
-    <p-dataTable [value]="guardians" [(selection)]="selectedGuardians" [loading]="guardiansLoading"
+    <p-dataTable [value]="guardians" [loading]="guardiansLoading"
                  loadingIcon="fa-spinner">
       <p-header>Guardians</p-header>
-      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
       <p-column field="fname" header="First Name"></p-column>
       <p-column field="mi" header="Middle Initial"></p-column>
       <p-column field="lname" header="Last Name"></p-column>

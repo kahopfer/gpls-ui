@@ -9,7 +9,7 @@
   <p-dataTable [value]="families" [rows]="10" [paginator]="true" [globalFilter]="gb" selectionMode="single"
                [(selection)]="selectedFamily" [loading]="loading" loadingIcon="fa-spinner"
                (onRowSelect)="onRowSelect($event) " #dt>
-    <p-header>Parents</p-header>
+    <p-header>Families</p-header>
     <p-column field="familyName" header="Family Name"></p-column>
     <p-footer>
       <button *ngIf="admin == true" type="button" class="btn btn-success" (click)="goToEnrollFamilyForm()">Enroll a New Family</button>
