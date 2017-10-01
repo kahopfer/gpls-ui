@@ -25,7 +25,7 @@ export class StudentService {
       .catch(this.handleError);
   }
 
-  createStudent(id: ObjectID, fname: string, lname: string, mi: string, birthdate: Date, notes: string, familyUnitID: ObjectID): Promise<any> {
+  createStudent(id: ObjectID, fname: string, lname: string, mi: string, birthdate: Date, notes: string, familyUnitID: ObjectID) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
@@ -41,9 +41,7 @@ export class StudentService {
       birthdate: birthdate,
       notes: notes,
       familyUnitID: familyUnitID
-    }), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    }), {headers: headers});
   }
 
   private handleError(error: any): Promise<any> {

@@ -26,7 +26,7 @@ export class GuardianService {
   }
 
   createGuardian(id: ObjectID, fname: string, lname: string, mi: string, relationship: string, primPhone: string,
-                 secPhone: string, email: string, familyUnitID: ObjectID): Promise<any> {
+                 secPhone: string, email: string, familyUnitID: ObjectID) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
@@ -44,9 +44,7 @@ export class GuardianService {
       secPhone: secPhone,
       email: email,
       familyUnitID: familyUnitID
-    }), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    }), {headers: headers});
   }
 
   private handleError(error: any): Promise<any> {

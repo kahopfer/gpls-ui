@@ -5,7 +5,8 @@ import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../service/family.service";
 import {StudentService} from "../service/student.service";
 import {GuardianService} from "../service/guardian.service";
-import { ObjectID } from 'bson';
+import {ObjectID} from 'bson';
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-enroll-family',
@@ -14,32 +15,15 @@ import { ObjectID } from 'bson';
 })
 export class EnrollFamilyComponent implements OnInit {
 
+  public enrollFamilyForm: FormGroup;
+
   enrollFamilyStatus: Status;
-  familyID: string;
-  familyName: string;
-  students: string[] = [];
-  guardians: string[] = [];
-
   enrollStudentStatus: Status;
-  studentID: string;
-  studentFname: string;
-  studentLname: string;
-  studentMi: string;
-  studentBirthDate: Date;
-  studentNotes: string;
-
   enrollGuardianStatus: Status;
-  guardianID: string;
-  guardianFname: string;
-  guardianLname: string;
-  guardianMi: string;
-  guardianRelationship: string;
-  guardianPrimPhone: string;
-  guardianSecPhone: string;
-  guardianEmail: string;
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
-              private guardianService: GuardianService, private router: Router, private location: Location) {
+              private guardianService: GuardianService, private router: Router, private location: Location,
+              private formBuilder: FormBuilder) {
     this.enrollFamilyStatus = {
       success: null,
       message: null
@@ -55,54 +39,116 @@ export class EnrollFamilyComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  createStudent(familyID: ObjectID) {
-    this.studentID = ObjectID();
-    this.studentService.createStudent(this.studentID, this.studentFname, this.studentLname, this.studentMi, this.studentBirthDate,
-      this.studentNotes, familyID).then(() => {
-      this.students.push(this.studentID);
-      this.enrollStudentStatus.success = true;
-      // this.location.back();
-      this.createGuardian(familyID);
-    }).catch(err => {
-      console.log(err);
-      this.enrollStudentStatus.success = false;
-      this.enrollStudentStatus.message = 'An error occurred while enrolling the student ' + this.studentFname + ' ' + this.studentLname;
+    this.enrollFamilyForm = this.formBuilder.group({
+      familyName: ['', Validators.required],
+      students: this.formBuilder.array([
+        this.initStudent()
+      ]),
+      guardians: this.formBuilder.array([
+        this.initGuardian()
+      ])
     })
   }
 
-  createGuardian(familyID: ObjectID) {
-    this.guardianID = ObjectID();
-    this.guardianService.createGuardian(this.guardianID, this.guardianFname, this.guardianLname, this.guardianMi,
-      this.guardianRelationship, this.guardianPrimPhone, this.guardianSecPhone, this.guardianEmail, familyID).then(() => {
-      this.guardians.push(this.guardianID);
-      this.enrollGuardianStatus.success = true;
-      // this.location.back();
-      this.createFamily(familyID);
-    }).catch(err => {
-      console.log(err);
-      this.enrollGuardianStatus.success = false;
-      this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian ' + this.guardianFname + ' ' + this.guardianLname;
+  initStudent() {
+    return this.formBuilder.group({
+      fname: ['', Validators.required],
+      lname: ['', Validators.required],
+      mi: ['', Validators.required],
+      birthDate: ['', Validators.required],
+      notes: ['']
     })
   }
 
-  createFamily(familyID: ObjectID) {
-    this.familyService.createFamily(familyID, this.familyName, this.students, this.guardians).then(() => {
-      this.enrollFamilyStatus.success = true;
-      this.location.back();
-    }).catch(err => {
-      console.log(err);
-      this.enrollFamilyStatus.success = false;
-      this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + this.familyName + ' family';
+  initGuardian() {
+    return this.formBuilder.group({
+      fname: ['', Validators.required],
+      lname: ['', Validators.required],
+      mi: ['', Validators.required],
+      relationship: ['', Validators.required],
+      primPhone: ['', Validators.required],
+      secPhone: [''],
+      email: ['', Validators.required]
     })
   }
 
-  enrollFamily() {
-    this.familyID = ObjectID();
-    this.createStudent(this.familyID);
-    // this.createGuardian(this.familyID);
-    // this.createFamily(this.familyID);
+  addStudent() {
+    const control = <FormArray>this.enrollFamilyForm.controls['students'];
+    control.push(this.initStudent());
+  }
+
+  removeStudent(i: number) {
+    const control = <FormArray>this.enrollFamilyForm.controls['students'];
+    control.removeAt(i);
+  }
+
+  addGuardian() {
+    const control = <FormArray>this.enrollFamilyForm.controls['guardians'];
+    control.push(this.initGuardian());
+  }
+
+  removeGuardian(i: number) {
+    const control = <FormArray>this.enrollFamilyForm.controls['guardians'];
+    control.removeAt(i);
+  }
+
+  enrollFamily(model: FormGroup) {
+    let familyID = ObjectID();
+
+    let students: string[] = [];
+    let guardians: string[] = [];
+
+    let createStudentPromise = new Promise((resolve, reject) => {
+      for (let studentIndex in model.value.students) {
+        let studentID = ObjectID();
+        students.push(studentID);
+        this.studentService.createStudent(studentID, model.value.students[studentIndex].fname,
+          model.value.students[studentIndex].lname, model.value.students[studentIndex].mi,
+          model.value.students[studentIndex].birthDate, model.value.students[studentIndex].notes,
+          familyID).subscribe(() => {
+          this.enrollStudentStatus.success = true;
+        }, err => {
+          console.log(err);
+          this.enrollStudentStatus.success = false;
+          this.enrollStudentStatus.message = 'An error occurred while enrolling the student ' + model.value.students[studentIndex].fname + ' ' + model.value.students[studentIndex].lname;
+          reject();
+        });
+      }
+      resolve(students);
+    });
+
+    let createGuardiansPromise = new Promise((resolve, reject) => {
+      for (let guardianIndex in model.value.guardians) {
+        let guardianID = ObjectID();
+        guardians.push(guardianID);
+        this.guardianService.createGuardian(guardianID, model.value.guardians[guardianIndex].fname,
+          model.value.guardians[guardianIndex].lname, model.value.guardians[guardianIndex].mi,
+          model.value.guardians[guardianIndex].relationship, model.value.guardians[guardianIndex].primPhone,
+          model.value.guardians[guardianIndex].secPhone, model.value.guardians[guardianIndex].email,
+          familyID).subscribe(() => {
+          this.enrollGuardianStatus.success = true;
+        }, err => {
+          console.log(err);
+          this.enrollGuardianStatus.success = false;
+          this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian ' + model.value.guardians[guardianIndex].fname + ' ' + model.value.guardians[guardianIndex].lname;
+          reject();
+        });
+      }
+      resolve(guardians);
+    });
+
+    createStudentPromise.then(() => {
+      createGuardiansPromise.then(() => {
+        this.familyService.createFamily(familyID, model.value.familyName, students, guardians).subscribe(() => {
+          this.enrollFamilyStatus.success = true;
+          this.location.back();
+        }, err => {
+          console.log(err);
+          this.enrollFamilyStatus.success = false;
+          this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + model.value.familyName + ' family';
+        });
+      });
+    })
   }
 
   cancel() {

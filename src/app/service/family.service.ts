@@ -38,7 +38,7 @@ export class FamilyService {
       .catch(this.handleError);
   }
 
-  createFamily(id: ObjectID, familyName: string, students: ObjectID[], guardians: ObjectID[]): Promise<any> {
+  createFamily(id: ObjectID, familyName: string, students: ObjectID[], guardians: ObjectID[]) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
@@ -51,9 +51,7 @@ export class FamilyService {
       familyName: familyName,
       students: students,
       guardians: guardians
-    }), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    }), {headers: headers});
   }
 
   private handleError(error: any): Promise<any> {
