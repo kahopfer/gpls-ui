@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
 import {Location} from '@angular/common';
 import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../service/family.service";
@@ -22,7 +21,7 @@ export class EnrollFamilyComponent implements OnInit {
   enrollGuardianStatus: Status;
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
-              private guardianService: GuardianService, private router: Router, private location: Location,
+              private guardianService: GuardianService, private location: Location,
               private formBuilder: FormBuilder) {
     this.enrollFamilyStatus = {
       success: null,
@@ -103,10 +102,8 @@ export class EnrollFamilyComponent implements OnInit {
   enrollFamily(model: FormGroup) {
     let familyID = ObjectID();
 
-    let students: string[] = [];
-    let guardians: string[] = [];
-
     let createStudentPromise = new Promise((resolve, reject) => {
+      let students: string[] = [];
       for (let studentIndex in model.value.students) {
         let studentID = ObjectID();
         students.push(studentID);
@@ -126,6 +123,7 @@ export class EnrollFamilyComponent implements OnInit {
     });
 
     let createGuardiansPromise = new Promise((resolve, reject) => {
+      let guardians: string[] = [];
       for (let guardianIndex in model.value.guardians) {
         let guardianID = ObjectID();
         guardians.push(guardianID);
@@ -142,12 +140,11 @@ export class EnrollFamilyComponent implements OnInit {
           reject();
         });
       }
-      //TODO: Remove guardians from resolve()
       resolve(guardians);
     });
 
-    createStudentPromise.then(() => {
-      createGuardiansPromise.then(() => {
+    createStudentPromise.then((students: string[]) => {
+      createGuardiansPromise.then((guardians: string[]) => {
         this.familyService.createFamily(familyID, model.value.familyName, students, guardians).subscribe(() => {
           this.enrollFamilyStatus.success = true;
           this.location.back();

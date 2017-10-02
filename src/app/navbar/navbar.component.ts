@@ -8,7 +8,7 @@ import {AuthenticationService} from "../service/authentication.service";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  title = 'GPLS Before/After Care';
+  title = 'GPLS Care Tracker';
   isLoggedIn$: Observable<boolean>;
   username: string;
   fullName: string;
