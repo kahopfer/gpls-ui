@@ -16,7 +16,7 @@ export class FamilyListComponent implements OnInit {
   families: Family[] = [];
   familiesStatus: Status;
   selectedFamily: Family;
-  loading: boolean = false;
+  loading: boolean = true;
   admin: boolean;
 
   constructor(private familyService: FamilyService, private authService: AuthenticationService, private router: Router) {
@@ -36,7 +36,7 @@ export class FamilyListComponent implements OnInit {
   }
 
   getFamilies(): void {
-    this.loading = false;
+    this.loading = true;
     this.familyService.getFamilies().then(families => {
       this.families = families.json().families;
       this.familiesStatus.success = true;
@@ -45,7 +45,7 @@ export class FamilyListComponent implements OnInit {
       this.familiesStatus.success = false;
       this.familiesStatus.message = 'An error occurred while getting the list of families';
     });
-    this.loading = true;
+    this.loading = false;
   }
 
   onRowSelect(event) {
