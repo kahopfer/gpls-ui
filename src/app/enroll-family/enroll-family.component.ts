@@ -142,6 +142,7 @@ export class EnrollFamilyComponent implements OnInit {
           reject();
         });
       }
+      //TODO: Remove guardians from resolve()
       resolve(guardians);
     });
 
