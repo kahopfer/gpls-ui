@@ -72,6 +72,14 @@ export class EnrollFamilyComponent implements OnInit {
     })
   }
 
+  getStudents(enrollFamilyForm){
+    return enrollFamilyForm.get('students').controls
+  }
+
+  getGuardians(enrollFamilyForm){
+    return enrollFamilyForm.get('guardians').controls
+  }
+
   addStudent() {
     const control = <FormArray>this.enrollFamilyForm.controls['students'];
     control.push(this.initStudent());

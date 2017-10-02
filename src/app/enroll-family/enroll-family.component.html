@@ -17,11 +17,11 @@
         </div>
         <!--students-->
         <div formArrayName="students">
-          <div *ngFor="let student of enrollFamilyForm.controls.students.controls; let i=index" class="card">
+          <div *ngFor="let student of getStudents(enrollFamilyForm); let i=index" class="card">
             <div class="card-header">
               <span>Student {{i + 1}}</span>
               <!--<span class="glyphicon glyphicon-remove pull-right" *ngIf="enrollFamilyForm.controls.students.controls.length > 1" (click)="removeStudent(i)"></span>-->
-              <button type="button" class="close" aria-label="Close" *ngIf="enrollFamilyForm.controls.students.controls.length > 1" (click)="removeStudent(i)">
+              <button type="button" class="close" aria-label="Close" *ngIf="getStudents(enrollFamilyForm).length > 1" (click)="removeStudent(i)">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -29,28 +29,28 @@
               <div class="form-group">
                 <label for="studentFname">First Name</label>
                 <input type="text" formControlName="fname" class="form-control" required id="studentFname" placeholder="First Name">
-                <small [hidden]="enrollFamilyForm.controls.students.controls[i].controls.fname.valid" class="text-danger">
+                <small [hidden]="student.controls.fname.valid" class="text-danger">
                   First name is required
                 </small>
               </div>
               <div class="form-group">
                 <label for="studentMi">Middle Initial</label>
                 <input type="text" formControlName="mi" class="form-control" required id="studentMi" placeholder="Middle Initial">
-                <small [hidden]="enrollFamilyForm.controls.students.controls[i].controls.mi.valid" class="text-danger">
+                <small [hidden]="student.controls.mi.valid" class="text-danger">
                   Middle initial is required
                 </small>
               </div>
               <div class="form-group">
                 <label for="studentLname">Last Name</label>
                 <input type="text" formControlName="lname" class="form-control" required id="studentLname" placeholder="Last Name">
-                <small [hidden]="enrollFamilyForm.controls.students.controls[i].controls.lname.valid" class="text-danger">
+                <small [hidden]="student.controls.lname.valid" class="text-danger">
                   Last name is required
                 </small>
               </div>
               <div class="form-group">
                 <label for="studentBirthDate">Birth Date</label>
                 <p-calendar id="studentBirthDate" formControlName="birthDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2050"></p-calendar> {{birthDate|date}}
-                <small [hidden]="enrollFamilyForm.controls.students.controls[i].controls.birthDate.valid" class="text-danger">
+                <small [hidden]="student.controls.birthDate.valid" class="text-danger">
                   Birth date is required
                 </small>
               </div>
@@ -70,10 +70,10 @@
         <br>
         <!--guardians-->
         <div formArrayName="guardians">
-          <div *ngFor="let guardian of enrollFamilyForm.controls.guardians.controls; let i=index" class="card">
+          <div *ngFor="let guardian of getGuardians(enrollFamilyForm); let i=index" class="card">
             <div class="card-header">
               <span>Guardian {{i + 1}}</span>
-              <button type="button" class="close" aria-label="Close" *ngIf="enrollFamilyForm.controls.guardians.controls.length > 1" (click)="removeGuardian(i)">
+              <button type="button" class="close" aria-label="Close" *ngIf="getGuardians(enrollFamilyForm).length > 1" (click)="removeGuardian(i)">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -81,21 +81,21 @@
               <div class="form-group">
                 <label for="guardianFname">First Name</label>
                 <input type="text" formControlName="fname" class="form-control" required id="guardianFname" placeholder="First Name">
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.fname.valid" class="text-danger">
+                <small [hidden]="guardian.controls.fname.valid" class="text-danger">
                   First name is required
                 </small>
               </div>
               <div class="form-group">
                 <label for="guardianMi">Middle Initial</label>
                 <input type="text" formControlName="mi" class="form-control" required id="guardianMi" placeholder="Middle Initial">
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.mi.valid" class="text-danger">
+                <small [hidden]="guardian.controls.mi.valid" class="text-danger">
                   Middle initial is required
                 </small>
               </div>
               <div class="form-group">
                 <label for="guardianLname">Last Name</label>
                 <input type="text" formControlName="lname" class="form-control" required id="guardianLname" placeholder="Last Name">
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.lname.valid" class="text-danger">
+                <small [hidden]="guardian.controls.lname.valid" class="text-danger">
                   Last name is required
                 </small>
               </div>
@@ -114,14 +114,15 @@
                   <option value="Neighbor">Neighbor</option>
                   <option value="Other">Other</option>
                 </select>
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.relationship.valid" class="text-danger">
+                <small [hidden]="guardian.controls.relationship.valid" class="text-danger">
                   Relationship is required
                 </small>
               </div>
+              <!--TODO: Add date format-->
               <div class="form-group">
                 <label for="guardianPrimPhone">Primary Phone</label>
                 <input type="text" formControlName="primPhone" class="form-control" required id="guardianPrimPhone" placeholder="Primary Phone">
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.primPhone.valid" class="text-danger">
+                <small [hidden]="guardian.controls.primPhone.valid" class="text-danger">
                   Primary phone is required
                 </small>
               </div>
@@ -132,7 +133,7 @@
               <div class="form-group">
                 <label for="guardianEmail">Email</label>
                 <input type="text" formControlName="email" class="form-control" required id="guardianEmail" placeholder="Email">
-                <small [hidden]="enrollFamilyForm.controls.guardians.controls[i].controls.email.valid" class="text-danger">
+                <small [hidden]="guardian.controls.email.valid" class="text-danger">
                   Email address is required
                 </small>
               </div>
