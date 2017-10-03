@@ -20,6 +20,8 @@ export class EnrollFamilyComponent implements OnInit {
   enrollStudentStatus: Status;
   enrollGuardianStatus: Status;
 
+  mask: any[] = ['+', '1', ' ', '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+
   constructor(private familyService: FamilyService, private studentService: StudentService,
               private guardianService: GuardianService, private location: Location,
               private formBuilder: FormBuilder) {
@@ -53,7 +55,7 @@ export class EnrollFamilyComponent implements OnInit {
     return this.formBuilder.group({
       fname: ['', Validators.required],
       lname: ['', Validators.required],
-      mi: ['', Validators.required],
+      mi: ['', [Validators.required, Validators.maxLength(1)]],
       birthDate: ['', Validators.required],
       notes: ['']
     })
@@ -63,11 +65,11 @@ export class EnrollFamilyComponent implements OnInit {
     return this.formBuilder.group({
       fname: ['', Validators.required],
       lname: ['', Validators.required],
-      mi: ['', Validators.required],
+      mi: ['', [Validators.required, Validators.maxLength(1)]],
       relationship: ['', Validators.required],
-      primPhone: ['', Validators.required],
-      secPhone: [''],
-      email: ['', Validators.required]
+      primPhone: ['', [Validators.required, Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],
+      secPhone: ['', [Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],
+      email: ['', [Validators.required, Validators.pattern(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)]]
     })
   }
 

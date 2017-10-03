@@ -29,6 +29,7 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
 import { SuccessAlertComponent } from './success-alert/success-alert.component';
 import { BackButtonComponent } from './back-button/back-button.component';
 import { EnrollFamilyComponent } from './enroll-family/enroll-family.component';
+import {TextMaskModule} from "angular2-text-mask";
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { EnrollFamilyComponent } from './enroll-family/enroll-family.component';
     PasswordModule,
     InputSwitchModule,
     ButtonModule,
-    CalendarModule
+    CalendarModule,
+    TextMaskModule
   ],
   providers: [
     AuthGuard,

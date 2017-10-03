@@ -14,7 +14,7 @@
           <input type="text" formControlName="familyName" class="form-control" required id="familyname"
                  placeholder="Family Name">
           <small *ngIf="!enrollFamilyForm.controls.familyName.valid" class="text-danger">
-            Family name is required
+            Family name is required.
           </small>
         </div>
         <h3>Students</h3>
@@ -36,7 +36,7 @@
                   <input type="text" formControlName="fname" class="form-control" required id="studentFname"
                          placeholder="First Name">
                   <small [hidden]="student.controls.fname.valid" class="text-danger">
-                    First name is required
+                    First name is required.
                   </small>
                 </div>
                 <div class="form-group">
@@ -44,7 +44,7 @@
                   <input type="text" formControlName="mi" class="form-control" required id="studentMi"
                          placeholder="Middle Initial">
                   <small [hidden]="student.controls.mi.valid" class="text-danger">
-                    Middle initial is required
+                    Middle initial is required (maximum 1 character).
                   </small>
                 </div>
                 <div class="form-group">
@@ -52,7 +52,7 @@
                   <input type="text" formControlName="lname" class="form-control" required id="studentLname"
                          placeholder="Last Name">
                   <small [hidden]="student.controls.lname.valid" class="text-danger">
-                    Last name is required
+                    Last name is required.
                   </small>
                 </div>
                 <div class="form-group">
@@ -61,7 +61,7 @@
                               [yearNavigator]="true" yearRange="1990:2050"></p-calendar>
                   {{birthDate|date}}
                   <small [hidden]="student.controls.birthDate.valid" class="text-danger">
-                    Birth date is required
+                    Birth date is required.
                   </small>
                 </div>
                 <div class="form-group">
@@ -99,7 +99,7 @@
                   <input type="text" formControlName="fname" class="form-control" required id="guardianFname"
                          placeholder="First Name">
                   <small [hidden]="guardian.controls.fname.valid" class="text-danger">
-                    First name is required
+                    First name is required.
                   </small>
                 </div>
                 <div class="form-group">
@@ -107,7 +107,7 @@
                   <input type="text" formControlName="mi" class="form-control" required id="guardianMi"
                          placeholder="Middle Initial">
                   <small [hidden]="guardian.controls.mi.valid" class="text-danger">
-                    Middle initial is required
+                    Middle initial is required (maximum 1 character).
                   </small>
                 </div>
                 <div class="form-group">
@@ -115,7 +115,7 @@
                   <input type="text" formControlName="lname" class="form-control" required id="guardianLname"
                          placeholder="Last Name">
                   <small [hidden]="guardian.controls.lname.valid" class="text-danger">
-                    Last name is required
+                    Last name is required.
                   </small>
                 </div>
                 <div class="form-group">
@@ -134,29 +134,31 @@
                     <option value="Other">Other</option>
                   </select>
                   <small [hidden]="guardian.controls.relationship.valid" class="text-danger">
-                    Relationship is required
+                    Relationship is required.
                   </small>
                 </div>
-                <!--TODO: Add date format-->
                 <div class="form-group">
                   <label for="guardianPrimPhone">Primary Phone</label>
                   <input type="text" formControlName="primPhone" class="form-control" required id="guardianPrimPhone"
-                         placeholder="Primary Phone">
+                         placeholder="+1 (123) 456-7890" [textMask]="{mask: mask}">
                   <small [hidden]="guardian.controls.primPhone.valid" class="text-danger">
-                    Primary phone is required
+                    Primary phone is required (must match pattern +1 (111) 111-1111).
                   </small>
                 </div>
                 <div class="form-group">
                   <label for="guardianSecPhone">Secondary Phone</label>
                   <input type="text" formControlName="secPhone" class="form-control" id="guardianSecPhone"
-                         placeholder="Secondary Phone (optional)">
+                         placeholder="+1 (123) 456-7890 (optional)" [textMask]="{mask: mask}">
+                  <small [hidden]="guardian.controls.secPhone.valid" class="text-danger">
+                    Must match pattern +1 (111) 111-1111.
+                  </small>
                 </div>
                 <div class="form-group">
                   <label for="guardianEmail">Email</label>
                   <input type="text" formControlName="email" class="form-control" required id="guardianEmail"
                          placeholder="Email">
                   <small [hidden]="guardian.controls.email.valid" class="text-danger">
-                    Email address is required
+                    Email address is required (must match pattern example@example.com).
                   </small>
                 </div>
               </div>
