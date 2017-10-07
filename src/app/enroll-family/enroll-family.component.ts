@@ -56,7 +56,7 @@ export class EnrollFamilyComponent implements OnInit {
       fname: ['', Validators.required],
       lname: ['', Validators.required],
       mi: ['', [Validators.required, Validators.maxLength(1)]],
-      birthDate: ['', Validators.required],
+      // birthDate: ['', Validators.required],
       notes: ['']
     })
   }
@@ -110,15 +110,12 @@ export class EnrollFamilyComponent implements OnInit {
         let studentID = ObjectID();
         students.push(studentID);
         this.studentService.createStudent(studentID, model.value.students[studentIndex].fname,
-          model.value.students[studentIndex].lname, model.value.students[studentIndex].mi,
-          model.value.students[studentIndex].birthDate, model.value.students[studentIndex].notes,
+          model.value.students[studentIndex].lname, model.value.students[studentIndex].mi, model.value.students[studentIndex].notes,
           familyID).subscribe(() => {
           this.enrollStudentStatus.success = true;
         }, err => {
-          console.log(err);
-          this.enrollStudentStatus.success = false;
-          this.enrollStudentStatus.message = 'An error occurred while enrolling the student ' + model.value.students[studentIndex].fname + ' ' + model.value.students[studentIndex].lname;
-          reject();
+          reject(err);
+          return;
         });
       }
       resolve(students);
@@ -136,10 +133,8 @@ export class EnrollFamilyComponent implements OnInit {
           familyID).subscribe(() => {
           this.enrollGuardianStatus.success = true;
         }, err => {
-          console.log(err);
-          this.enrollGuardianStatus.success = false;
-          this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian ' + model.value.guardians[guardianIndex].fname + ' ' + model.value.guardians[guardianIndex].lname;
-          reject();
+          reject(err);
+          return;
         });
       }
       resolve(guardians);
@@ -155,7 +150,15 @@ export class EnrollFamilyComponent implements OnInit {
           this.enrollFamilyStatus.success = false;
           this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + model.value.familyName + ' family';
         });
+      }).catch(err => {
+        console.log(err);
+        this.enrollGuardianStatus.success = false;
+        this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian';
       });
+    }).catch((err) => {
+      console.log(err);
+      this.enrollStudentStatus.success = false;
+      this.enrollStudentStatus.message = 'An error occurred while enrolling the student';
     })
   }
 

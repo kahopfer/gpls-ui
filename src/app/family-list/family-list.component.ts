@@ -3,7 +3,7 @@ import {Router} from "@angular/router";
 import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../models/family";
 import {FamilyService} from "../service/family.service";
-import { ObjectID } from 'bson';
+import {ObjectID} from 'bson';
 import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
@@ -15,7 +15,6 @@ export class FamilyListComponent implements OnInit {
 
   families: Family[] = [];
   familiesStatus: Status;
-  selectedFamily: Family;
   loading: boolean = true;
   admin: boolean;
 

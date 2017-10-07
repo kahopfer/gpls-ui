@@ -1,5 +1,6 @@
 <div class="container">
   <app-error-alert [status]="usersStatus"></app-error-alert>
+  <!--TODO: Add ability to reset passwords-->
   <div class="row justify-content-md-center">
     <p-dataTable [value]="users" [(selection)]="selectedUser" [loading]="loading" loadingIcon="fa-spinner">
       <p-header>Current Users in the System</p-header>
@@ -10,7 +11,9 @@
       <p-column field="authorities" header="Authorities"></p-column>
       <p-footer>
         <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
-        <button type="button" class="btn btn-danger" [disabled]="selectedUser == null" (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User</button>
+        <button type="button" class="btn btn-danger" [disabled]="selectedUser == null"
+                (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User
+        </button>
         <app-back-button></app-back-button>
       </p-footer>
     </p-dataTable>

@@ -7,7 +7,7 @@ import {BaseRequestOptions, HttpModule} from "@angular/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
-  ButtonModule, CalendarModule, DataTableModule, InputSwitchModule, InputTextModule,
+  ButtonModule, CalendarModule, DataTableModule, DialogModule, InputSwitchModule, InputTextModule,
   PasswordModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -60,7 +60,8 @@ import {TextMaskModule} from "angular2-text-mask";
     InputSwitchModule,
     ButtonModule,
     CalendarModule,
-    TextMaskModule
+    TextMaskModule,
+    DialogModule
   ],
   providers: [
     AuthGuard,

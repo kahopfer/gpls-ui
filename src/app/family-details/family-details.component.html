@@ -1,20 +1,33 @@
 <div class="container">
+  <!--TODO: Maybe add ability to change family name-->
   <h2>{{family.familyName}}</h2>
+  <br>
+  <h5>Select a student or guardian to edit or delete</h5>
+  <app-error-alert [status]="familyStatus"></app-error-alert>
   <br>
   <app-error-alert [status]="studentsStatus"></app-error-alert>
   <div class="row justify-content-md-center">
-    <p-dataTable [value]="students"[loading]="studentsLoading"
-                 loadingIcon="fa-spinner">
+    <!--TODO: Make it so only admins can select rows-->
+    <p-dataTable [value]="students" selectionMode="single" [(selection)]="selectedStudent" [loading]="studentsLoading"
+                 loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false"
+                 [responsive]="true">
       <p-header>Students</p-header>
       <p-column field="fname" header="First Name"></p-column>
       <p-column field="mi" header="Middle Initial"></p-column>
       <p-column field="lname" header="Last Name"></p-column>
       <p-column field="notes" header="Notes"></p-column>
-      <p-footer></p-footer>
+      <p-footer>
+        <!--TODO: Make it so only admins can add students/guardians-->
+        <div class="ui-helper-clearfix" style="width:100%">
+          <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddStudent()"
+                  label="Add new student"></button>
+        </div>
+      </p-footer>
     </p-dataTable>
     <br>
-    <p-dataTable [value]="guardians" [loading]="guardiansLoading"
-                 loadingIcon="fa-spinner">
+    <p-dataTable [value]="guardians" selectionMode="single" [(selection)]="selectedGuardian"
+                 [loading]="guardiansLoading" [metaKeySelection]="false"
+                 loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
       <p-header>Guardians</p-header>
       <p-column field="fname" header="First Name"></p-column>
       <p-column field="mi" header="Middle Initial"></p-column>
@@ -23,8 +36,109 @@
       <p-column field="primPhone" header="Primary Phone"></p-column>
       <p-column field="secPhone" header="Secondary Phone"></p-column>
       <p-footer>
-        <app-back-button></app-back-button>
+        <div class="ui-helper-clearfix" style="width:100%">
+          <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddGuardian()"
+                  label="Add new guardian"></button>
+        </div>
       </p-footer>
     </p-dataTable>
+    <button type="button" class="btn btn-danger" (click)="deleteFamily()">Delete This Family</button>
+    <app-back-button></app-back-button>
+
+
+    <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
+              [modal]="true">
+      <app-error-alert [status]="studentStatus"></app-error-alert>
+      <!--TODO: Add form validation-->
+      <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="student">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="studentFname">First Name</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="studentFname" [(ngModel)]="student.fname"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="studentMi">Middle Initial</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="studentMi" [(ngModel)]="student.mi"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="studentLname">Last Name</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="studentLname" [(ngModel)]="student.lname"/></div>
+        </div>
+        <!--<div class="ui-grid-row">-->
+        <!--<div class="ui-grid-col-4"><label for="studentBirthDate">Birth Date</label></div>-->
+        <!--<div class="ui-grid-col-8"><p-calendar id="studentBirthDate" id="studentBirthDate" [(ngModel)]="student.birthdate" [monthNavigator]="true"-->
+        <!--[yearNavigator]="true" yearRange="1990:2050"></p-calendar>-->
+        <!--{{student.birthdate|date}}</div>-->
+        <!--</div>-->
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="studentNotes">Notes</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="studentNotes" [(ngModel)]="student.notes"/></div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button *ngIf="newStudent === false" type="button" pButton icon="fa-close"
+                  (click)="deleteStudent(student._id)" label="Delete"></button>
+          <button type="button" pButton icon="fa-check" (click)="saveStudent(student)" label="Save"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+
+
+    <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
+              [modal]="true">
+      <app-error-alert [status]="guardianStatus"></app-error-alert>
+      <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="guardian">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianFname">First Name</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianFname" [(ngModel)]="guardian.fname"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianMi">Middle Initial</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianMi" [(ngModel)]="guardian.mi"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianLname">Last Name</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianLname" [(ngModel)]="guardian.lname"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianRelationship">Relationship</label></div>
+          <div class="ui-grid-col-8"><select id="guardianRelationship" [(ngModel)]="guardian.relationship"
+                                             class="custom-select">
+            <option></option>
+            <option value="Father">Father</option>
+            <option value="Mother">Mother</option>
+            <option value="Grandfather">Grandfather</option>
+            <option value="Grandmother">Grandmother</option>
+            <option value="Stepfather">Stepfather</option>
+            <option value="Stepmother">Stepmother</option>
+            <option value="Aunt">Aunt</option>
+            <option value="Uncle">Uncle</option>
+            <option value="Neighbor">Neighbor</option>
+            <option value="Other">Other</option>
+          </select></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianPrimPhone">Primary Phone</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianPrimPhone" [textMask]="{mask: mask}"
+                                            [(ngModel)]="guardian.primPhone"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianSecPhone">Secondary Phone</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianSecPhone" [textMask]="{mask: mask}"
+                                            [(ngModel)]="guardian.secPhone"/></div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label for="guardianEmail">Email</label></div>
+          <div class="ui-grid-col-8"><input pInputText id="guardianEmail" [(ngModel)]="guardian.email"/></div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button *ngIf="newGuardian === false" type="button" pButton icon="fa-close"
+                  (click)="deleteGuardian(guardian._id)" label="Delete"></button>
+          <button type="button" pButton icon="fa-check" (click)="saveGuardian(guardian)" label="Save"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
   </div>
 </div>

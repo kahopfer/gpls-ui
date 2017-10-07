@@ -2,7 +2,8 @@ import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
-import { ObjectID } from 'bson';
+import {ObjectID} from 'bson';
+import {Family} from "../models/family";
 
 @Injectable()
 export class FamilyService {
@@ -52,6 +53,33 @@ export class FamilyService {
       students: students,
       guardians: guardians
     }), {headers: headers});
+  }
+
+  updateFamily(family: Family): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/families/${family._id}`;
+    return this.http.put(url, JSON.stringify(family), {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  deleteFamily(id: string): Promise<void> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/families/${id}`;
+    return this.http.delete(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
