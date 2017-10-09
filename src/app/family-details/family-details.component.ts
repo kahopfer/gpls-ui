@@ -39,6 +39,9 @@ export class FamilyDetailsComponent implements OnInit {
   displayStudentDialog: boolean;
   displayGuardianDialog: boolean;
 
+  editableFamily: Family = new Family();
+  displayFamilyForm: boolean = false;
+
   mask: any[] = ['+', '1', ' ', '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   studentStatus: Status;
@@ -382,6 +385,35 @@ export class FamilyDetailsComponent implements OnInit {
         }
       })
     }
+  }
+
+  showUpdateFamilyForm() {
+    this.familyService.getFamily(this.route.snapshot.params['id']).then(family => {
+      this.editableFamily = JSON.parse(family._body);
+      this.displayFamilyForm = true;
+      this.familyStatus.success = true;
+    }).catch(err => {
+      console.log(err);
+      this.familyStatus.success = false;
+      this.familyStatus.message = 'An error occurred while loading the family';
+    })
+  }
+
+  hideUpdateFamilyForm() {
+    this.displayFamilyForm = false;
+  }
+
+  updateFamilyName() {
+    this.familyService.updateFamily(this.editableFamily).then(() => {
+      this.familyStatus.success = true;
+      this.displayFamilyForm = false;
+      this.editableFamily = null;
+      this.getFamily(this.route.snapshot.params['id']);
+    }).catch(err => {
+      console.log(err);
+      this.familyStatus.success = false;
+      this.familyStatus.message = 'An error occurred while saving the family';
+    })
   }
 
   onStudentSelect(event) {

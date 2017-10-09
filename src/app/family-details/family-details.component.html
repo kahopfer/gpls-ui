@@ -1,8 +1,27 @@
 <div class="container">
-  <!--TODO: Maybe add ability to change family name-->
-  <h2>{{family.familyName}}</h2>
+  <div class="row" *ngIf="displayFamilyForm === false">
+    <div class="col col-lg-10">
+      <h2>{{family.familyName}}</h2>
+    </div>
+    <div class="col col-lg-2">
+      <button *ngIf="admin === true" type="button" class="btn btn-primary" (click)="showUpdateFamilyForm()">
+        <i class="fa fa-pencil"></i>
+        Edit Family Name
+      </button>
+    </div>
+  </div>
+  <form *ngIf="displayFamilyForm === true" #updateFamilyForm="ngForm" (ngSubmit)="updateFamilyName()">
+    <div class="form-group">
+      <label for="familyname">Family Name</label>
+      <input type="text" name="familyname" class="form-control" required id="familyname" placeholder="Family Name"
+             value="{{family.familyName}}"
+             [(ngModel)]="editableFamily.familyName">
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!updateFamilyForm.form.valid">Save</button>
+    <button type="button" class="btn btn-secondary" (click)="hideUpdateFamilyForm()">Cancel</button>
+  </form>
   <br>
-  <h5>Select a student or guardian to edit or delete</h5>
+  <h5 *ngIf="admin === true">Select a student or guardian to edit or delete</h5>
   <app-error-alert [status]="familyStatus"></app-error-alert>
   <br>
   <app-error-alert [status]="studentsStatus"></app-error-alert>
@@ -18,7 +37,8 @@
       <p-column field="notes" header="Notes"></p-column>
       <p-footer>
         <div class="ui-helper-clearfix" style="width:100%">
-          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddStudent()"
+          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left"
+                  (click)="showDialogToAddStudent()"
                   label="Add new student"></button>
         </div>
       </p-footer>
@@ -36,7 +56,8 @@
       <p-column field="secPhone" header="Secondary Phone"></p-column>
       <p-footer>
         <div class="ui-helper-clearfix" style="width:100%">
-          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddGuardian()"
+          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left"
+                  (click)="showDialogToAddGuardian()"
                   label="Add new guardian"></button>
         </div>
       </p-footer>
@@ -76,7 +97,8 @@
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
           <button *ngIf="newStudent === false && admin === true" type="button" pButton icon="fa-close"
                   (click)="deleteStudent(student._id)" label="Delete"></button>
-          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveStudent(student)" label="Save"></button>
+          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveStudent(student)"
+                  label="Save"></button>
         </div>
       </p-footer>
     </p-dialog>
@@ -134,17 +156,23 @@
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
           <button *ngIf="newGuardian === false && admin === true" type="button" pButton icon="fa-close"
                   (click)="deleteGuardian(guardian._id)" label="Delete"></button>
-          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveGuardian(guardian)" label="Save"></button>
+          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveGuardian(guardian)"
+                  label="Save"></button>
         </div>
       </p-footer>
     </p-dialog>
   </div>
-  <div class="row justify-content-md-center">
+  <div *ngIf="admin === true" class="row justify-content-md-center">
     <div class="col col-lg-2">
-      <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="deleteFamily()">Delete This Family</button>
+      <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="deleteFamily()">
+        Delete This Family
+      </button>
     </div>
     <div class="col col-lg-2">
       <app-back-button></app-back-button>
     </div>
+  </div>
+  <div *ngIf="admin === false" class="row justify-content-center">
+      <app-back-button></app-back-button>
   </div>
 </div>
