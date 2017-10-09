@@ -10,11 +10,16 @@ import {FamilyListComponent} from "./family-list/family-list.component";
 import {FamilyDetailsComponent} from "./family-details/family-details.component";
 import {UserProfileComponent} from "./user/user-profile/user-profile.component";
 import {EnrollFamilyComponent} from "./enroll-family/enroll-family.component";
+import {CheckInComponent} from "./check-in/check-in.component";
+import {CheckOutComponent} from "./check-out/check-out.component";
+import {CheckInDetailsComponent} from "./check-in-details/check-in-details.component";
+import {CheckOutDetailsComponent} from "./check-out-details/check-out-details.component";
+import {ManageRatesComponent} from "./manage-rates/manage-rates.component";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/family-list',
+    redirectTo: '/check-in',
     pathMatch: 'full'
   },
   {
@@ -50,6 +55,31 @@ const routes: Routes = [
     path: 'profile/:username',
     component: UserProfileComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'check-in',
+    component: CheckInComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'check-out',
+    component: CheckOutComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'check-in-details',
+    component: CheckInDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'check-out-details',
+    component: CheckOutDetailsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'manage-rates',
+    component: ManageRatesComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: '**',

@@ -7,6 +7,12 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['check-in']">Check In</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['check-out']">Check Out</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" [routerLink]="['family-list']">Families</a>
       </li>
     </ul>
@@ -22,6 +28,7 @@
           <div class="dropdown-menu dropdown-menu-right">
             <button class="dropdown-item" [routerLink]="['profile/', username]">View My Profile</button>
             <button *ngIf="admin == true" class="dropdown-item" [routerLink]="['users']">Manage Users</button>
+            <button *ngIf="admin == true" class="dropdown-item" [routerLink]="['manage-rates']">Manage Child Care Rates</button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" [routerLink]="['login']">Log Out</button>
           </div>

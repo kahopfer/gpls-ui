@@ -17,9 +17,8 @@
       <p-column field="lname" header="Last Name"></p-column>
       <p-column field="notes" header="Notes"></p-column>
       <p-footer>
-        <!--TODO: Make it so only admins can add students/guardians-->
         <div class="ui-helper-clearfix" style="width:100%">
-          <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddStudent()"
+          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddStudent()"
                   label="Add new student"></button>
         </div>
       </p-footer>
@@ -37,13 +36,12 @@
       <p-column field="secPhone" header="Secondary Phone"></p-column>
       <p-footer>
         <div class="ui-helper-clearfix" style="width:100%">
-          <button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddGuardian()"
+          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAddGuardian()"
                   label="Add new guardian"></button>
         </div>
       </p-footer>
     </p-dataTable>
-    <button type="button" class="btn btn-danger" (click)="deleteFamily()">Delete This Family</button>
-    <app-back-button></app-back-button>
+    <br>
 
 
     <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
@@ -76,9 +74,9 @@
       </div>
       <p-footer>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-          <button *ngIf="newStudent === false" type="button" pButton icon="fa-close"
+          <button *ngIf="newStudent === false && admin === true" type="button" pButton icon="fa-close"
                   (click)="deleteStudent(student._id)" label="Delete"></button>
-          <button type="button" pButton icon="fa-check" (click)="saveStudent(student)" label="Save"></button>
+          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveStudent(student)" label="Save"></button>
         </div>
       </p-footer>
     </p-dialog>
@@ -134,11 +132,19 @@
       </div>
       <p-footer>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-          <button *ngIf="newGuardian === false" type="button" pButton icon="fa-close"
+          <button *ngIf="newGuardian === false && admin === true" type="button" pButton icon="fa-close"
                   (click)="deleteGuardian(guardian._id)" label="Delete"></button>
-          <button type="button" pButton icon="fa-check" (click)="saveGuardian(guardian)" label="Save"></button>
+          <button *ngIf="admin === true" type="button" pButton icon="fa-check" (click)="saveGuardian(guardian)" label="Save"></button>
         </div>
       </p-footer>
     </p-dialog>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+      <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="deleteFamily()">Delete This Family</button>
+    </div>
+    <div class="col col-lg-2">
+      <app-back-button></app-back-button>
+    </div>
   </div>
 </div>

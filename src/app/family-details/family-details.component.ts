@@ -9,6 +9,7 @@ import {FamilyService} from "../service/family.service";
 import {StudentService} from "../service/student.service";
 import {GuardianService} from "../service/guardian.service";
 import {ObjectID} from 'bson';
+import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
   selector: 'app-family-details',
@@ -17,6 +18,8 @@ import {ObjectID} from 'bson';
 })
 
 export class FamilyDetailsComponent implements OnInit {
+  admin: boolean;
+
   family: Family = new Family;
   students: Student[] = [];
   guardians: Guardian[] = [];
@@ -49,7 +52,13 @@ export class FamilyDetailsComponent implements OnInit {
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
               private guardianService: GuardianService, private route: ActivatedRoute,
-              private location: Location) {
+              private location: Location, private authService: AuthenticationService) {
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    this.admin = currentUser && currentUser.admin;
+
+    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
+
     this.studentStatus = {
       success: null,
       message: null
@@ -80,6 +89,10 @@ export class FamilyDetailsComponent implements OnInit {
     this.getFamily(this.route.snapshot.params['id']);
     this.getStudents(this.route.snapshot.params['id']);
     this.getGuardians(this.route.snapshot.params['id']);
+  }
+
+  private changeAdmin(admin: boolean): void {
+    this.admin = admin;
   }
 
   getStudents(familyUnitID: string) {

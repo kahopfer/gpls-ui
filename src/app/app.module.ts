@@ -7,7 +7,7 @@ import {BaseRequestOptions, HttpModule} from "@angular/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
-  ButtonModule, CalendarModule, DataTableModule, DialogModule, InputSwitchModule, InputTextModule,
+  ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
   PasswordModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -30,6 +30,11 @@ import { SuccessAlertComponent } from './success-alert/success-alert.component';
 import { BackButtonComponent } from './back-button/back-button.component';
 import { EnrollFamilyComponent } from './enroll-family/enroll-family.component';
 import {TextMaskModule} from "angular2-text-mask";
+import { CheckInComponent } from './check-in/check-in.component';
+import { CheckOutComponent } from './check-out/check-out.component';
+import { CheckInDetailsComponent } from './check-in-details/check-in-details.component';
+import { CheckOutDetailsComponent } from './check-out-details/check-out-details.component';
+import { ManageRatesComponent } from './manage-rates/manage-rates.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +50,12 @@ import {TextMaskModule} from "angular2-text-mask";
     UserProfileComponent,
     SuccessAlertComponent,
     BackButtonComponent,
-    EnrollFamilyComponent
+    EnrollFamilyComponent,
+    CheckInComponent,
+    CheckOutComponent,
+    CheckInDetailsComponent,
+    CheckOutDetailsComponent,
+    ManageRatesComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +71,8 @@ import {TextMaskModule} from "angular2-text-mask";
     ButtonModule,
     CalendarModule,
     TextMaskModule,
-    DialogModule
+    DialogModule,
+    InputMaskModule
   ],
   providers: [
     AuthGuard,

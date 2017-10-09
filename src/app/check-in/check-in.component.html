@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+      <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+      <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+    </div>
+    <p-dataTable [value]="students" [(selection)]="selectedStudents" [globalFilter]="gb" #dt>
+      <p-header>Select students to check in</p-header>
+      <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+      <p-column field="fname" header="First Name"></p-column>
+      <p-column field="mi" header="Middle Initial"></p-column>
+      <p-column field="lname" header="Last Name"></p-column>
+      <p-footer>
+        <button type="button" class="btn btn-success" [disabled]="selectedStudents.length === 0" (click)="goToCheckInDetails()">Check In</button>
+      </p-footer>
+    </p-dataTable>
+</div>
