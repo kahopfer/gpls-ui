@@ -11,6 +11,7 @@
       <p-column field="authorities" header="Authorities"></p-column>
       <p-footer>
         <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
+        <button type="button" class="btn btn-primary" [disabled]="selectedUser == null" (click)="goToResetPasswordForm(selectedUser.username)">Reset Password for Selected User</button>
         <button type="button" class="btn btn-danger" [disabled]="selectedUser == null"
                 (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User
         </button>

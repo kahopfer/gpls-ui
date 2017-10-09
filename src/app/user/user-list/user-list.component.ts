@@ -57,6 +57,10 @@ export class UserListComponent implements OnInit {
     })
   }
 
+  goToResetPasswordForm(username: string) {
+    this.router.navigate(['/reset-password', username]);
+  }
+
   goToCreateUserForm() {
     this.router.navigate(['/create-user']);
   }

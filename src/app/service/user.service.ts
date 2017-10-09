@@ -79,6 +79,23 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  resetPassword(username: string, newPassword: string): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+    });
+    const url = `${this.gplsApiUrl}/users/resetPassword/${username}`;
+
+    return this.http.put(url, JSON.stringify({
+      username: username,
+      password: newPassword
+    }), {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
   deleteUser(userToDelete: string): Promise<void> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;

@@ -35,6 +35,7 @@ import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckInDetailsComponent } from './check-in-details/check-in-details.component';
 import { CheckOutDetailsComponent } from './check-out-details/check-out-details.component';
 import { ManageRatesComponent } from './manage-rates/manage-rates.component';
+import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { ManageRatesComponent } from './manage-rates/manage-rates.component';
     CheckOutComponent,
     CheckInDetailsComponent,
     CheckOutDetailsComponent,
-    ManageRatesComponent
+    ManageRatesComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
