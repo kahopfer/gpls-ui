@@ -70,7 +70,7 @@
 
     <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
       <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
-                [modal]="true" [width]="400" [minWidth]="240">
+                [modal]="true" [width]="400" [resizable]="false">
         <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
         <app-error-alert [status]="studentStatus"></app-error-alert>
         <div class="form-group">
@@ -114,7 +114,7 @@
 
     <form *ngIf="guardian" #guardianDetailsForm="ngForm" (ngSubmit)="saveGuardian(guardian)">
       <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
-                [modal]="true" [width]="550" [minWidth]="278">
+                [modal]="true" [width]="550" [resizable]="false">
         <!--[modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">-->
         <app-error-alert [status]="guardianStatus"></app-error-alert>
 
