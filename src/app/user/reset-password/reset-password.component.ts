@@ -13,7 +13,7 @@ import {NgForm} from "@angular/forms";
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   username: string;
   newPassword: string;
-  private sub: any;
+  private usernameSub: any;
   resetPasswordStatus: Status;
 
   constructor(private usersService: UserService, private route: ActivatedRoute) {
@@ -24,13 +24,13 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.usernameSub = this.route.params.subscribe(params => {
       this.username = params['username'];
     })
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.usernameSub.unsubscribe();
   }
 
   resetPassword(resetPasswordForm: NgForm): void {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Location} from '@angular/common';
 import {Status} from "../error-alert/error-alert.component";
@@ -17,7 +17,8 @@ import {AuthenticationService} from "../service/authentication.service";
   styleUrls: ['./family-details.component.css']
 })
 
-export class FamilyDetailsComponent implements OnInit {
+export class FamilyDetailsComponent implements OnInit, OnDestroy {
+  private adminSub: any;
   admin: boolean;
 
   family: Family = new Family;
@@ -60,8 +61,6 @@ export class FamilyDetailsComponent implements OnInit {
 
     this.admin = currentUser && currentUser.admin;
 
-    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
-
     this.studentStatus = {
       success: null,
       message: null
@@ -89,9 +88,14 @@ export class FamilyDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.adminSub = this.authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
     this.getFamily(this.route.snapshot.params['id']);
     this.getStudents(this.route.snapshot.params['id']);
     this.getGuardians(this.route.snapshot.params['id']);
+  }
+
+  ngOnDestroy() {
+    this.adminSub.unsubscribe();
   }
 
   private changeAdmin(admin: boolean): void {

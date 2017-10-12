@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../models/family";
@@ -11,17 +11,17 @@ import {AuthenticationService} from "../service/authentication.service";
   templateUrl: './family-list.component.html',
   styleUrls: ['./family-list.component.css']
 })
-export class FamilyListComponent implements OnInit {
+export class FamilyListComponent implements OnInit, OnDestroy {
 
   families: Family[] = [];
   familiesStatus: Status;
   loading: boolean = true;
+  private adminSub: any;
   admin: boolean;
 
   constructor(private familyService: FamilyService, private authService: AuthenticationService, private router: Router) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.admin = currentUser && currentUser.admin;
-    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
 
     this.familiesStatus = {
       success: null,
@@ -30,8 +30,13 @@ export class FamilyListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.adminSub = this.authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
     this.families = [];
     this.getFamilies();
+  }
+
+  ngOnDestroy() {
+    this.adminSub.unsubscribe();
   }
 
   getFamilies(): void {

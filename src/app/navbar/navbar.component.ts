@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {AuthenticationService} from "../service/authentication.service";
 
@@ -7,11 +7,17 @@ import {AuthenticationService} from "../service/authentication.service";
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   title = 'GPLS Care Tracker';
   isLoggedIn$: Observable<boolean>;
+
+  private usernameSub: any;
   username: string;
+
+  private fullNameSub: any;
   fullName: string;
+
+  private adminSub: any;
   admin: boolean;
 
   constructor(private authService: AuthenticationService) {
@@ -20,14 +26,20 @@ export class NavbarComponent implements OnInit {
     this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
     this.username = currentUser && currentUser.username;
     this.admin = currentUser && currentUser.admin;
-
-    authService.getLoggedInName.subscribe(name => this.changeFullName(name));
-    authService.getUsername.subscribe(username => this.changeUsername(username));
-    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
   }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
+
+    this.fullNameSub = this.authService.getLoggedInName.subscribe(name => this.changeFullName(name));
+    this.usernameSub = this.authService.getUsername.subscribe(username => this.changeUsername(username));
+    this.adminSub = this.authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
+  }
+
+  ngOnDestroy() {
+    this.fullNameSub.unsubscribe();
+    this.usernameSub.unsubscribe();
+    this.adminSub.unsubscribe();
   }
 
   private changeFullName(name: string): void {

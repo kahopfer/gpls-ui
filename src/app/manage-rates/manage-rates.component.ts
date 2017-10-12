@@ -8,13 +8,9 @@ import {AuthenticationService} from "../service/authentication.service";
 })
 export class ManageRatesComponent implements OnInit {
 
-  admin: boolean;
   rates: any[];
 
-  constructor(private authService: AuthenticationService) {
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.admin = currentUser && currentUser.admin;
-    authService.getAdmin.subscribe(admin => this.changeAdmin(admin));
+  constructor() {
   }
 
   ngOnInit() {
@@ -51,10 +47,6 @@ export class ManageRatesComponent implements OnInit {
       value: 1.25,
       extra: true
     }]
-  }
-
-  private changeAdmin(admin: boolean): void {
-    this.admin = admin;
   }
 
   saveChanges() {
