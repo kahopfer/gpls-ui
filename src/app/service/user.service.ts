@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
-import {User} from "../models/user";
 
 @Injectable()
 export class UserService {

@@ -1,0 +1,183 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-8 col-md-offset-2">
+      <h2>Enroll a New Family</h2>
+      <br>
+      <app-error-alert [status]="enrollFamilyStatus"></app-error-alert>
+      <br>
+
+      <form [formGroup]="enrollFamilyForm" novalidate (ngSubmit)="enrollFamily(enrollFamilyForm)">
+        <h3>General Family Information</h3>
+        <br>
+        <div class="form-group">
+          <label for="familyname">Family Name</label>
+          <input type="text" formControlName="familyName" class="form-control" required id="familyname"
+                 placeholder="Family Name">
+          <small *ngIf="!enrollFamilyForm.controls.familyName.valid" class="text-danger">
+            Family name is required.
+          </small>
+        </div>
+        <h3>Students</h3>
+        <br>
+        <div formArrayName="students">
+          <div *ngFor="let student of getStudents(enrollFamilyForm); let i=index">
+            <app-error-alert [status]="enrollStudentStatus"></app-error-alert>
+            <div class="card">
+              <div class="card-header">
+                <span>Student {{i + 1}}</span>
+                <button type="button" class="close" aria-label="Close" *ngIf="getStudents(enrollFamilyForm).length > 1"
+                        (click)="removeStudent(i)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="card-body" [formGroupName]="i">
+                <div class="form-group">
+                  <label for="studentFname">First Name</label>
+                  <input type="text" formControlName="fname" class="form-control" required id="studentFname"
+                         placeholder="First Name">
+                  <small [hidden]="student.controls.fname.valid" class="text-danger">
+                    First name is required.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="studentMi">Middle Initial</label>
+                  <input type="text" formControlName="mi" class="form-control" required id="studentMi"
+                         placeholder="Middle Initial">
+                  <small [hidden]="student.controls.mi.valid" class="text-danger">
+                    Middle initial is required (maximum 1 character).
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="studentLname">Last Name</label>
+                  <input type="text" formControlName="lname" class="form-control" required id="studentLname"
+                         placeholder="Last Name">
+                  <small [hidden]="student.controls.lname.valid" class="text-danger">
+                    Last name is required.
+                  </small>
+                </div>
+                <!--<div class="form-group">-->
+                <!--<label for="studentBirthDate">Birth Date</label>-->
+                <!--<p-calendar id="studentBirthDate" formControlName="birthDate" [monthNavigator]="true"-->
+                <!--[yearNavigator]="true" yearRange="1990:2050"></p-calendar>-->
+                <!--{{birthDate|date}}-->
+                <!--<small [hidden]="student.controls.birthDate.valid" class="text-danger">-->
+                <!--Birth date is required.-->
+                <!--</small>-->
+                <!--</div>-->
+                <div class="form-group">
+                  <label for="studentNotes">Notes</label>
+                  <textarea type="text" formControlName="notes" class="form-control" id="studentNotes"
+                            placeholder="Write any special notes about the student here (optional)"></textarea>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+        <div class="margin-20">
+          <a (click)="addStudent()" style="cursor: default" class="text-primary">
+            Add another student +
+          </a>
+        </div>
+        <br>
+        <h3>Guardians</h3>
+        <br>
+        <div formArrayName="guardians">
+          <div *ngFor="let guardian of getGuardians(enrollFamilyForm); let i=index">
+            <app-error-alert [status]="enrollGuardianStatus"></app-error-alert>
+            <div class="card">
+              <div class="card-header">
+                <span>Guardian {{i + 1}}</span>
+                <button type="button" class="close" aria-label="Close" *ngIf="getGuardians(enrollFamilyForm).length > 1"
+                        (click)="removeGuardian(i)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="card-body" [formGroupName]="i">
+                <div class="form-group">
+                  <label for="guardianFname">First Name</label>
+                  <input type="text" formControlName="fname" class="form-control" required id="guardianFname"
+                         placeholder="First Name">
+                  <small [hidden]="guardian.controls.fname.valid" class="text-danger">
+                    First name is required.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianMi">Middle Initial</label>
+                  <input type="text" formControlName="mi" class="form-control" required id="guardianMi"
+                         placeholder="Middle Initial">
+                  <small [hidden]="guardian.controls.mi.valid" class="text-danger">
+                    Middle initial is required (maximum 1 character).
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianLname">Last Name</label>
+                  <input type="text" formControlName="lname" class="form-control" required id="guardianLname"
+                         placeholder="Last Name">
+                  <small [hidden]="guardian.controls.lname.valid" class="text-danger">
+                    Last name is required.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianRelationship">Relationship: </label>
+                  <select formControlName="relationship" class="custom-select" required id="guardianRelationship">
+                    <option></option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Grandfather">Grandfather</option>
+                    <option value="Grandmother">Grandmother</option>
+                    <option value="Stepfather">Stepfather</option>
+                    <option value="Stepmother">Stepmother</option>
+                    <option value="Aunt">Aunt</option>
+                    <option value="Uncle">Uncle</option>
+                    <option value="Neighbor">Neighbor</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <small [hidden]="guardian.controls.relationship.valid" class="text-danger">
+                    Relationship is required.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianPrimPhone">Primary Phone</label>
+                  <input type="text" formControlName="primPhone" class="form-control" required id="guardianPrimPhone"
+                         placeholder="+1 (123) 456-7890" [textMask]="{mask: mask}">
+                  <small [hidden]="guardian.controls.primPhone.valid" class="text-danger">
+                    Primary phone is required (must match pattern +1 (111) 111-1111).
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianSecPhone">Secondary Phone</label>
+                  <input type="text" formControlName="secPhone" class="form-control" id="guardianSecPhone"
+                         placeholder="+1 (123) 456-7890 (optional)" [textMask]="{mask: mask}">
+                  <small [hidden]="guardian.controls.secPhone.valid" class="text-danger">
+                    Must match pattern +1 (111) 111-1111.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label for="guardianEmail">Email</label>
+                  <input type="text" formControlName="email" class="form-control" required id="guardianEmail"
+                         placeholder="Email">
+                  <small [hidden]="guardian.controls.email.valid" class="text-danger">
+                    Email address is required (must match pattern example@example.com).
+                  </small>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+        <div class="margin-20">
+          <a (click)="addGuardian()" style="cursor: default" class="text-primary">
+            Add another guardian +
+          </a>
+        </div>
+        <br>
+        <!--<div class="margin-20">-->
+        <button type="submit" class="btn btn-primary" [disabled]="!enrollFamilyForm.valid">Submit</button>
+        <!--</div>-->
+        <button type="button" class="btn btn-secondary pull-right" (click)="cancel()">Cancel</button>
+        <div class="clearfix"></div>
+      </form>
+    </div>
+  </div>
+</div>

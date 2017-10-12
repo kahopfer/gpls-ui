@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-8 col-md-offset-2">
+      <h2>Current Profile</h2>
+      <br>
+      <app-error-alert [status]="changePasswordStatus"></app-error-alert>
+      <app-success-alert [status]="changePasswordStatus"></app-success-alert>
+      <br>
+      <p>First Name: {{firstname}}</p>
+      <p>Last Name: {{lastname}}</p>
+      <p>Username: {{username}}</p>
+      <form #changePasswordForm="ngForm" (ngSubmit)="changePassword(changePasswordForm)">
+        <div class="form-group">
+          <label for="oldPassword">Password</label>
+          <input type="password" name="oldPassword" class="form-control" required id="oldPassword"
+                 placeholder="Old Password"
+                 [(ngModel)]="oldPassword" #userOldPassword="ngModel">
+          <small [hidden]="userOldPassword.valid" class="text-danger">
+            Old password is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Password</label>
+          <input type="password" name="newPassword" class="form-control" required id="newPassword"
+                 placeholder="New Password" [(ngModel)]="newPassword" #userNewPassword="ngModel" minlength="8"
+                 pPassword>
+          <small [hidden]="userNewPassword.valid" class="text-danger">
+            New password is required (minimum 8 characters).
+          </small>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!changePasswordForm.form.valid">Change Password
+        </button>
+        <app-back-button></app-back-button>
+      </form>
+    </div>
+  </div>
+</div>

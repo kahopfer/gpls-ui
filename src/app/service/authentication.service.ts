@@ -1,6 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Http, Headers, Response} from '@angular/http';
-import {Observable} from 'rxjs';
 import 'rxjs/add/operator/map'
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {GPLS_API_URL} from "../app.constants";

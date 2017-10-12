@@ -1,0 +1,29 @@
+<div class="container">
+  <p-dataTable [value]="invoices" [(selection)]="selectedInvoice" sortMode="multiple" #dt>
+    <p-header>Invoices</p-header>
+    <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
+    <p-column field="familyName" header="Family Name" [filter]="true" filterPlaceholder="Search"></p-column>
+    <p-column field="totalCost" header="Total Cost">
+      <ng-template let-col let-rate="rowData" pTemplate="body">
+        {{rate[col.field]|currency:'USD':true }}
+      </ng-template>
+    </p-column>
+    <p-column field="invoiceToDate" header="Invoice Date" [sortable]="true">
+      <ng-template let-col let-rate="rowData" pTemplate="body">
+        {{rate[col.field]|date }}
+      </ng-template>
+    </p-column>
+    <p-column field="paid" header="Paid" [filter]="true" filterMatchMode="equals">
+      <ng-template pTemplate="filter" let-col>
+        <p-dropdown [options]="paidOptions" [style]="{'width':'100%'}"
+                    (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                    styleClass="ui-column-filter"></p-dropdown>
+      </ng-template>
+    </p-column>
+    <!--<p-column field="paid" header="Paid" [sortable]="true"></p-column>-->
+    <p-footer>
+      <button type="button" class="btn btn-success" [disabled]="selectedInvoice == null">Download Selected Invoice
+      </button>
+    </p-footer>
+  </p-dataTable>
+</div>

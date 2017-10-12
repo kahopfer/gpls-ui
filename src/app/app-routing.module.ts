@@ -1,21 +1,22 @@
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {PageNotFoundComponent} from "./not-found.component";
-import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {AdminGuard} from "./guards/admin.guard";
-import {UserListComponent} from "./user/user-list/user-list.component";
-import {AddUserComponent} from "./user/add-user/add-user.component";
-import {FamilyListComponent} from "./family-list/family-list.component";
-import {FamilyDetailsComponent} from "./family-details/family-details.component";
-import {UserProfileComponent} from "./user/user-profile/user-profile.component";
-import {EnrollFamilyComponent} from "./enroll-family/enroll-family.component";
-import {CheckInComponent} from "./check-in/check-in.component";
-import {CheckOutComponent} from "./check-out/check-out.component";
-import {CheckInDetailsComponent} from "./check-in-details/check-in-details.component";
-import {CheckOutDetailsComponent} from "./check-out-details/check-out-details.component";
-import {ManageRatesComponent} from "./manage-rates/manage-rates.component";
-import {ResetPasswordComponent} from "./user/reset-password/reset-password.component";
+import {LoginComponent} from "./components/login/login.component";
+import {FamilyListComponent} from "./components/family-list/family-list.component";
+import {EnrollFamilyComponent} from "./components/enroll-family/enroll-family.component";
+import {FamilyDetailsComponent} from "./components/family-details/family-details.component";
+import {UserListComponent} from "./components/user-list/user-list.component";
+import {AddUserComponent} from "./components/add-user/add-user.component";
+import {UserProfileComponent} from "./components/user-profile/user-profile.component";
+import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {CheckInComponent} from "./components/check-in/check-in.component";
+import {CheckOutComponent} from "./components/check-out/check-out.component";
+import {CheckInDetailsComponent} from "./components/check-in-details/check-in-details.component";
+import {CheckOutDetailsComponent} from "./components/check-out-details/check-out-details.component";
+import {ManageRatesComponent} from "./components/manage-rates/manage-rates.component";
+import {InvoiceListComponent} from "./components/invoice-list/invoice-list.component";
 
 const routes: Routes = [
   {
@@ -86,6 +87,11 @@ const routes: Routes = [
     path: 'manage-rates',
     component: ManageRatesComponent,
     canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'invoice-list',
+    component: InvoiceListComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',

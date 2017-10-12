@@ -8,34 +8,35 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
   ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
-  PasswordModule
+  PasswordModule, DropdownModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {LoginComponent} from './login/login.component';
+import {LoginComponent} from "./components/login/login.component";
+import {NavbarComponent} from "./components/navbar/navbar.component";
+import {ErrorAlertComponent} from "./components/error-alert/error-alert.component";
+import {UserListComponent} from "./components/user-list/user-list.component";
+import {AddUserComponent} from "./components/add-user/add-user.component";
+import {FamilyListComponent} from "./components/family-list/family-list.component";
+import {FamilyDetailsComponent} from "./components/family-details/family-details.component";
+import {UserProfileComponent} from "./components/user-profile/user-profile.component";
+import {SuccessAlertComponent} from "./components/success-alert/success-alert.component";
+import {BackButtonComponent} from "./components/back-button/back-button.component";
+import {EnrollFamilyComponent} from "./components/enroll-family/enroll-family.component";
+import {CheckInComponent} from "./components/check-in/check-in.component";
+import {CheckOutComponent} from "./components/check-out/check-out.component";
+import {CheckInDetailsComponent} from "./components/check-in-details/check-in-details.component";
+import {CheckOutDetailsComponent} from "./components/check-out-details/check-out-details.component";
+import {ManageRatesComponent} from "./components/manage-rates/manage-rates.component";
+import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {InvoiceListComponent} from "./components/invoice-list/invoice-list.component";
+import {TextMaskModule} from "angular2-text-mask";
 import {AuthGuard} from "./guards/auth.guard";
-import {AuthenticationService} from "./service/authentication.service";
-import {NavbarComponent} from './navbar/navbar.component';
-import {ErrorAlertComponent} from './error-alert/error-alert.component';
 import {AdminGuard} from "./guards/admin.guard";
-import {UserService} from "./service/user.service";
-import {UserListComponent} from './user/user-list/user-list.component';
-import {AddUserComponent} from './user/add-user/add-user.component';
-import {FamilyListComponent} from './family-list/family-list.component';
-import {FamilyDetailsComponent} from './family-details/family-details.component';
+import {AuthenticationService} from "./service/authentication.service";
 import {FamilyService} from "./service/family.service";
 import {StudentService} from "./service/student.service";
 import {GuardianService} from "./service/guardian.service";
-import { UserProfileComponent } from './user/user-profile/user-profile.component';
-import { SuccessAlertComponent } from './success-alert/success-alert.component';
-import { BackButtonComponent } from './back-button/back-button.component';
-import { EnrollFamilyComponent } from './enroll-family/enroll-family.component';
-import {TextMaskModule} from "angular2-text-mask";
-import { CheckInComponent } from './check-in/check-in.component';
-import { CheckOutComponent } from './check-out/check-out.component';
-import { CheckInDetailsComponent } from './check-in-details/check-in-details.component';
-import { CheckOutDetailsComponent } from './check-out-details/check-out-details.component';
-import { ManageRatesComponent } from './manage-rates/manage-rates.component';
-import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
+import {UserService} from "./service/user.service";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ResetPasswordComponent } from './user/reset-password/reset-password.com
     CheckInDetailsComponent,
     CheckOutDetailsComponent,
     ManageRatesComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    InvoiceListComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +76,8 @@ import { ResetPasswordComponent } from './user/reset-password/reset-password.com
     CalendarModule,
     TextMaskModule,
     DialogModule,
-    InputMaskModule
+    InputMaskModule,
+    DropdownModule
   ],
   providers: [
     AuthGuard,
