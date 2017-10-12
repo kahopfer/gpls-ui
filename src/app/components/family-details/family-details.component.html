@@ -39,9 +39,9 @@
       <p-column field="mi" header="Middle Initial"></p-column>
       <p-column field="lname" header="Last Name"></p-column>
       <p-column field="notes" header="Notes"></p-column>
-      <p-footer>
+      <p-footer *ngIf="admin === true">
         <div class="ui-helper-clearfix" style="width:100%">
-          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left"
+          <button type="button" pButton icon="fa-plus" style="float:left"
                   (click)="showDialogToAddStudent()"
                   label="Add new student"></button>
         </div>
@@ -58,9 +58,9 @@
       <p-column field="relationship" header="Relationship"></p-column>
       <p-column field="primPhone" header="Primary Phone"></p-column>
       <p-column field="secPhone" header="Secondary Phone"></p-column>
-      <p-footer>
+      <p-footer *ngIf="admin === true">
         <div class="ui-helper-clearfix" style="width:100%">
-          <button *ngIf="admin === true" type="button" pButton icon="fa-plus" style="float:left"
+          <button type="button" pButton icon="fa-plus" style="float:left"
                   (click)="showDialogToAddGuardian()"
                   label="Add new guardian"></button>
         </div>
@@ -103,10 +103,10 @@
                     placeholder="Write any special notes about the student here (optional)"
                     [(ngModel)]="student.notes"></textarea>
         </div>
-        <p-footer>
-          <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
+        <p-footer *ngIf="admin === true">
+          <button type="submit" pButton icon="fa-check"
                   [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newStudent === false && admin === true" type="button" pButton icon="fa-close"
+          <button *ngIf="newStudent === false" type="button" pButton icon="fa-close"
                   (click)="deleteStudent(student._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>
@@ -191,10 +191,10 @@
             Email address is required (must match pattern example@example.com).
           </small>
         </div>
-        <p-footer>
-          <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
+        <p-footer *ngIf="admin === true">
+          <button type="submit" pButton icon="fa-check"
                   [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newGuardian === false && admin === true" type="button" pButton icon="fa-close"
+          <button *ngIf="newGuardian === false" type="button" pButton icon="fa-close"
                   (click)="deleteGuardian(guardian._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>

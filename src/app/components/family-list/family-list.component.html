@@ -9,8 +9,8 @@
                #dt>
     <p-header>Families</p-header>
     <p-column field="familyName" header="Family Name"></p-column>
-    <p-footer>
-      <button *ngIf="admin == true" type="button" class="btn btn-success" (click)="goToEnrollFamilyForm()">Enroll a New
+    <p-footer *ngIf="admin == true">
+      <button type="button" class="btn btn-success" (click)="goToEnrollFamilyForm()">Enroll a New
         Family
       </button>
     </p-footer>
