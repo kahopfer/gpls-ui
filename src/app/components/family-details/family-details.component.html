@@ -68,10 +68,11 @@
     </p-dataTable>
     <br>
 
-    <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
-              [modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">
-      <app-error-alert [status]="studentStatus"></app-error-alert>
-      <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
+    <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
+      <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
+                [modal]="true" [width]="400" [minWidth]="240">
+        <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
+        <app-error-alert [status]="studentStatus"></app-error-alert>
         <div class="form-group">
           <label for="studentFname">First Name</label>
           <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"
@@ -102,19 +103,21 @@
                     placeholder="Write any special notes about the student here (optional)"
                     [(ngModel)]="student.notes"></textarea>
         </div>
-        <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
-                [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
-        <button *ngIf="newStudent === false && admin === true" type="button" pButton icon="fa-close"
-                (click)="deleteStudent(student._id)" label="Delete"></button>
-      </form>
-    </p-dialog>
+        <p-footer>
+          <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
+                  [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
+          <button *ngIf="newStudent === false && admin === true" type="button" pButton icon="fa-close"
+                  (click)="deleteStudent(student._id)" label="Delete"></button>
+        </p-footer>
+      </p-dialog>
+    </form>
 
+    <form *ngIf="guardian" #guardianDetailsForm="ngForm" (ngSubmit)="saveGuardian(guardian)">
+      <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
+                [modal]="true" [width]="550" [minWidth]="278">
+        <!--[modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">-->
+        <app-error-alert [status]="guardianStatus"></app-error-alert>
 
-    <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
-              [modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">
-      <app-error-alert [status]="guardianStatus"></app-error-alert>
-
-      <form *ngIf="guardian" #guardianDetailsForm="ngForm" (ngSubmit)="saveGuardian(guardian)">
         <div class="form-group">
           <label for="guardianFname">First Name</label>
           <input type="text" name="fname" class="form-control" required id="guardianFname" placeholder="First Name"
@@ -188,12 +191,14 @@
             Email address is required (must match pattern example@example.com).
           </small>
         </div>
-        <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
-                [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
-        <button *ngIf="newGuardian === false && admin === true" type="button" pButton icon="fa-close"
-                (click)="deleteGuardian(guardian._id)" label="Delete"></button>
-      </form>
-    </p-dialog>
+        <p-footer>
+          <button *ngIf="admin === true" type="submit" pButton icon="fa-check"
+                  [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
+          <button *ngIf="newGuardian === false && admin === true" type="button" pButton icon="fa-close"
+                  (click)="deleteGuardian(guardian._id)" label="Delete"></button>
+        </p-footer>
+      </p-dialog>
+    </form>
   </div>
   <div *ngIf="admin === true" class="row justify-content-md-center">
     <div class="col col-lg-2">
