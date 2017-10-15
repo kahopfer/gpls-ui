@@ -8,7 +8,7 @@
         {{rate[col.field]|currency:'USD':true }}
       </ng-template>
     </p-column>
-    <p-column field="invoiceToDate" header="Invoice Date" [sortable]="true">
+    <p-column field="invoiceDate" header="Invoice Date" [sortable]="true">
       <ng-template let-col let-rate="rowData" pTemplate="body">
         {{rate[col.field]|date }}
       </ng-template>

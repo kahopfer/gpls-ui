@@ -1,0 +1,6 @@
+<div class="container">
+  <p-dataTable [value]="families" selectionMode="single"  (onRowSelect)="onRowSelect($event)">
+    <p-header>Families</p-header>
+    <p-column field="familyName" header="Family Name"></p-column>
+  </p-dataTable>
+</div>

@@ -55,7 +55,7 @@ export class EnrollFamilyComponent implements OnInit {
     return this.formBuilder.group({
       fname: ['', Validators.required],
       lname: ['', Validators.required],
-      mi: ['', [Validators.required, Validators.maxLength(1)]],
+      mi: ['', Validators.maxLength(1)],
       // birthDate: ['', Validators.required],
       notes: ['']
     })
@@ -65,7 +65,7 @@ export class EnrollFamilyComponent implements OnInit {
     return this.formBuilder.group({
       fname: ['', Validators.required],
       lname: ['', Validators.required],
-      mi: ['', [Validators.required, Validators.maxLength(1)]],
+      mi: ['', Validators.maxLength(1)],
       relationship: ['', Validators.required],
       primPhone: ['', [Validators.required, Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],
       secPhone: ['', [Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],

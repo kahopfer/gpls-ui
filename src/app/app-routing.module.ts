@@ -17,6 +17,8 @@ import {CheckInDetailsComponent} from "./components/check-in-details/check-in-de
 import {CheckOutDetailsComponent} from "./components/check-out-details/check-out-details.component";
 import {ManageRatesComponent} from "./components/manage-rates/manage-rates.component";
 import {InvoiceListComponent} from "./components/invoice-list/invoice-list.component";
+import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
+import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
 
 const routes: Routes = [
   {
@@ -91,7 +93,17 @@ const routes: Routes = [
   {
     path: 'invoice-list',
     component: InvoiceListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'create-invoice',
+    component: CreateInvoiceComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'create-invoice-details',
+    component: CreateInvoiceDetailsComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: '**',

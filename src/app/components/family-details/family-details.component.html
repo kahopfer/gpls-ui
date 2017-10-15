@@ -36,7 +36,7 @@
                  [responsive]="true">
       <p-header>Students</p-header>
       <p-column field="fname" header="First Name"></p-column>
-      <p-column field="mi" header="Middle Initial"></p-column>
+      <!--<p-column field="mi" header="Middle Initial"></p-column>-->
       <p-column field="lname" header="Last Name"></p-column>
       <p-column field="notes" header="Notes"></p-column>
       <p-footer *ngIf="admin === true">
@@ -53,7 +53,7 @@
                  loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
       <p-header>Guardians</p-header>
       <p-column field="fname" header="First Name"></p-column>
-      <p-column field="mi" header="Middle Initial"></p-column>
+      <!--<p-column field="mi" header="Middle Initial"></p-column>-->
       <p-column field="lname" header="Last Name"></p-column>
       <p-column field="relationship" header="Relationship"></p-column>
       <p-column field="primPhone" header="Primary Phone"></p-column>
@@ -83,10 +83,10 @@
         </div>
         <div class="form-group">
           <label for="studentMi">Middle Initial</label>
-          <input type="text" name="mi" class="form-control" required id="studentMi" placeholder="Middle Initial"
+          <input type="text" name="mi" class="form-control" id="studentMi" placeholder="Middle Initial"
                  [(ngModel)]="student.mi" maxlength="1" #studentMi="ngModel">
           <small [hidden]="studentMi.valid" class="text-danger">
-            Middle initial is required (maximum 1 character).
+            Maximum 1 character.
           </small>
         </div>
         <div class="form-group">
@@ -128,10 +128,10 @@
         </div>
         <div class="form-group">
           <label for="guardianMi">Middle Initial</label>
-          <input type="text" name="mi" class="form-control" required id="guardianMi" placeholder="Middle Initial"
+          <input type="text" name="mi" class="form-control" id="guardianMi" placeholder="Middle Initial"
                  [(ngModel)]="guardian.mi" #guardianMi="ngModel" maxlength="1">
           <small [hidden]="guardianMi.valid" class="text-danger">
-            Middle initial is required (maximum 1 character).
+            Maximum 1 character.
           </small>
         </div>
         <div class="form-group">

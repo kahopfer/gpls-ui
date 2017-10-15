@@ -37,6 +37,8 @@ import {FamilyService} from "./service/family.service";
 import {StudentService} from "./service/student.service";
 import {GuardianService} from "./service/guardian.service";
 import {UserService} from "./service/user.service";
+import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
+import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import {UserService} from "./service/user.service";
     CheckOutDetailsComponent,
     ManageRatesComponent,
     ResetPasswordComponent,
-    InvoiceListComponent
+    InvoiceListComponent,
+    CreateInvoiceComponent,
+    CreateInvoiceDetailsComponent
   ],
   imports: [
     BrowserModule,

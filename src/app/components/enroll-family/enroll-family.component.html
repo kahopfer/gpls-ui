@@ -41,10 +41,10 @@
                 </div>
                 <div class="form-group">
                   <label for="studentMi">Middle Initial</label>
-                  <input type="text" formControlName="mi" class="form-control" required id="studentMi"
+                  <input type="text" formControlName="mi" class="form-control" id="studentMi"
                          placeholder="Middle Initial">
                   <small [hidden]="student.controls.mi.valid" class="text-danger">
-                    Middle initial is required (maximum 1 character).
+                    Maximum 1 character.
                   </small>
                 </div>
                 <div class="form-group">
@@ -104,10 +104,10 @@
                 </div>
                 <div class="form-group">
                   <label for="guardianMi">Middle Initial</label>
-                  <input type="text" formControlName="mi" class="form-control" required id="guardianMi"
+                  <input type="text" formControlName="mi" class="form-control" id="guardianMi"
                          placeholder="Middle Initial">
                   <small [hidden]="guardian.controls.mi.valid" class="text-danger">
-                    Middle initial is required (maximum 1 character).
+                    Maximum 1 character.
                   </small>
                 </div>
                 <div class="form-group">

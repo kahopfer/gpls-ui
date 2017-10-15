@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <p-dataTable [value]="students">
+        <p-header>Students</p-header>
+        <p-column field="firstName" header="First Name"></p-column>
+        <p-column field="lastName" header="Last Name"></p-column>
+      </p-dataTable>
+    </div>
+    <div class="col-6">
+      <p-dataTable [value]="guardians">
+        <p-header>Guardians</p-header>
+        <p-column field="firstName" header="First Name"></p-column>
+        <p-column field="lastName" header="Last Name"></p-column>
+      </p-dataTable>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <br>
+      <p-dataTable [value]="lineItems" [(selection)]="selectedLineItem">
+        <p-header>Line Items</p-header>
+        <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
+        <p-column field="checkIn" header="Check In">
+          <ng-template let-col let-rate="rowData" pTemplate="body">
+            {{rate[col.field]|date:'medium' }}
+          </ng-template>
+        </p-column>
+        <p-column field="checkOut" header="Check Out">
+          <ng-template let-col let-rate="rowData" pTemplate="body">
+            {{rate[col.field]|date:'medium' }}
+          </ng-template>
+        </p-column>
+        <p-column field="lineCost" header="Line Cost">
+          <ng-template let-col let-rate="rowData" pTemplate="body">
+            {{rate[col.field]|currency:'USD':true }}
+          </ng-template>
+        </p-column>
+        <p-footer>
+          <button type="button" class="btn btn-success">Add a Line Item</button>
+          <button type="button" class="btn btn-primary" [disabled]="selectedLineItem == null">Edit Selected Line Item
+          </button>
+          <button type="button" class="btn btn-danger" [disabled]="selectedLineItem == null">Delete Selected Line Item
+          </button>
+        </p-footer>
+      </p-dataTable>
+    </div>
+
+    <br>
+  </div>
+  <div class="row justify-content-center">
+    <form class="form form-inline" #createInvoiceForm="ngForm" (submit)="goBack()">
+      <div class="row">
+        <div class="form-group">
+          <div class="col">
+            <label for="invoiceRange">Invoice Range: </label>
+          </div>
+          <div class="col">
+            <p-calendar id="invoiceRange" name="invoiceRange" required [(ngModel)]="invoiceRange"
+                        selectionMode="range" readonlyInput="true" ngModel></p-calendar>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">Create Invoice
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <br>
+    <br>
+  </div>
+  <div class="row justify-content-center">
+    <br>
+    <app-back-button></app-back-button>
+    <br>
+    <br>
+  </div>
+</div>
