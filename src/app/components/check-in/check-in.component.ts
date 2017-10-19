@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Student} from "../../models/student";
 import {Router} from "@angular/router";
+import {Status} from "../error-alert/error-alert.component";
+import {StudentService} from "../../service/student.service";
 
 @Component({
   selector: 'app-check-in',
@@ -11,58 +13,61 @@ export class CheckInComponent implements OnInit {
 
   students: Student[] = [];
   selectedStudents: Student[] = [];
+  studentsStatus: Status;
+  studentsLoading: boolean = true;
 
-  constructor(private router: Router) {
-    this.students = [{
-      _id: '123',
-      fname: 'Billy',
-      lname: 'Smith',
-      mi: 'J',
-      notes: '',
-      familyUnitID: '1234'
-    }, {
-      _id: '124',
-      fname: 'Suzie',
-      lname: 'Johnson',
-      mi: 'F',
-      notes: '',
-      familyUnitID: '1234'
-    }, {
-      _id: '125',
-      fname: 'Mary',
-      lname: 'Anderson',
-      mi: 'J',
-      notes: '',
-      familyUnitID: '1234'
-    }, {
-      _id: '126',
-      fname: 'Jeff',
-      lname: 'Davenport',
-      mi: 'B',
-      notes: '',
-      familyUnitID: '1234'
-    }, {
-      _id: '127',
-      fname: 'Phil',
-      lname: 'Jones',
-      mi: 'R',
-      notes: '',
-      familyUnitID: '1234'
-    }, {
-      _id: '128',
-      fname: 'Jane',
-      lname: 'Richmond',
-      mi: 'L',
-      notes: '',
-      familyUnitID: '1234'
-    }];
+  constructor(private router: Router, private studentService: StudentService) {
+    this.studentsStatus = {
+      success: null,
+      message: null
+    };
   }
 
   ngOnInit() {
+    this.getStudents();
   }
+
+  getStudents() {
+    this.studentsLoading = true;
+    this.studentService.getCheckedOutStudents().then(students => {
+      this.students = students.json().students;
+      this.studentsStatus.success = true;
+    }).catch(err => {
+      console.log(err);
+      this.studentsStatus.success = false;
+      this.studentsStatus.message = 'An error occurred while loading the students';
+    });
+    this.studentsLoading = false;
+  }
+
+  // checkIn() {
+  //   let promiseArray: Promise<any>[] = [];
+  //
+  //   for (let studentIndex in this.selectedStudents) {
+  //     this.selectedStudents[studentIndex].checkedIn = true;
+  //     promiseArray.push(this.studentService.updateCheckedIn(this.selectedStudents[studentIndex]));
+  //   }
+  //
+  //   Promise.all(promiseArray).then(() => {
+  //     this.studentsStatus.success = true;
+  //     this.getStudents();
+  //   }).catch(err => {
+  //     if (err.status === 400) {
+  //       this.studentsStatus.success = false;
+  //       this.studentsStatus.message = 'Missing a required field';
+  //     } else {
+  //       console.log(err);
+  //       this.studentsStatus.success = false;
+  //       this.studentsStatus.message = 'An error occurred while updating the student';
+  //     }
+  //   });
+  // }
 
   goToCheckInDetails() {
-    this.router.navigate(['/check-in-details']);
+    let idArray: String[] = [];
+    for(let studentIndex in this.selectedStudents) {
+      idArray.push(this.selectedStudents[studentIndex]._id);
+    }
+    this.router.navigate(['check-in-details'], {queryParams: {id: [idArray]}});
   }
-
 }

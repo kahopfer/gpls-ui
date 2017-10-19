@@ -111,7 +111,7 @@ export class EnrollFamilyComponent implements OnInit {
         students.push(studentID);
         this.studentService.createStudent(studentID, model.value.students[studentIndex].fname,
           model.value.students[studentIndex].lname, model.value.students[studentIndex].mi, model.value.students[studentIndex].notes,
-          familyID).subscribe(() => {
+          false, familyID).subscribe(() => {
           this.enrollStudentStatus.success = true;
         }, err => {
           reject(err);

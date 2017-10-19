@@ -6,5 +6,6 @@ export class Student {
   // birthdate: Date;
   // allergyCode: string[];
   notes: string;
+  checkedIn: boolean;
   familyUnitID: string;
 }

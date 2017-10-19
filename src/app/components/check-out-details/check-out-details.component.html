@@ -2,22 +2,31 @@
   <div class="row justify-content-md-center">
     <div class="col-md-8 col-md-offset-2">
       <h2>Student Check Out</h2>
-      <form #checkOutStudentsForm="ngForm" (ngSubmit)="checkStudentsOut(checkOutStudentsForm)">
-        <ng-container *ngFor="let student of students; let i = index">
-          <div class="form-group">
-            <label for="checkInBy-{{i}}">Who is checking {{student.fname}} out?</label>
-            <select class="custom-select" required id="checkInBy-{{i}}">
-              <option></option>
-              <option value="Father">Father</option>
-              <option value="Mother">Mother</option>
-              <option value="Employee">Employee</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </ng-container>
-        <button type="submit" class="btn btn-primary" [disabled]="!checkOutStudentsForm.form.valid">Check Out</button>
-        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-      </form>
+      <app-error-alert [status]="studentsStatus"></app-error-alert>
+      <br>
+      <app-error-alert [status]="guardiansStatus"></app-error-alert>
+      <div *ngIf="students.length > 0">
+        <form #checkOutStudentsForm="ngForm" (ngSubmit)="updateStudentCheckedInStatus(checkOutStudentsForm)">
+          <ng-container *ngFor="let student of students; let i = index">
+            <div class="form-group">
+              <label for="checkOutBy-{{i}}">Who is checking {{student.fname}} {{student.lname}} out?</label>
+              <select name="checkOutBy-{{i}}" class="form-control" required id="checkOutBy-{{i}}" #checkOutBy ngModel>
+                <option></option>
+                <ng-container *ngFor="let guardian of guardianArray[i]">
+                  <option *ngFor="let guardian of guardianArray[i]" value="{{guardian.fname}} {{guardian.lname}}">{{guardian.fname}} {{guardian.lname}}</option>
+                </ng-container>
+                <option value="{{fullName}}">{{fullName}}</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </ng-container>
+          <button type="submit" class="btn btn-primary" [disabled]="!checkOutStudentsForm.form.valid">Check Out</button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </form>
+      </div>
+      <div *ngIf="students.length === 0">
+        <p>No students selected</p>
+      </div>
     </div>
   </div>
 </div>

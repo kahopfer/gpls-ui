@@ -39,7 +39,33 @@ export class StudentService {
       .catch(this.handleError);
   }
 
-  createStudent(id: ObjectID, fname: string, lname: string, mi: string, notes: string, familyUnitID: ObjectID) {
+  getCheckedOutStudents(): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/students?checkedIn=false`;
+    return this.http.get(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  getCheckedInStudents(): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/students?checkedIn=true`;
+    return this.http.get(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  createStudent(id: ObjectID, fname: string, lname: string, mi: string, notes: string, checkedIn: boolean, familyUnitID: ObjectID) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
@@ -54,6 +80,7 @@ export class StudentService {
       mi: mi,
       // birthdate: birthdate,
       notes: notes,
+      checkedIn: checkedIn,
       familyUnitID: familyUnitID
     }), {headers: headers});
   }
@@ -65,7 +92,20 @@ export class StudentService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     });
-    const url = `${this.gplsApiUrl}/students/${student._id}`;
+    const url = `${this.gplsApiUrl}/students/updateStudent/${student._id}`;
+    return this.http.put(url, JSON.stringify(student), {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  updateCheckedIn(student: Student): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/students/updateCheckedIn/${student._id}`;
     return this.http.put(url, JSON.stringify(student), {headers: headers})
       .toPromise()
       .catch(this.handleError);
