@@ -39,6 +39,7 @@ import {GuardianService} from "./service/guardian.service";
 import {UserService} from "./service/user.service";
 import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
 import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
+import {OrderModule} from "ngx-order-pipe";
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice
     TextMaskModule,
     DialogModule,
     InputMaskModule,
-    DropdownModule
+    DropdownModule,
+    OrderModule
   ],
   providers: [
     AuthGuard,

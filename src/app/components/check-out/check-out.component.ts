@@ -15,6 +15,7 @@ export class CheckOutComponent implements OnInit {
   selectedStudents: Student[] = [];
   studentsStatus: Status;
   studentsLoading: boolean = true;
+  order: string = 'lname';
 
   constructor(private router: Router, private studentService: StudentService) {
     this.studentsStatus = {
@@ -39,29 +40,6 @@ export class CheckOutComponent implements OnInit {
     });
     this.studentsLoading = false;
   }
-
-  // checkOut() {
-  //   let promiseArray: Promise<any>[] = [];
-  //
-  //   for (let studentIndex in this.selectedStudents) {
-  //     this.selectedStudents[studentIndex].checkedIn = false;
-  //     promiseArray.push(this.studentService.updateCheckedIn(this.selectedStudents[studentIndex]));
-  //   }
-  //
-  //   Promise.all(promiseArray).then(() => {
-  //     this.studentsStatus.success = true;
-  //     this.getStudents();
-  //   }).catch(err => {
-  //     if (err.status === 400) {
-  //       this.studentsStatus.success = false;
-  //       this.studentsStatus.message = 'Missing a required field';
-  //     } else {
-  //       console.log(err);
-  //       this.studentsStatus.success = false;
-  //       this.studentsStatus.message = 'An error occurred while updating the student';
-  //     }
-  //   });
-  // }
 
   goToCheckOutDetails() {
     let idArray: String[] = [];

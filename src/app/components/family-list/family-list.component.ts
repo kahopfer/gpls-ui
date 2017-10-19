@@ -18,6 +18,7 @@ export class FamilyListComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   private adminSub: any;
   admin: boolean;
+  order: string = 'familyName';
 
   constructor(private familyService: FamilyService, private authService: AuthenticationService, private router: Router) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));

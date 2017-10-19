@@ -89,6 +89,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       }
       this.studentsStatus.success = true;
       this.getGuardians();
+      console.log(this.guardianArray);
     }).catch(err => {
       console.log(err);
       this.studentsStatus.success = false;

@@ -13,7 +13,7 @@
               <select name="checkInBy-{{i}}" class="form-control" required id="checkInBy-{{i}}" #checkInBy ngModel>
                 <option></option>
                 <ng-container *ngFor="let guardian of guardianArray[i]">
-                  <option *ngFor="let guardian of guardianArray[i]" value="{{guardian.fname}} {{guardian.lname}}">{{guardian.fname}} {{guardian.lname}}</option>
+                  <option value="{{guardian.fname}} {{guardian.lname}}">{{guardian.fname}} {{guardian.lname}}</option>
                 </ng-container>
                 <option value="{{fullName}}">{{fullName}}</option>
                 <option value="Other">Other</option>
