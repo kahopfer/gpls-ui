@@ -8,6 +8,8 @@ import {Status} from "../error-alert/error-alert.component";
 import {isNullOrUndefined} from "util";
 import {GuardianService} from "../../service/guardian.service";
 import {AuthenticationService} from "../../service/authentication.service";
+import {LineItemService} from "../../service/lineItem.service";
+import 'rxjs/add/operator/toPromise';
 
 @Component({
   selector: 'app-check-in-details',
@@ -29,7 +31,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService, private lineItemService: LineItemService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
 
@@ -128,18 +130,40 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateStudentCheckedInStatus(form: NgForm) {
-    let promiseArray: Promise<any>[] = [];
+    let updateStudentPromiseArray: Promise<any>[] = [];
+    let createLineItemPromiseArray: Promise<any>[] = [];
 
     for (let studentIndex in this.students) {
       this.students[studentIndex].checkedIn = true;
-      promiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
+      updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
     }
 
-    Promise.all(promiseArray).then(() => {
-      this.studentsStatus.success = true;
-      console.log(form.value);
-      // This is where the line items would be created
-      this.router.navigate(['/check-in']);
+    for (let studentIndex in this.students) {
+      createLineItemPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
+        this.students[studentIndex]._id, new Date(), null, null, null, null,
+        form.value['checkInBy-' + studentIndex], null, null, null).toPromise());
+    }
+
+    Promise.all(createLineItemPromiseArray).then(() => {
+      Promise.all(updateStudentPromiseArray).then(() => {
+        this.studentsStatus.success = true;
+        this.router.navigate(['/check-in']);
+      }).catch(err => {
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.studentsStatus.success = false;
+          this.studentsStatus.message = 'An unexpected error occurred';
+        } else {
+          if (err.status === 400) {
+            this.studentsStatus.success = false;
+            this.studentsStatus.message = 'Missing a required field in the students';
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.studentsStatus.success = false;
+            this.studentsStatus.message = 'An error occurred while updating the students';
+          }
+        }
+      });
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -148,11 +172,11 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
       } else {
         if (err.status === 400) {
           this.studentsStatus.success = false;
-          this.studentsStatus.message = 'Missing a required field';
+          this.studentsStatus.message = 'Missing a required field in the line items';
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
           this.studentsStatus.success = false;
-          this.studentsStatus.message = 'An error occurred while updating the student';
+          this.studentsStatus.message = 'An error occurred while creating the line items';
         }
       }
     });

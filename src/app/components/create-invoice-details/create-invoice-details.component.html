@@ -1,41 +1,42 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-6">
-      <p-dataTable [value]="students">
+      <app-error-alert [status]="studentsStatus"></app-error-alert>
+      <p-dataTable [value]="students" [loading]="studentsLoading" loadingIcon="fa-spinner">
         <p-header>Students</p-header>
-        <p-column field="firstName" header="First Name"></p-column>
-        <p-column field="lastName" header="Last Name"></p-column>
+        <p-column field="fname" header="First Name"></p-column>
+        <p-column field="lname" header="Last Name"></p-column>
       </p-dataTable>
     </div>
     <div class="col-6">
-      <p-dataTable [value]="guardians">
+      <app-error-alert [status]="guardiansStatus"></app-error-alert>
+      <p-dataTable [value]="guardians" [loading]="guardiansLoading" loadingIcon="fa-spinner">
         <p-header>Guardians</p-header>
-        <p-column field="firstName" header="First Name"></p-column>
-        <p-column field="lastName" header="Last Name"></p-column>
+        <p-column field="fname" header="First Name"></p-column>
+        <p-column field="lname" header="Last Name"></p-column>
       </p-dataTable>
     </div>
   </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <br>
-      <p-dataTable [value]="lineItems" [(selection)]="selectedLineItem">
+      <app-error-alert [status]="lineItemsStatus"></app-error-alert>
+      <p-dataTable [value]="lineItems" [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner">
         <p-header>Line Items</p-header>
         <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
-        <p-column field="checkIn" header="Check In">
+        <p-column field="checkIn" header="Check In Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="checkOut" header="Check Out">
+        <p-column field="checkInBy" header="Checked In By"></p-column>
+        <p-column field="checkOut" header="Check Out Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="lineCost" header="Line Cost">
-          <ng-template let-col let-rate="rowData" pTemplate="body">
-            {{rate[col.field]|currency:'USD':true }}
-          </ng-template>
-        </p-column>
+        <p-column field="checkOutBy" header="Checked Out By"></p-column>
+        <p-column field="notes" header="Notes"></p-column>
         <p-footer>
           <button type="button" class="btn btn-success">Add a Line Item</button>
           <button type="button" class="btn btn-primary" [disabled]="selectedLineItem == null">Edit Selected Line Item

@@ -40,6 +40,7 @@ import {UserService} from "./service/user.service";
 import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
 import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
 import {OrderModule} from "ngx-order-pipe";
+import {LineItemService} from "./service/lineItem.service";
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import {OrderModule} from "ngx-order-pipe";
     FamilyService,
     StudentService,
     GuardianService,
-    UserService
+    UserService,
+    LineItemService
   ],
   bootstrap: [AppComponent]
 })

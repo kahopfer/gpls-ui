@@ -8,6 +8,8 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {AuthenticationService} from "../../service/authentication.service";
 import {isNullOrUndefined} from "util";
+import {LineItemService} from "../../service/lineItem.service";
+import {LineItem} from "../../models/lineItem";
 
 @Component({
   selector: 'app-check-out-details',
@@ -29,7 +31,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService, private lineItemService: LineItemService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
 
@@ -128,32 +130,80 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateStudentCheckedInStatus(form: NgForm) {
-    let promiseArray: Promise<any>[] = [];
+    // This promise array will be used to update the checked in status of each student
+    let updateStudentPromiseArray: Promise<any>[] = [];
+
+    // This promise array will be used to get a list of all line items without a check out time
+    let getLineItemPromiseArray: Promise<any>[] = [];
+
+    // This promise array will be used to update the existing line item for each student
+    let updateLineItemPromiseArray: Promise<any>[] = [];
 
     for (let studentIndex in this.students) {
       this.students[studentIndex].checkedIn = false;
-      promiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
+      updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
     }
 
-    Promise.all(promiseArray).then(() => {
-      this.studentsStatus.success = false;
-      console.log(form.value);
-      // This is where the line items would be created
-      this.router.navigate(['/check-out']);
+    for (let studentIndex in this.students) {
+      getLineItemPromiseArray.push(this.lineItemService.getLineItemsWithoutCheckOut(this.students[studentIndex]._id));
+    }
+
+    // First get all of the line items without a check out time
+    Promise.all(getLineItemPromiseArray).then(lineItems => {
+      // Go through all the line items returned
+      for (let lineItemIndex in lineItems) {
+        // Temporary line item used to stage the changes
+        let temporaryLineItem: LineItem = lineItems[lineItemIndex].json().lineItems[0];
+        // Set temp line item values
+        temporaryLineItem.checkOut = new Date();
+        // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
+        temporaryLineItem.checkOutBy = form.value['checkOutBy-' + lineItemIndex];
+        temporaryLineItem.notes = form.value['lineItemNotes-' + lineItemIndex];
+        // Next, push the edited line item to the update line item promise array
+        updateLineItemPromiseArray.push(this.lineItemService.updateLineItem(temporaryLineItem));
+      }
+      // Update the line items
+      Promise.all(updateLineItemPromiseArray).then(() => {
+        // Then update each student's checked in status
+        Promise.all(updateStudentPromiseArray).then(() => {
+          this.studentsStatus.success = true;
+          this.router.navigate(['/check-out']);
+        }).catch(err => {
+          if (err.error instanceof Error) {
+            console.log('An error occurred:', err.error.message);
+            this.studentsStatus.success = false;
+            this.studentsStatus.message = 'An unexpected error occurred';
+          } else {
+            if (err.status === 400) {
+              this.studentsStatus.success = false;
+              this.studentsStatus.message = 'Missing a required field';
+            } else {
+              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+              this.studentsStatus.success = false;
+              this.studentsStatus.message = 'An error occurred while updating the students';
+            }
+          }
+        });
+      }).catch(err => {
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.studentsStatus.success = false;
+          this.studentsStatus.message = 'An unexpected error occurred';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.studentsStatus.success = false;
+          this.studentsStatus.message = 'An error occurred while updating the line items';
+        }
+      })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
         this.studentsStatus.success = false;
         this.studentsStatus.message = 'An unexpected error occurred';
       } else {
-        if (err.status === 400) {
-          this.studentsStatus.success = false;
-          this.studentsStatus.message = 'Missing a required field';
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.studentsStatus.success = false;
-          this.studentsStatus.message = 'An error occurred while updating the student';
-        }
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.studentsStatus.success = false;
+        this.studentsStatus.message = 'An error occurred while retrieving the line items';
       }
     });
   }

@@ -19,6 +19,12 @@
                 <option value="Other">Other</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="lineItemNotes-{{i}}">Notes</label>
+              <textarea name="lineItemNotes-{{i}}" type="text" class="form-control" id="lineItemNotes-{{i}}" #lineItemNotes ngModel
+                        placeholder="Write any notes about {{student.fname}}'s day here (optional)"></textarea>
+            </div>
+            <!--TODO: Add option to select extra items-->
           </ng-container>
           <button type="submit" class="btn btn-primary" [disabled]="!checkOutStudentsForm.form.valid">Check Out</button>
           <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>

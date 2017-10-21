@@ -101,7 +101,7 @@ const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
-    path: 'create-invoice-details',
+    path: 'create-invoice-details/:id',
     component: CreateInvoiceDetailsComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
