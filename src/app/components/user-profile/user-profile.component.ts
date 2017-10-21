@@ -44,24 +44,36 @@ export class UserProfileComponent implements OnInit {
         this.changePasswordStatus.message = 'You have successfully changed your password';
         changePasswordForm.resetForm();
       }, err => {
-        if (err.status === 401) {
-          this.changePasswordStatus.success = false;
-          this.changePasswordStatus.message = 'An error occurred while reauthorizing your account';
-        } else {
-          console.log(err);
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
           this.changePasswordStatus.success = false;
           this.changePasswordStatus.message = 'An unexpected error occurred';
+        } else {
+          if (err.status === 401) {
+            this.changePasswordStatus.success = false;
+            this.changePasswordStatus.message = 'An error occurred while reauthorizing your account';
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.changePasswordStatus.success = false;
+            this.changePasswordStatus.message = 'An unexpected server error occurred';
+          }
         }
       })
 
     }).catch(err => {
-      if (err.status === 400) {
-        this.changePasswordStatus.success = false;
-        this.changePasswordStatus.message = 'Old password is incorrect';
-      } else {
-        console.log(err);
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
         this.changePasswordStatus.success = false;
         this.changePasswordStatus.message = 'An unexpected error occurred';
+      } else {
+        if (err.status === 400) {
+          this.changePasswordStatus.success = false;
+          this.changePasswordStatus.message = 'Old password is incorrect';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.changePasswordStatus.success = false;
+          this.changePasswordStatus.message = 'An unexpected server error occurred';
+        }
       }
     })
   }

@@ -13,7 +13,7 @@ export class StudentService {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getStudent(id: number): Promise<any> {
+  getStudent(id: string): Promise<any> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({

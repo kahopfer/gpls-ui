@@ -16,7 +16,7 @@ import {isNullOrUndefined} from "util";
 })
 export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   private studentIdSub: any;
-  studentIdArray: any[] = [];
+  studentIdArray: string[] = [];
 
   private fullNameSub: any;
   fullName: string;
@@ -89,11 +89,16 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       }
       this.studentsStatus.success = true;
       this.getGuardians();
-      console.log(this.guardianArray);
     }).catch(err => {
-      console.log(err);
-      this.studentsStatus.success = false;
-      this.studentsStatus.message = 'An error occurred while loading the students';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.studentsStatus.success = false;
+        this.studentsStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.studentsStatus.success = false;
+        this.studentsStatus.message = 'An error occurred while loading the students';
+      }
     })
   }
 
@@ -110,9 +115,15 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       }
       this.guardiansStatus.success = true;
     }).catch(err => {
-      console.log(err);
-      this.guardiansStatus.success = false;
-      this.guardiansStatus.message = 'An error occurred while loading the guardians';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.guardiansStatus.success = false;
+        this.guardiansStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.guardiansStatus.success = false;
+        this.guardiansStatus.message = 'An error occurred while loading the guardians';
+      }
     })
   }
 
@@ -130,13 +141,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       // This is where the line items would be created
       this.router.navigate(['/check-out']);
     }).catch(err => {
-      if (err.status === 400) {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
         this.studentsStatus.success = false;
-        this.studentsStatus.message = 'Missing a required field';
+        this.studentsStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(err);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while updating the student';
+        if (err.status === 400) {
+          this.studentsStatus.success = false;
+          this.studentsStatus.message = 'Missing a required field';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.studentsStatus.success = false;
+          this.studentsStatus.message = 'An error occurred while updating the student';
+        }
       }
     });
   }

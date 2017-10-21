@@ -43,9 +43,15 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       this.resetPasswordStatus.message = 'You have successfully reset the password for ' + this.username;
       resetPasswordForm.reset();
     }).catch(err => {
-      console.log(err);
-      this.resetPasswordStatus.success = false;
-      this.resetPasswordStatus.message = 'An error occurred';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.resetPasswordStatus.success = false;
+        this.resetPasswordStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.resetPasswordStatus.success = false;
+        this.resetPasswordStatus.message = 'An unexpected server error occurred';
+      }
     })
   }
 

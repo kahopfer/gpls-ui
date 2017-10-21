@@ -4,7 +4,6 @@ export class Student {
   lname: string;
   mi: string;
   // birthdate: Date;
-  // allergyCode: string[];
   notes: string;
   checkedIn: boolean;
   familyUnitID: string;

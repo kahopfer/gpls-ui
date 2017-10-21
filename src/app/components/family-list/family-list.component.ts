@@ -46,9 +46,15 @@ export class FamilyListComponent implements OnInit, OnDestroy {
       this.families = families.json().families;
       this.familiesStatus.success = true;
     }).catch(err => {
-      console.log(err);
-      this.familiesStatus.success = false;
-      this.familiesStatus.message = 'An error occurred while getting the list of families';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.familiesStatus.success = false;
+        this.familiesStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.familiesStatus.success = false;
+        this.familiesStatus.message = 'An error occurred while getting the list of families';
+      }
     });
     this.loading = false;
   }

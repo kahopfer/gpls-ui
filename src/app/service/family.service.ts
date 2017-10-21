@@ -26,7 +26,7 @@ export class FamilyService {
       .catch(this.handleError);
   }
 
-  getFamily(id: number): Promise<any> {
+  getFamily(id: string): Promise<any> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({

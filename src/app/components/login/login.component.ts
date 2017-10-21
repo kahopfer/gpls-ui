@@ -36,13 +36,19 @@ export class LoginComponent implements OnInit {
         // login successful
         this.router.navigate(['/']);
       }, err => {
-        if (err.status === 401) {
-          this.error = 'Username or password is incorrect';
-          this.loading = false;
-        } else {
-          console.log(err);
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
           this.error = 'An unexpected error occurred.';
           this.loading = false;
+        } else {
+          if (err.status === 401) {
+            this.error = 'Username or password is incorrect';
+            this.loading = false;
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.error = 'An unexpected server error occurred.';
+            this.loading = false;
+          }
         }
       });
   }

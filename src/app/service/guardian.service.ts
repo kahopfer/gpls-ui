@@ -13,7 +13,7 @@ export class GuardianService {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getGuardian(id: number): Promise<any> {
+  getGuardian(id: string): Promise<any> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({

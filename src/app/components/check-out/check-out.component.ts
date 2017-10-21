@@ -34,9 +34,15 @@ export class CheckOutComponent implements OnInit {
       this.students = students.json().students;
       this.studentsStatus.success = true;
     }).catch(err => {
-      console.log(err);
-      this.studentsStatus.success = false;
-      this.studentsStatus.message = 'An error occurred while loading the students';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.studentsStatus.success = false;
+        this.studentsStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.studentsStatus.success = false;
+        this.studentsStatus.message = 'An error occurred while loading the students';
+      }
     });
     this.studentsLoading = false;
   }

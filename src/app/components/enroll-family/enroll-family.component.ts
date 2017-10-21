@@ -146,19 +146,37 @@ export class EnrollFamilyComponent implements OnInit {
           this.enrollFamilyStatus.success = true;
           this.location.back();
         }, err => {
-          console.log(err);
-          this.enrollFamilyStatus.success = false;
-          this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + model.value.familyName + ' family';
+          if (err.error instanceof Error) {
+            console.log('An error occurred:', err.error.message);
+            this.enrollFamilyStatus.success = false;
+            this.enrollFamilyStatus.message = 'An unexpected error occurred';
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.enrollFamilyStatus.success = false;
+            this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + model.value.familyName + ' family';
+          }
         });
       }).catch(err => {
-        console.log(err);
-        this.enrollGuardianStatus.success = false;
-        this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian';
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.enrollGuardianStatus.success = false;
+          this.enrollGuardianStatus.message = 'An unexpected error occurred';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.enrollGuardianStatus.success = false;
+          this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian';
+        }
       });
     }).catch((err) => {
-      console.log(err);
-      this.enrollStudentStatus.success = false;
-      this.enrollStudentStatus.message = 'An error occurred while enrolling the student';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.enrollStudentStatus.success = false;
+        this.enrollStudentStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.enrollStudentStatus.success = false;
+        this.enrollStudentStatus.message = 'An error occurred while enrolling the student';
+      }
     })
   }
 

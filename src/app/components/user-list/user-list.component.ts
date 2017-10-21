@@ -34,9 +34,15 @@ export class UserListComponent implements OnInit {
       this.users = users.json().users;
       this.usersStatus.success = true;
     }).catch(err => {
-      console.log(err);
-      this.usersStatus.success = false;
-      this.usersStatus.message = 'An error occurred while getting the list of users';
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.usersStatus.success = false;
+        this.usersStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.usersStatus.success = false;
+        this.usersStatus.message = 'An error occurred while getting the list of users';
+      }
     });
     this.loading = false;
   }
@@ -46,13 +52,19 @@ export class UserListComponent implements OnInit {
       this.usersStatus.success = true;
       this.getUsers();
     }).catch(err => {
-      if (err.status === 400) {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
         this.usersStatus.success = false;
-        this.usersStatus.message = 'You cannot delete yourself from the system';
+        this.usersStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(err);
-        this.usersStatus.success = false;
-        this.usersStatus.message = 'An error occurred while deleting the user ' + username;
+        if (err.status === 400) {
+          this.usersStatus.success = false;
+          this.usersStatus.message = 'You cannot delete yourself from the system';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.usersStatus.success = false;
+          this.usersStatus.message = 'An error occurred while deleting the user ' + username;
+        }
       }
     })
   }
