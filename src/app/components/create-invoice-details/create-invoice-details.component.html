@@ -21,9 +21,10 @@
     <div class="col-12">
       <br>
       <app-error-alert [status]="lineItemsStatus"></app-error-alert>
-      <p-dataTable [value]="lineItems" [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner">
+      <p-dataTable [value]="lineItems" selectionMode="single" [(selection)]="selectedLineItem"
+                   [loading]="lineItemsLoading" loadingIcon="fa-spinner" (onRowSelect)="onLineItemSelect($event)"
+                   [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
-        <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
         <p-column field="checkIn" header="Check In Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
@@ -38,16 +39,96 @@
         <p-column field="checkOutBy" header="Checked Out By"></p-column>
         <p-column field="notes" header="Notes"></p-column>
         <p-footer>
-          <button type="button" class="btn btn-success">Add a Line Item</button>
-          <button type="button" class="btn btn-primary" [disabled]="selectedLineItem == null">Edit Selected Line Item
-          </button>
-          <button type="button" class="btn btn-danger" [disabled]="selectedLineItem == null">Delete Selected Line Item
-          </button>
+          <div class="ui-helper-clearfix" style="width:100%">
+            <button type="button" pButton icon="fa-plus" style="float:left"
+                    (click)="showDialogToAddLineItem()"
+                    label="Add new line item"></button>
+          </div>
         </p-footer>
       </p-dataTable>
     </div>
-
     <br>
+
+    <form *ngIf="lineItem" #lineItemDetailsForm="ngForm" (ngSubmit)="saveLineItem(lineItem)">
+      <p-dialog header="Line Item Details" [(visible)]="displayLineItemDialog" [responsive]="true" showEffect="fade"
+                [modal]="true" [width]="400" [resizable]="false">
+        <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
+        <app-error-alert [status]="lineItemStatus"></app-error-alert>
+        <div class="form-group">
+          <label for="studentName">Student</label>
+          <select name="studentID" class="form-control" required id="studentName"
+                  [(ngModel)]="lineItem.studentID" #studentName="ngModel">
+            <option></option>
+            <option *ngFor="let student of students" [value]="student._id">{{student.fname}} {{student.lname}}</option>
+          </select>
+          <small [hidden]="studentName.valid" class="text-danger">
+            Student name is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="checkIn">Check In Time</label>
+          <br>
+          <p-calendar name="checkIn" id="checkIn" [(ngModel)]="lineItem.checkIn" #checkIn="ngModel"
+                      [showTime]="true" hourFormat="12" required></p-calendar>
+          <br>
+          <small [hidden]="checkIn.valid" class="text-danger">
+            Check in time is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="checkOut">Check Out Time</label>
+          <br>
+          <p-calendar name="checkOut" id="checkOut" [(ngModel)]="lineItem.checkOut"
+                      #checkOut="ngModel" [showTime]="true" hourFormat="12" required></p-calendar>
+          <br>
+          <small [hidden]="checkOut.valid" class="text-danger">
+            Check out time is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="checkInBy">Checked In By</label>
+          <select name="checkInBy" class="form-control" required id="checkInBy"
+                  [(ngModel)]="lineItem.checkInBy" #checkInBy="ngModel">
+            <option></option>
+            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">{{guardian.fname}}
+              {{guardian.lname}}
+            </option>
+            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}} {{user.lastname}}</option>
+            <option value="Other">Other</option>
+          </select>
+          <small [hidden]="checkInBy.valid" class="text-danger">
+            Checked in by is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="checkOutBy">Checked Out By</label>
+          <select name="checkOutBy" class="form-control" required id="checkOutBy"
+                  [(ngModel)]="lineItem.checkOutBy" #checkOutBy="ngModel">
+            <option></option>
+            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">{{guardian.fname}}
+              {{guardian.lname}}
+            </option>
+            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}} {{user.lastname}}</option>
+            <option value="Other">Other</option>
+          </select>
+          <small [hidden]="checkOutBy.valid" class="text-danger">
+            Checked out by is required.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea type="text" name="notes" class="form-control" id="notes"
+                    placeholder="Write any notes about the line item here (optional)"
+                    [(ngModel)]="lineItem.notes"></textarea>
+        </div>
+        <p-footer>
+          <button type="submit" pButton icon="fa-check"
+                  [disabled]="!lineItemDetailsForm.form.valid" label="Save"></button>
+          <button *ngIf="newLineItem === false" type="button" pButton icon="fa-close"
+                  (click)="deleteLineItem(lineItem._id)" label="Delete"></button>
+        </p-footer>
+      </p-dialog>
+    </form>
   </div>
   <div class="row justify-content-center">
     <form class="form form-inline" #createInvoiceForm="ngForm" (submit)="goBack()">

@@ -345,6 +345,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     // If the student is not new, then update the selected student
     if (this.newStudent === false) {
       this.studentService.updateStudent(student).then(() => {
+        this.studentStatus.success = true;
         this.student = null;
         this.displayStudentDialog = false;
         this.getStudents(this.route.snapshot.params['id']);
@@ -417,6 +418,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   saveGuardian(guardian: Guardian) {
     if (this.newGuardian === false) {
       this.guardianService.updateGuardian(guardian).then(() => {
+        this.guardianStatus.success = true;
         this.guardian = null;
         this.displayGuardianDialog = false;
         this.getGuardians(this.route.snapshot.params['id']);
