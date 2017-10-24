@@ -33,7 +33,7 @@ export class LineItemService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     });
-    const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull`;
+    const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull&invoiced=null`;
     return this.http.get(url, {headers: headers})
       .toPromise()
       .catch(this.handleError);

@@ -1,4 +1,4 @@
 export class ExtraItem {
   itemName: string;
-  itemValue: string;
+  itemValue: number;
 }

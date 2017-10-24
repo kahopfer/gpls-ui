@@ -4,7 +4,7 @@
     <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
     <input #gb type="text" pInputText size="50" placeholder="Global Filter">
   </div>
-  <p-dataTable [value]="families | orderBy: order" [rows]="10" [paginator]="true" [globalFilter]="gb" selectionMode="single"
+  <p-dataTable [value]="families | orderBy: order" [rows]="10" scrollable="true" scrollHeight="400px" [globalFilter]="gb" selectionMode="single"
                [responsive]="true" [loading]="loading" loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) "
                #dt>
     <p-header>Families</p-header>

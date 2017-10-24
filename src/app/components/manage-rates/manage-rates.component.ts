@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import {Status} from "../error-alert/error-alert.component";
+import {PriceList} from "../../models/priceList";
+import {PriceListService} from "../../service/priceList.service";
 
 @Component({
   selector: 'app-manage-rates',
@@ -7,45 +10,68 @@ import {Component, OnInit} from '@angular/core';
 })
 export class ManageRatesComponent implements OnInit {
 
-  rates: any[];
+  nonExtraPriceList: PriceList[];
+  extraPriceList: PriceList[];
 
-  constructor() {
+  nonExtraPriceListStatus: Status;
+  extraPriceListStatus: Status;
+
+  nonExtraPriceListLoading: boolean = true;
+  extraPriceListLoading: boolean = true;
+
+  constructor(private priceListService: PriceListService) {
+    this.nonExtraPriceListStatus = {
+      success: null,
+      message: null
+    };
+
+    this.extraPriceListStatus = {
+      success: null,
+      message: null
+    };
   }
 
   ngOnInit() {
-    this.rates = [{
-      name: 'Before Care Full Week',
-      value: 31.00,
-      extra: false
-    }, {
-      name: 'Before Care Full Morning',
-      value: 6.60,
-      extra: false
-    }, {
-      name: 'Before Care Hour or Less',
-      value: 3.90,
-      extra: false
-    }, {
-      name: 'After Care Full Week',
-      value: 40.00,
-      extra: false
-    }, {
-      name: 'After Care Full Afternoon',
-      value: 8.90,
-      extra: false
-    }, {
-      name: 'After Care Hour or Less',
-      value: 4.45,
-      extra: false
-    }, {
-      name: 'Early In Late Out',
-      value: 1.25,
-      extra: false
-    }, {
-      name: 'Breakfast',
-      value: 1.25,
-      extra: true
-    }]
+    this.getNonExtraPriceList();
+    this.getExtraPriceList();
+  }
+
+  getNonExtraPriceList() {
+    this.nonExtraPriceListLoading = true;
+    this.priceListService.getNonExtraPriceList().then(priceList => {
+      this.nonExtraPriceList = priceList.json().priceLists;
+      this.nonExtraPriceListStatus.success = true;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.nonExtraPriceListStatus.success = false;
+        this.nonExtraPriceListStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.nonExtraPriceListStatus.success = false;
+        this.nonExtraPriceListStatus.message = 'An error occurred while loading the price list';
+      }
+    });
+    this.nonExtraPriceListLoading = false;
+  }
+
+  getExtraPriceList() {
+    this.extraPriceListLoading = true;
+    this.priceListService.getExtraPriceList().then(priceList => {
+      this.extraPriceList = priceList.json().priceLists;
+      this.extraPriceListStatus.success = true;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.extraPriceListStatus.success = false;
+        this.extraPriceListStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.extraPriceListStatus.success = false;
+        this.extraPriceListStatus.message = 'An error occurred while loading the price list';
+      }
+    });
+    this.extraPriceListLoading = false;
   }
 
   saveChanges() {

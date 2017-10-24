@@ -41,6 +41,7 @@ import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details
 import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
 import {OrderModule} from "ngx-order-pipe";
 import {LineItemService} from "./service/lineItem.service";
+import {PriceListService} from "./service/priceList.service";
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import {LineItemService} from "./service/lineItem.service";
     StudentService,
     GuardianService,
     UserService,
-    LineItemService
+    LineItemService,
+    PriceListService
   ],
   bootstrap: [AppComponent]
 })
