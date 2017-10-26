@@ -173,9 +173,15 @@
         </div>
         <br>
         <!--<div class="margin-20">-->
-        <button type="submit" class="btn btn-primary" [disabled]="!enrollFamilyForm.valid">Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!enrollFamilyForm.valid">
+          <i class="fa fa-check"></i>
+          Save
+        </button>
         <!--</div>-->
-        <button type="button" class="btn btn-secondary pull-right" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-secondary pull-right" (click)="cancel()">
+          <i class="fa fa-ban"></i>
+          Cancel
+        </button>
         <div class="clearfix"></div>
       </form>
     </div>

@@ -26,8 +26,14 @@
             </div>
             <!--TODO: Add option to select extra items-->
           </ng-container>
-          <button type="submit" class="btn btn-primary" [disabled]="!checkOutStudentsForm.form.valid">Check Out</button>
-          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!checkOutStudentsForm.form.valid">
+            <i class="fa fa-check"></i>
+            Check Out
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            <i class="fa fa-ban"></i>
+            Cancel
+          </button>
         </form>
       </div>
       <div *ngIf="students.length === 0">

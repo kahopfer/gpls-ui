@@ -22,9 +22,13 @@
     </p-column>
     <!--<p-column field="paid" header="Paid" [sortable]="true"></p-column>-->
     <p-footer>
-      <button type="button" class="btn btn-success" [disabled]="selectedInvoice == null">Download Selected Invoice
+      <button type="button" class="btn btn-success" [disabled]="selectedInvoice == null">
+        <i class="fa fa-download"></i>
+        Download Selected Invoice
       </button>
-      <button type="button" class="btn btn-danger" [disabled]="selectedInvoice == null">Delete Selected Invoice
+      <button type="button" class="btn btn-danger" [disabled]="selectedInvoice == null">
+        <i class="fa fa-close"></i>
+        Delete Selected Invoice
       </button>
     </p-footer>
   </p-dataTable>

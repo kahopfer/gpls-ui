@@ -189,7 +189,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       })
     } else {
       this.lineItemService.createLineItem(this.route.snapshot.params['id'], this.lineItem.studentID, this.lineItem.checkIn,
-        this.lineItem.checkOut, this.lineItem.extraItems, this.lineItem.earlyInLateOutFee, this.lineItem.lineTotalCost,
+        this.lineItem.checkOut, this.lineItem.extraItems, 0.00, 0.00,
         this.lineItem.checkInBy, this.lineItem.checkOutBy, this.lineItem.notes, this.lineItem.invoiceID).subscribe(() => {
         this.lineItemStatus.success = true;
         this.lineItem = null;

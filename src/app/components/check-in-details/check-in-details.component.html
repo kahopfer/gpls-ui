@@ -20,8 +20,14 @@
               </select>
             </div>
           </ng-container>
-          <button type="submit" class="btn btn-primary" [disabled]="!checkInStudentsForm.form.valid">Check In</button>
-          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!checkInStudentsForm.form.valid">
+            <i class="fa fa-check"></i>
+            Check In
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            <i class="fa fa-ban"></i>
+            Cancel
+          </button>
         </form>
       </div>
       <div *ngIf="students.length === 0">

@@ -12,7 +12,9 @@
     <p-column field="lname" header="Last Name"></p-column>
     <p-footer>
       <button type="button" class="btn btn-success" [disabled]="selectedStudents.length === 0"
-              (click)="goToCheckOutDetails()">Check Out
+              (click)="goToCheckOutDetails()">
+        <i class="fa fa-check"></i>
+        Check Out
       </button>
     </p-footer>
   </p-dataTable>
