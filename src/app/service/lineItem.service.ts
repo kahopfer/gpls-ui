@@ -39,6 +39,32 @@ export class LineItemService {
       .catch(this.handleError);
   }
 
+  getUninvoicedLineItemsByStudent(studentID: string): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/lineItems?studentID=${studentID}&invoiced=null`;
+    return this.http.get(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
+  getUninvoicedLineItemsByFamily(familyID: string): Promise<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&invoiced=null`;
+    return this.http.get(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
   getLineItemsWithoutCheckOut(studentID: string) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;

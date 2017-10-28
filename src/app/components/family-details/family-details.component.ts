@@ -10,6 +10,7 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
+import {LineItemService} from "../../service/lineItem.service";
 
 @Component({
   selector: 'app-family-details',
@@ -55,8 +56,8 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   guardiansLoading: boolean = true;
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
-              private guardianService: GuardianService, private route: ActivatedRoute,
-              private location: Location, private authService: AuthenticationService) {
+              private guardianService: GuardianService, private route: ActivatedRoute, private location: Location,
+              private authService: AuthenticationService, private lineItemService: LineItemService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     this.admin = currentUser && currentUser.admin;
@@ -158,68 +159,86 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   }
 
   deleteFamily() {
-    let deleteStudents = new Promise((resolve, reject) => {
-      for (let studentIndex in this.students) {
-        this.studentService.deleteStudent(this.students[studentIndex]._id).then(() => {
-          this.studentsStatus.success = true;
-        }).catch(err => {
-          reject(err);
-          return;
-        })
-      }
-      resolve();
-    });
+    this.lineItemService.getUninvoicedLineItemsByFamily(this.route.snapshot.params['id']).then(lineItems => {
+      if (lineItems.json().lineItems.length > 0) {
+        this.familyStatus.success = false;
+        this.familyStatus.message = 'You cannot delete a family with uninvoiced line items';
+        return;
+      } else {
+        let deleteStudents = new Promise((resolve, reject) => {
+          for (let studentIndex in this.students) {
+            this.studentService.deleteStudent(this.students[studentIndex]._id).then(() => {
+              this.studentsStatus.success = true;
+            }).catch(err => {
+              reject(err);
+              return;
+            })
+          }
+          resolve();
+        });
 
-    let deleteGuardians = new Promise((resolve, reject) => {
-      for (let guardianIndex in this.guardians) {
-        this.guardianService.deleteGuardian(this.guardians[guardianIndex]._id).then(() => {
-          this.guardiansStatus.success = true;
-        }).catch(err => {
-          reject(err);
-          return;
-        })
-      }
-      resolve();
-    });
+        let deleteGuardians = new Promise((resolve, reject) => {
+          for (let guardianIndex in this.guardians) {
+            this.guardianService.deleteGuardian(this.guardians[guardianIndex]._id).then(() => {
+              this.guardiansStatus.success = true;
+            }).catch(err => {
+              reject(err);
+              return;
+            })
+          }
+          resolve();
+        });
 
-    deleteStudents.then(() => {
-      deleteGuardians.then(() => {
-        this.familyService.deleteFamily(this.route.snapshot.params['id']).then(() => {
-          this.familyStatus.success = true;
-          this.location.back();
+        deleteStudents.then(() => {
+          deleteGuardians.then(() => {
+            this.familyService.deleteFamily(this.route.snapshot.params['id']).then(() => {
+              this.familyStatus.success = true;
+              this.location.back();
+            }).catch(err => {
+              if (err.error instanceof Error) {
+                console.log('An error occurred:', err.error.message);
+                this.familyStatus.success = false;
+                this.familyStatus.message = 'An unexpected error occurred';
+              } else {
+                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+                this.familyStatus.success = false;
+                this.familyStatus.message = 'An error occurred while deleting the family';
+              }
+            })
+          }).catch(err => {
+            if (err.error instanceof Error) {
+              console.log('An error occurred:', err.error.message);
+              this.guardiansStatus.success = false;
+              this.guardiansStatus.message = 'An unexpected error occurred';
+            } else {
+              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+              this.guardiansStatus.success = false;
+              this.guardiansStatus.message = 'An error occurred while deleting the guardians';
+            }
+          })
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.familyStatus.success = false;
-            this.familyStatus.message = 'An unexpected error occurred';
+            this.studentsStatus.success = false;
+            this.studentsStatus.message = 'An unexpected error occurred';
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.familyStatus.success = false;
-            this.familyStatus.message = 'An error occurred while deleting the family';
+            this.studentsStatus.success = false;
+            this.studentsStatus.message = 'An error occurred while deleting the students';
           }
         })
-      }).catch(err => {
-        if (err.error instanceof Error) {
-          console.log('An error occurred:', err.error.message);
-          this.guardiansStatus.success = false;
-          this.guardiansStatus.message = 'An unexpected error occurred';
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.guardiansStatus.success = false;
-          this.guardiansStatus.message = 'An error occurred while deleting the guardians';
-        }
-      })
+      }
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An unexpected error occurred';
+        this.familyStatus.success = false;
+        this.familyStatus.message = 'An unexpected error occurred';
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while deleting the students';
+        this.familyStatus.success = false;
+        this.familyStatus.message = 'An error occurred while loading the family\'s line items';
       }
-    })
+    });
   }
 
   deleteStudent(id: string) {
@@ -229,45 +248,63 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Remove student ID from family record
-    let deleteStudentFromFamilyRecord = new Promise((resolve, reject) => {
-      for (let familyIndex in this.family.students) {
-        if (this.family.students[familyIndex] == id) {
-          // If student ID is found in family record, remove it from the student's array
-          this.family.students.splice(+familyIndex, 1);
-          this.familyService.updateFamily(this.family).then(() => {
-            this.studentStatus.success = true;
-          }).catch(err => {
-            reject(err);
-            return;
-          })
-        }
-      }
-      resolve();
-    });
+    this.lineItemService.getUninvoicedLineItemsByStudent(id).then(lineItems => {
+      if (lineItems.json().lineItems.length > 0) {
+        this.studentStatus.success = false;
+        this.studentStatus.message = 'You cannot delete a student with uninvoiced line items';
+        return;
+      } else {
+        // Remove student ID from family record
+        let deleteStudentFromFamilyRecord = new Promise((resolve, reject) => {
+          for (let familyIndex in this.family.students) {
+            if (this.family.students[familyIndex] == id) {
+              // If student ID is found in family record, remove it from the student's array
+              this.family.students.splice(+familyIndex, 1);
+              this.familyService.updateFamily(this.family).then(() => {
+                this.studentStatus.success = true;
+              }).catch(err => {
+                reject(err);
+                return;
+              })
+            }
+          }
+          resolve();
+        });
 
-    deleteStudentFromFamilyRecord.then(() => {
-      this.studentService.deleteStudent(id).then(() => {
-        this.studentStatus.success = true;
-        this.student = null;
-        this.displayStudentDialog = false;
-        this.getStudents(this.route.snapshot.params['id']);
-      }).catch(err => {
-        if (err.error instanceof Error) {
-          console.log('An error occurred:', err.error.message);
-          this.studentStatus.success = false;
-          this.studentStatus.message = 'An unexpected error occurred';
-        } else {
-          if (err.status === 404) {
+        deleteStudentFromFamilyRecord.then(() => {
+          this.studentService.deleteStudent(id).then(() => {
+            this.studentStatus.success = true;
+            this.student = null;
+            this.displayStudentDialog = false;
+            this.getStudents(this.route.snapshot.params['id']);
+          }).catch(err => {
+            if (err.error instanceof Error) {
+              console.log('An error occurred:', err.error.message);
+              this.studentStatus.success = false;
+              this.studentStatus.message = 'An unexpected error occurred';
+            } else {
+              if (err.status === 404) {
+                this.studentStatus.success = false;
+                this.studentStatus.message = 'Student not found';
+              } else {
+                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+                this.studentStatus.success = false;
+                this.studentStatus.message = 'An error occurred while deleting the student';
+              }
+            }
+          })
+        }).catch(err => {
+          if (err.error instanceof Error) {
+            console.log('An error occurred:', err.error.message);
             this.studentStatus.success = false;
-            this.studentStatus.message = 'Student not found';
+            this.studentStatus.message = 'An unexpected error occurred';
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
             this.studentStatus.success = false;
-            this.studentStatus.message = 'An error occurred while deleting the student';
+            this.studentStatus.message = 'An error occurred updating the family record';
           }
-        }
-      })
+        });
+      }
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -276,7 +313,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
         this.studentStatus.success = false;
-        this.studentStatus.message = 'An error occurred updating the family record';
+        this.studentStatus.message = 'An error occurred while retrieving the student\'s line items';
       }
     });
   }
