@@ -177,19 +177,20 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
           resolve();
         });
 
-        let deleteGuardians = new Promise((resolve, reject) => {
-          for (let guardianIndex in this.guardians) {
-            this.guardianService.deleteGuardian(this.guardians[guardianIndex]._id).then(() => {
-              this.guardiansStatus.success = true;
-            }).catch(err => {
-              reject(err);
-              return;
-            })
-          }
-          resolve();
-        });
-
         deleteStudents.then(() => {
+
+          let deleteGuardians = new Promise((resolve, reject) => {
+            for (let guardianIndex in this.guardians) {
+              this.guardianService.deleteGuardian(this.guardians[guardianIndex]._id).then(() => {
+                this.guardiansStatus.success = true;
+              }).catch(err => {
+                reject(err);
+                return;
+              })
+            }
+            resolve();
+          });
+
           deleteGuardians.then(() => {
             this.familyService.deleteFamily(this.route.snapshot.params['id']).then(() => {
               this.familyStatus.success = true;
