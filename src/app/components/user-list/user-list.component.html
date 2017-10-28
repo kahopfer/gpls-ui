@@ -9,12 +9,19 @@
       <p-column field="lastname" header="Last Name"></p-column>
       <p-column field="authorities" header="Authorities"></p-column>
       <p-footer>
-        <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">Create a New User</button>
+        <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">
+          <i class="fa fa-plus"></i>
+          Create a New User
+        </button>
         <button type="button" class="btn btn-primary" [disabled]="selectedUser == null"
-                (click)="goToResetPasswordForm(selectedUser.username)">Reset Password for Selected User
+                (click)="goToResetPasswordForm(selectedUser.username)">
+          <i class="fa fa-repeat"></i>
+          Reset Password for Selected User
         </button>
         <button type="button" class="btn btn-danger" [disabled]="selectedUser == null"
-                (click)="deleteSelectedUser(selectedUser.username)">Delete Selected User
+                (click)="deleteSelectedUser(selectedUser.username)">
+          <i class="fa fa-close"></i>
+          Delete Selected User
         </button>
         <app-back-button></app-back-button>
       </p-footer>

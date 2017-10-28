@@ -24,7 +24,7 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  createUser(username: string, password: string, firstname: string, lastname: string, admin: string): Promise<any> {
+  createUser(username: string, password: string, firstname: string, lastname: string, admin: boolean): Promise<any> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
@@ -32,7 +32,7 @@ export class UserService {
       'Authorization': 'Bearer ' + token
     });
     const url = `${this.gplsApiUrl}/users`;
-    if (JSON.parse(admin)) {
+    if (admin) {
       return this.http.post(url, JSON.stringify({
         username: username,
         password: password,

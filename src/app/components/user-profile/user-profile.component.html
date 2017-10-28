@@ -28,7 +28,9 @@
             New password is required (minimum 8 characters).
           </small>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!changePasswordForm.form.valid">Change Password
+        <button type="submit" class="btn btn-primary" [disabled]="!changePasswordForm.form.valid">
+          <i class="fa fa-check"></i>
+          Change Password
         </button>
         <app-back-button></app-back-button>
       </form>

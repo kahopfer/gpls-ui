@@ -17,7 +17,7 @@ export class AddUserComponent implements OnInit {
   encryptedPassword: string;
   firstname: string;
   lastname: string;
-  admin: string;
+  admin: boolean;
 
   constructor(private userService: UserService, private router: Router, private location: Location) {
     this.createUserStatus = {
@@ -59,5 +59,4 @@ export class AddUserComponent implements OnInit {
   cancel() {
     this.location.back();
   }
-
 }

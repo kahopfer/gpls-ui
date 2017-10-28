@@ -140,7 +140,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
     for (let studentIndex in this.students) {
       createLineItemPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
-        this.students[studentIndex]._id, new Date(), null, null, 0.00, 0.00,
+        this.students[studentIndex]._id, false, new Date(), null, null, 0.00, 0.00,
         form.value['checkInBy-' + studentIndex], null, null, null).toPromise());
     }
 

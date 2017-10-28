@@ -22,9 +22,9 @@
       <br>
       <h5>Select a line item to edit or delete</h5>
       <app-error-alert [status]="lineItemsStatus"></app-error-alert>
-      <p-dataTable [value]="lineItems" selectionMode="single" scrollable="true" scrollHeight="400px" [(selection)]="selectedLineItem"
-                   [loading]="lineItemsLoading" loadingIcon="fa-spinner" (onRowSelect)="onLineItemSelect($event)"
-                   [metaKeySelection]="false" [responsive]="true">
+      <p-dataTable [value]="lineItems" selectionMode="single" scrollable="true" scrollHeight="400px"
+                   [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
+                   (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
         <p-column field="checkIn" header="Check In Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
@@ -39,6 +39,7 @@
         </p-column>
         <p-column field="checkOutBy" header="Checked Out By"></p-column>
         <p-column field="notes" header="Notes"></p-column>
+        <p-column field="serviceType" header="Service Type"></p-column>
         <p-footer>
           <div class="ui-helper-clearfix" style="width:100%">
             <button type="button" pButton icon="fa-plus" style="float:left"
@@ -55,6 +56,12 @@
                 [modal]="true" [width]="400" [resizable]="false">
         <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
         <app-error-alert [status]="lineItemStatus"></app-error-alert>
+        <div class="form-group" *ngIf="newLineItem == true">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" name="extraItem" [(ngModel)]="lineItem.extraItem">
+            Check if this is an extra item
+          </label>
+        </div>
         <div class="form-group">
           <label for="studentName">Student</label>
           <select name="studentID" class="form-control" required id="studentName"
@@ -70,9 +77,10 @@
           <label for="checkIn">Check In Time</label>
           <br>
           <p-calendar name="checkIn" id="checkIn" [(ngModel)]="lineItem.checkIn" #checkIn="ngModel"
-                      [showTime]="true" hourFormat="12" required></p-calendar>
+                      [disabled]="lineItem.extraItem == true" [showTime]="true" hourFormat="12"
+                      [required]="lineItem.extraItem == false"></p-calendar>
           <br>
-          <small [hidden]="checkIn.valid" class="text-danger">
+          <small [hidden]="checkIn.valid || lineItem.extraItem == true" class="text-danger">
             Check in time is required.
           </small>
         </div>
@@ -80,39 +88,46 @@
           <label for="checkOut">Check Out Time</label>
           <br>
           <p-calendar name="checkOut" id="checkOut" [(ngModel)]="lineItem.checkOut"
-                      #checkOut="ngModel" [showTime]="true" hourFormat="12" required></p-calendar>
+                      [disabled]="lineItem.extraItem == true" #checkOut="ngModel" [showTime]="true" hourFormat="12"
+                      [required]="lineItem.extraItem == false"></p-calendar>
           <br>
-          <small [hidden]="checkOut.valid" class="text-danger">
+          <small [hidden]="checkOut.valid || lineItem.extraItem == true" class="text-danger">
             Check out time is required.
           </small>
         </div>
         <div class="form-group">
           <label for="checkInBy">Checked In By</label>
-          <select name="checkInBy" class="form-control" required id="checkInBy"
-                  [(ngModel)]="lineItem.checkInBy" #checkInBy="ngModel">
+          <select name="checkInBy" class="form-control" [required]="lineItem.extraItem == false" id="checkInBy"
+                  [disabled]="lineItem.extraItem == true" [(ngModel)]="lineItem.checkInBy" #checkInBy="ngModel">
             <option></option>
-            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">{{guardian.fname}}
+            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">
+              {{guardian.fname}}
               {{guardian.lname}}
             </option>
-            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}} {{user.lastname}}</option>
+            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}}
+              {{user.lastname}}
+            </option>
             <option value="Other">Other</option>
           </select>
-          <small [hidden]="checkInBy.valid" class="text-danger">
+          <small [hidden]="checkInBy.valid || lineItem.extraItem == true" class="text-danger">
             Checked in by is required.
           </small>
         </div>
         <div class="form-group">
           <label for="checkOutBy">Checked Out By</label>
-          <select name="checkOutBy" class="form-control" required id="checkOutBy"
-                  [(ngModel)]="lineItem.checkOutBy" #checkOutBy="ngModel">
+          <select name="checkOutBy" class="form-control" [required]="lineItem.extraItem == false" id="checkOutBy"
+                  [disabled]="lineItem.extraItem == true" [(ngModel)]="lineItem.checkOutBy" #checkOutBy="ngModel">
             <option></option>
-            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">{{guardian.fname}}
+            <option *ngFor="let guardian of guardians" [value]="guardian.fname + ' ' + guardian.lname">
+              {{guardian.fname}}
               {{guardian.lname}}
             </option>
-            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}} {{user.lastname}}</option>
+            <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}}
+              {{user.lastname}}
+            </option>
             <option value="Other">Other</option>
           </select>
-          <small [hidden]="checkOutBy.valid" class="text-danger">
+          <small [hidden]="checkOutBy.valid || lineItem.extraItem == true" class="text-danger">
             Checked out by is required.
           </small>
         </div>
@@ -121,6 +136,18 @@
           <textarea type="text" name="notes" class="form-control" id="notes"
                     placeholder="Write any notes about the line item here (optional)"
                     [(ngModel)]="lineItem.notes"></textarea>
+        </div>
+        <div class="form-group" *ngIf="newLineItem || lineItem.extraItem">
+          <label for="serviceType">Service Type</label>
+          <select name="serviceType" class="form-control" id="serviceType" [disabled]="lineItem.extraItem == false"
+                  [(ngModel)]="lineItem.serviceType" [required]="lineItem.extraItem == true" #serviceType="ngModel">
+            <option></option>
+            <option *ngFor="let extraItem of extraItems" [value]="extraItem.itemName">{{extraItem.itemName}}</option>
+            <option value="Annual Registration Fee">Annual Registration Fee</option>
+          </select>
+          <small [hidden]="serviceType.valid || lineItem.extraItem == false" class="text-danger">
+            Service type is required.
+          </small>
         </div>
         <p-footer>
           <button type="submit" pButton icon="fa-check"

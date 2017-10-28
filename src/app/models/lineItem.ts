@@ -1,12 +1,11 @@
-import {ExtraItem} from "./extraItem";
-
 export class LineItem {
   _id: string;
   familyID: string;
   studentID: string;
+  extraItem: boolean;
   checkIn: Date;
   checkOut: Date;
-  extraItems: ExtraItem[];
+  serviceType: string;
   earlyInLateOutFee: number;
   lineTotalCost: number;
   checkInBy: string;

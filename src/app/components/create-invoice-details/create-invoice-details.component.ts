@@ -10,6 +10,8 @@ import {LineItemService} from "../../service/lineItem.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../service/user.service";
 import {User} from "../../models/user";
+import {PriceList} from "../../models/priceList";
+import {PriceListService} from "../../service/priceList.service";
 
 @Component({
   selector: 'app-create-invoice-details',
@@ -21,7 +23,8 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   students: Student[];
   guardians: Guardian[];
   lineItems: LineItem[];
-  users: User[] = [];
+  users: User[];
+  extraItems: PriceList[];
 
   selectedLineItem: LineItem;
   lineItem: LineItem = new LineItem();
@@ -41,7 +44,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   lineItemsLoading: boolean = true;
 
   constructor(private location: Location, private studentService: StudentService, private guardianService: GuardianService,
-              private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService) {
+              private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService, private priceListService: PriceListService) {
     this.guardiansStatus = {
       success: null,
       message: null
@@ -68,6 +71,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     this.getGuardians(this.route.snapshot.params['id']);
     this.getLineItems(this.route.snapshot.params['id']);
     this.getUsers();
+    this.getExtraItems();
   }
 
   getStudents(familyUnitID: string) {
@@ -108,6 +112,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     this.guardiansLoading = false;
   }
 
+  // TODO: try to replace student id with student name
   getLineItems(familyID: string) {
     this.lineItemsLoading = true;
     this.lineItemService.getLineItemsByFamily(familyID).then(lineItems => {
@@ -130,6 +135,18 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   getUsers(): void {
     this.usersService.getUsers().then(users => {
       this.users = users.json().users;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+      }
+    });
+  }
+
+  getExtraItems(): void {
+    this.priceListService.getExtraPriceList().then(priceList => {
+      this.extraItems = priceList.json().priceLists;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -166,6 +183,9 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   saveLineItem(lineItem: LineItem) {
     // If the lineItem is not new, then update the selected lineItem
     if (this.newLineItem === false) {
+      if (!this.lineItem.extraItem) {
+        this.lineItem.serviceType = this.lineItemService.determineServiceType(this.lineItem.checkIn, this.lineItem.checkOut);
+      }
       this.lineItemService.updateLineItem(lineItem).then(() => {
         this.lineItemStatus.success = true;
         this.lineItem = null;
@@ -188,8 +208,18 @@ export class CreateInvoiceDetailsComponent implements OnInit {
         }
       })
     } else {
-      this.lineItemService.createLineItem(this.route.snapshot.params['id'], this.lineItem.studentID, this.lineItem.checkIn,
-        this.lineItem.checkOut, this.lineItem.extraItems, 0.00, 0.00,
+      if (this.lineItem.extraItem == true) {
+        let date: Date = new Date();
+        this.lineItem.checkIn = date;
+        this.lineItem.checkOut = date;
+        this.lineItem.checkInBy = 'Other';
+        this.lineItem.checkOutBy = 'Other';
+      } else {
+        this.lineItem.serviceType = this.lineItemService.determineServiceType(this.lineItem.checkIn, this.lineItem.checkOut);
+      }
+
+      this.lineItemService.createLineItem(this.route.snapshot.params['id'], this.lineItem.studentID, this.lineItem.extraItem, this.lineItem.checkIn,
+        this.lineItem.checkOut, this.lineItem.serviceType, 0.00, 0.00,
         this.lineItem.checkInBy, this.lineItem.checkOutBy, this.lineItem.notes, this.lineItem.invoiceID).subscribe(() => {
         this.lineItemStatus.success = true;
         this.lineItem = null;
@@ -239,6 +269,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   showDialogToAddLineItem() {
     this.newLineItem = true;
     this.lineItem = new LineItem();
+    this.lineItem.extraItem = false;
     this.displayLineItemDialog = true;
   }
 
