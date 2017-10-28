@@ -139,10 +139,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
     // This promise array will be used to update the existing line item for each student
     let updateLineItemPromiseArray: Promise<any>[] = [];
 
-    for (let studentIndex in this.students) {
-      this.students[studentIndex].checkedIn = false;
-      updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
-    }
+
 
     for (let studentIndex in this.students) {
       getLineItemPromiseArray.push(this.lineItemService.getLineItemsWithoutCheckOut(this.students[studentIndex]._id));
@@ -165,6 +162,12 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       }
       // Update the line items
       Promise.all(updateLineItemPromiseArray).then(() => {
+
+        for (let studentIndex in this.students) {
+          this.students[studentIndex].checkedIn = false;
+          updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
+        }
+
         // Then update each student's checked in status
         Promise.all(updateStudentPromiseArray).then(() => {
           this.studentsStatus.success = true;

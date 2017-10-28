@@ -134,17 +134,17 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
     let createLineItemPromiseArray: Promise<any>[] = [];
 
     for (let studentIndex in this.students) {
-      this.students[studentIndex].checkedIn = true;
-      updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
-    }
-
-    for (let studentIndex in this.students) {
       createLineItemPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
         this.students[studentIndex]._id, false, new Date(), null, null, 0.00, 0.00,
         form.value['checkInBy-' + studentIndex], null, null, null).toPromise());
     }
 
     Promise.all(createLineItemPromiseArray).then(() => {
+      for (let studentIndex in this.students) {
+        this.students[studentIndex].checkedIn = true;
+        updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
+      }
+
       Promise.all(updateStudentPromiseArray).then(() => {
         this.studentsStatus.success = true;
         this.router.navigate(['/check-in']);
@@ -179,7 +179,6 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
           this.studentsStatus.message = 'An error occurred while creating the line items';
         }
       }
-      return;
     });
   }
 
