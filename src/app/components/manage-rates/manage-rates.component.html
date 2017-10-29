@@ -1,4 +1,5 @@
 <div class="container">
+  <!--TODO: Make sure that price inputs only accept numbers. Also, make sure that price list items that are in uninvoiced line items cannot be deleted-->
   <app-error-alert [status]="nonExtraPriceListStatus"></app-error-alert>
   <p-dataTable [value]="nonExtraPriceList" [editable]="true" [loading]="nonExtraPriceListLoading"
                loadingIcon="fa-spinner">
