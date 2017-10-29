@@ -10,6 +10,9 @@ import {AuthenticationService} from "../../service/authentication.service";
 import {isNullOrUndefined} from "util";
 import {LineItemService} from "../../service/lineItem.service";
 import {LineItem} from "../../models/lineItem";
+import {PriceListService} from "../../service/priceList.service";
+import {PriceList} from "../../models/priceList";
+import 'rxjs/add/operator/toPromise';
 
 @Component({
   selector: 'app-check-out-details',
@@ -19,6 +22,8 @@ import {LineItem} from "../../models/lineItem";
 export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   private studentIdSub: any;
   studentIdArray: string[] = [];
+
+  extraItems: PriceList[];
 
   private fullNameSub: any;
   fullName: string;
@@ -31,7 +36,8 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
-              private authService: AuthenticationService, private lineItemService: LineItemService) {
+              private authService: AuthenticationService, private lineItemService: LineItemService,
+              private priceListService: PriceListService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
 
@@ -56,11 +62,13 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
           let studentIdString = params['id'][0];
           this.studentIdArray = studentIdString.split(',');
           this.getStudents();
+          this.getExtraItems();
         }
 
         if (typeof params['id'] === 'string') {
           this.studentIdArray = params['id'].split(',');
           this.getStudents();
+          this.getExtraItems();
         }
       }
     });
@@ -129,6 +137,18 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
     })
   }
 
+  getExtraItems(): void {
+    this.priceListService.getExtraPriceList().then(priceList => {
+      this.extraItems = priceList.json().priceLists;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+      }
+    });
+  }
+
   updateStudentCheckedInStatus(form: NgForm) {
     // This promise array will be used to update the checked in status of each student
     let updateStudentPromiseArray: Promise<any>[] = [];
@@ -139,6 +159,8 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
     // This promise array will be used to update the existing line item for each student
     let updateLineItemPromiseArray: Promise<any>[] = [];
 
+    // This promise array will be used to create line items for any extra items that the student may have had
+    let createLineItemExtraPromiseArray: Promise<any>[] = [];
 
 
     for (let studentIndex in this.students) {
@@ -170,8 +192,40 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
         // Then update each student's checked in status
         Promise.all(updateStudentPromiseArray).then(() => {
-          this.studentsStatus.success = true;
-          this.router.navigate(['/check-out']);
+
+          for (let studentIndex in this.students) {
+            // Go through extra items
+            for (let extraItemIndex in this.extraItems) {
+              // If an extra item was checked...
+              if (form.value['extraItem-' + studentIndex + '-' + extraItemIndex]) {
+                let date: Date = new Date();
+                // ...then add it to the promise array
+                createLineItemExtraPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
+                  this.students[studentIndex]._id, true, date, date, this.extraItems[extraItemIndex].itemName,
+                  0, 0, 'Other', 'Other', null, null).toPromise());
+              }
+            }
+          }
+
+          Promise.all(createLineItemExtraPromiseArray).then(() => {
+            this.studentsStatus.success = true;
+            this.router.navigate(['/check-out']);
+          }).catch(err => {
+            if (err.error instanceof Error) {
+              console.log('An error occurred:', err.error.message);
+              this.studentsStatus.success = false;
+              this.studentsStatus.message = 'An unexpected error occurred';
+            } else {
+              if (err.status === 400) {
+                this.studentsStatus.success = false;
+                this.studentsStatus.message = 'Missing a required field';
+              } else {
+                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+                this.studentsStatus.success = false;
+                this.studentsStatus.message = 'An error occurred while creating the extra line items';
+              }
+            }
+          });
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
