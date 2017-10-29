@@ -22,10 +22,11 @@
       <br>
       <h5>Select a line item to edit or delete</h5>
       <app-error-alert [status]="lineItemsStatus"></app-error-alert>
-      <p-dataTable [value]="lineItems" selectionMode="single" scrollable="true" scrollHeight="400px"
+      <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" scrollable="true" scrollHeight="400px"
                    [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
+        <p-column field="studentName" header="Student Name"></p-column>
         <p-column field="checkIn" header="Check In Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
@@ -73,6 +74,7 @@
             Student name is required.
           </small>
         </div>
+        <!--TODO: Find less buggy time selector-->
         <div class="form-group">
           <label for="checkIn">Check In Time</label>
           <br>

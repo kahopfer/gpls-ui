@@ -23,6 +23,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   students: Student[];
   guardians: Guardian[];
   lineItems: LineItem[];
+  lineItemsToDisplay: any[];
   users: User[];
   extraItems: PriceList[];
 
@@ -44,7 +45,8 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   lineItemsLoading: boolean = true;
 
   constructor(private location: Location, private studentService: StudentService, private guardianService: GuardianService,
-              private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService, private priceListService: PriceListService) {
+              private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService,
+              private priceListService: PriceListService) {
     this.guardiansStatus = {
       success: null,
       message: null
@@ -112,12 +114,36 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     this.guardiansLoading = false;
   }
 
-  // TODO: try to replace student id with student name
   getLineItems(familyID: string) {
+    // Used to get the students associated to each line item
+    let individualStudentPromiseArray: Promise<any>[] = [];
+
     this.lineItemsLoading = true;
     this.lineItemService.getLineItemsByFamily(familyID).then(lineItems => {
       this.lineItems = lineItems.json().lineItems;
-      this.lineItemsStatus.success = true;
+
+      for (let lineItemIndex in this.lineItems) {
+        individualStudentPromiseArray.push(this.studentService.getStudent(this.lineItems[lineItemIndex].studentID));
+      }
+
+      Promise.all(individualStudentPromiseArray).then(students => {
+        this.lineItemsToDisplay = this.lineItems;
+        for (let studentIndex in students) {
+          this.lineItemsToDisplay[studentIndex].studentName = JSON.parse(students[studentIndex]._body).fname + ' ' +
+            JSON.parse(students[studentIndex]._body).lname;
+        }
+        this.lineItemsStatus.success = true;
+      }).catch(err => {
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.lineItemsStatus.success = false;
+          this.lineItemsStatus.message = 'An unexpected error occurred';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.lineItemsStatus.success = false;
+          this.lineItemsStatus.message = 'An error occurred while loading the student names for the line items';
+        }
+      });
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
