@@ -33,6 +33,7 @@ export class CheckOutComponent implements OnInit {
     this.studentService.getCheckedInStudents().then(students => {
       this.students = students.json().students;
       this.studentsStatus.success = true;
+      this.studentsLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -43,8 +44,8 @@ export class CheckOutComponent implements OnInit {
         this.studentsStatus.success = false;
         this.studentsStatus.message = 'An error occurred while loading the students';
       }
+      this.studentsLoading = false;
     });
-    this.studentsLoading = false;
   }
 
   goToCheckOutDetails() {

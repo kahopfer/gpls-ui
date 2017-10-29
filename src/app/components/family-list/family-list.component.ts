@@ -45,6 +45,7 @@ export class FamilyListComponent implements OnInit, OnDestroy {
     this.familyService.getFamilies().then(families => {
       this.families = families.json().families;
       this.familiesStatus.success = true;
+      this.loading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -55,8 +56,8 @@ export class FamilyListComponent implements OnInit, OnDestroy {
         this.familiesStatus.success = false;
         this.familiesStatus.message = 'An error occurred while getting the list of families';
       }
+      this.loading = false;
     });
-    this.loading = false;
   }
 
   onRowSelect(event) {

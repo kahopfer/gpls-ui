@@ -41,6 +41,7 @@ export class ManageRatesComponent implements OnInit {
     this.priceListService.getNonExtraPriceList().then(priceList => {
       this.nonExtraPriceList = priceList.json().priceLists;
       this.nonExtraPriceListStatus.success = true;
+      this.nonExtraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -51,8 +52,8 @@ export class ManageRatesComponent implements OnInit {
         this.nonExtraPriceListStatus.success = false;
         this.nonExtraPriceListStatus.message = 'An error occurred while loading the price list';
       }
+      this.nonExtraPriceListLoading = false;
     });
-    this.nonExtraPriceListLoading = false;
   }
 
   getExtraPriceList() {
@@ -60,6 +61,7 @@ export class ManageRatesComponent implements OnInit {
     this.priceListService.getExtraPriceList().then(priceList => {
       this.extraPriceList = priceList.json().priceLists;
       this.extraPriceListStatus.success = true;
+      this.extraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -70,8 +72,8 @@ export class ManageRatesComponent implements OnInit {
         this.extraPriceListStatus.success = false;
         this.extraPriceListStatus.message = 'An error occurred while loading the price list';
       }
+      this.extraPriceListLoading = false;
     });
-    this.extraPriceListLoading = false;
   }
 
   saveChanges() {
