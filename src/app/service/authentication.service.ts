@@ -15,6 +15,10 @@ export class AuthenticationService {
   // Used for routing to correct profile link in navbar
   @Output() getUsername: EventEmitter<any> = new EventEmitter();
 
+  // Used for displaying profile information
+  @Output() getFirstName: EventEmitter<any> = new EventEmitter();
+  @Output() getLastName: EventEmitter<any> = new EventEmitter();
+
   public token: string;
 
   // Used for showing the navbar when logged in and hiding it when logged out
@@ -51,6 +55,7 @@ export class AuthenticationService {
         let lastname = response.json() && response.json().lastname;
         let authorities = response.json() && response.json().authorities;
         let admin: boolean = false;
+        username = response.json() && response.json().username;
 
         for (let i in authorities) {
           if (authorities[i].authority === 'ROLE_ADMIN') {
@@ -79,6 +84,10 @@ export class AuthenticationService {
         this.getLoggedInName.emit(firstname + ' ' + lastname);
 
         this.getUsername.emit(username);
+
+        this.getFirstName.emit(firstname);
+
+        this.getLastName.emit(lastname);
       });
   }
 

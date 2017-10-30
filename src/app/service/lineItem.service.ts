@@ -132,18 +132,18 @@ export class LineItemService {
   }
 
   determineServiceType(checkIn: Date, checkOut: Date): string {
-    let format = 'HH:mm';
+    let format = 'HH:mm:ss';
 
     let checkInMoment = moment(checkIn, format);
     let checkOutMoment = moment(checkOut, format);
 
     let checkInDate = moment(checkIn).format('YYYY-MM-DD');
 
-    let beforeCareStartTime = moment('00:00', format).format(format);
-    let beforeCareEndTime = moment('12:00', format).format(format);
+    let beforeCareStartTime = moment('00:00:00', format).format(format);
+    let beforeCareEndTime = moment('12:00:00', format).format(format);
 
-    let afterCareStartTime = moment('12:01', format).format(format);
-    let afterCareEndTime = moment('23:59', format).format(format);
+    let afterCareStartTime = moment('12:00:00', format).format(format);
+    let afterCareEndTime = moment('23:59:59', format).format(format);
 
     let beforeCareStartToCompare = moment(checkInDate+' '+beforeCareStartTime);
     let beforeCareEndToCompare = moment(checkInDate+' '+beforeCareEndTime);

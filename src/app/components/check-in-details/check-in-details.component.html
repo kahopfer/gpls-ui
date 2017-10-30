@@ -19,6 +19,9 @@
                 <option value="Other">Other</option>
               </select>
             </div>
+            <div *ngIf="students.length > 1 && i !== students.length - 1">
+              <hr>
+            </div>
           </ng-container>
           <button type="submit" class="btn btn-primary" [disabled]="!checkInStudentsForm.form.valid">
             <i class="fa fa-check"></i>

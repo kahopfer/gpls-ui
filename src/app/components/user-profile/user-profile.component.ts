@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import {UserService} from "../../service/user.service";
 import {Status} from "../error-alert/error-alert.component";
@@ -10,13 +10,20 @@ import {NgForm} from "@angular/forms";
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnDestroy {
   changePasswordStatus: Status;
+
+  private firstNameSub: any;
+  firstname: string;
+
+  private lastNameSub: any;
+  lastname: string;
+
+  private usernameSub: any;
   username: string;
+
   oldPassword: string;
   newPassword: string;
-  firstname: string;
-  lastname: string;
 
   constructor(private userService: UserService, private authService: AuthenticationService) {
     this.changePasswordStatus = {
@@ -30,6 +37,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.firstNameSub = this.authService.getFirstName.subscribe(firstname => this.changeFirstName(firstname));
+    this.lastNameSub = this.authService.getLastName.subscribe(lastname => this.changeLastName(lastname));
+    this.usernameSub = this.authService.getUsername.subscribe(username => this.changeUsername(username));
+  }
+
+  ngOnDestroy() {
+    this.firstNameSub.unsubscribe();
+    this.lastNameSub.unsubscribe();
+    this.usernameSub.unsubscribe();
   }
 
   changePassword(changePasswordForm: NgForm): void {
@@ -76,5 +92,17 @@ export class UserProfileComponent implements OnInit {
         }
       }
     })
+  }
+
+  private changeFirstName(firstname: string): void {
+    this.firstname = firstname;
+  }
+
+  private changeLastName(lastname: string): void {
+    this.lastname = lastname;
+  }
+
+  private changeUsername(username: string): void {
+    this.username = username;
   }
 }
