@@ -23,7 +23,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   private studentIdSub: any;
   studentIdArray: string[] = [];
 
-  extraItems: PriceList[];
+  extraItems: PriceList[] = [];
 
   private fullNameSub: any;
   fullName: string;

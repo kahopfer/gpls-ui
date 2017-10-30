@@ -20,12 +20,12 @@ import {PriceListService} from "../../service/priceList.service";
 })
 export class CreateInvoiceDetailsComponent implements OnInit {
 
-  students: Student[];
-  guardians: Guardian[];
-  lineItems: LineItem[];
-  lineItemsToDisplay: any[];
-  users: User[];
-  extraItems: PriceList[];
+  students: Student[] = [];
+  guardians: Guardian[] = [];
+  lineItems: LineItem[] = [];
+  lineItemsToDisplay: any[] = [];
+  users: User[] = [];
+  extraItems: PriceList[] = [];
 
   selectedLineItem: LineItem;
   lineItem: LineItem = new LineItem();

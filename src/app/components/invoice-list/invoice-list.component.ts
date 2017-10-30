@@ -7,9 +7,9 @@ import {Component, OnInit} from '@angular/core';
 })
 export class InvoiceListComponent implements OnInit {
 
-  invoices: any[];
+  invoices: any[] = [];
   selectedInvoice: any;
-  paidOptions: any[];
+  paidOptions: any[] = [];
 
   constructor() {
   }
