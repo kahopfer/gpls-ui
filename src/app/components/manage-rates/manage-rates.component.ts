@@ -91,7 +91,7 @@ export class ManageRatesComponent implements OnInit {
   }
 
   deletePriceList(id: string) {
-    this.lineItemService.getLineItemsByServiceType(this.priceList.itemName).then(lineItems => {
+    this.lineItemService.getUninvoicedLineItemsByServiceType(this.priceList.itemName).then(lineItems => {
       if (lineItems.json().lineItems.length > 0) {
         this.priceListStatus.success = false;
         this.priceListStatus.message = 'You cannot delete rates that are in uninvoiced line items';

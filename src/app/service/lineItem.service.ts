@@ -78,14 +78,14 @@ export class LineItemService {
       .catch(this.handleError);
   }
 
-  getLineItemsByServiceType(serviceType: string) {
+  getUninvoicedLineItemsByServiceType(serviceType: string) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const token = currentUser && currentUser.token;
     const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     });
-    const url = `${this.gplsApiUrl}/lineItems?serviceType=${serviceType}`;
+    const url = `${this.gplsApiUrl}/lineItems?serviceType=${serviceType}&invoiced=null`;
     return this.http.get(url, {headers: headers})
       .toPromise()
       .catch(this.handleError);
