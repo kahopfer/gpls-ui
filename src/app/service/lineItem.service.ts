@@ -78,6 +78,19 @@ export class LineItemService {
       .catch(this.handleError);
   }
 
+  getLineItemsByServiceType(serviceType: string) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+    const url = `${this.gplsApiUrl}/lineItems?serviceType=${serviceType}`;
+    return this.http.get(url, {headers: headers})
+      .toPromise()
+      .catch(this.handleError);
+  }
+
   createLineItem(familyID: string, studentID: string, extraItem: boolean, checkIn: Date, checkOut: Date, serviceType: string,
                  earlyInLateOutFee: number, lineTotalCost: number, checkInBy: string, checkOutBy: string, notes: string,
                  invoiceID: string) {

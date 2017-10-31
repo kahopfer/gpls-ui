@@ -1,8 +1,9 @@
 <div class="container">
-  <!--TODO: Make sure that price inputs only accept numbers. Also, make sure that price list items that are in uninvoiced line items cannot be deleted-->
+  <h5>Select a rate to edit the value</h5>
   <app-error-alert [status]="nonExtraPriceListStatus"></app-error-alert>
-  <p-dataTable [value]="nonExtraPriceList" [editable]="true" [loading]="nonExtraPriceListLoading"
-               loadingIcon="fa-spinner">
+  <p-dataTable [value]="nonExtraPriceList" selectionMode="single" scrollable="true" scrollHeight="400px"
+               [(selection)]="selectedNonExtraPriceList" [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner"
+               (onRowSelect)="onPriceListSelect($event)" [metaKeySelection]="false" [responsive]="true">
     <p-header>Childcare Rates</p-header>
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
@@ -10,15 +11,13 @@
         {{rate[col.field]|currency:'USD':true }}
       </ng-template>
     </p-column>
-    <p-footer>
-      <button type="button" class="btn btn-success" (click)="saveChanges()">Save Changes</button>
-    </p-footer>
   </p-dataTable>
   <br>
   <app-error-alert [status]="extraPriceListStatus"></app-error-alert>
-  <p-dataTable [value]="extraPriceList" [editable]="true" [loading]="extraPriceListLoading"
-               loadingIcon="fa-spinner">
-    <p-header>Extra Childcare Rates</p-header>
+  <p-dataTable [value]="extraPriceList" selectionMode="single" scrollable="true" scrollHeight="400px"
+               [(selection)]="selectedExtraPriceList" [loading]="extraPriceListLoading" loadingIcon="fa-spinner"
+               (onRowSelect)="onPriceListSelect($event)" [metaKeySelection]="false" [responsive]="true">
+    <p-header>Extra Items</p-header>
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
       <ng-template let-col let-rate="rowData" pTemplate="body">
@@ -26,10 +25,47 @@
       </ng-template>
     </p-column>
     <p-footer>
-      <button type="button" class="btn btn-success" (click)="saveChanges()">Save Changes</button>
+      <div class="ui-helper-clearfix" style="width:100%">
+        <button type="button" pButton icon="fa-plus" style="float:left"
+                (click)="showDialogToAddPriceList()"
+                label="Add new extra item"></button>
+      </div>
     </p-footer>
   </p-dataTable>
   <br>
+
+  <form *ngIf="priceList" #priceListForm="ngForm" (ngSubmit)="savePriceList(priceList)">
+    <p-dialog header="Rate Information" [(visible)]="displayPriceListDialog" [responsive]="true" showEffect="fade"
+              [modal]="true" [width]="400" [resizable]="false">
+      <app-error-alert [status]="priceListStatus"></app-error-alert>
+      <div class="form-group">
+        <label for="itemName">Item Name</label>
+        <input type="text" name="itemName" class="form-control" required id="itemName" placeholder="Item Name"
+               [(ngModel)]="priceList.itemName" [readonly]="!newPriceList" #itemName="ngModel">
+        <small [hidden]="itemName.valid" class="text-danger">
+          Item name is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="itemValue">Item Value</label>
+        <div class="input-group">
+          <div class="input-group-addon">$</div>
+          <input type="number" min="0" step="0.05" name="itemValue" class="form-control currency" required id="itemValue"
+                 placeholder="Item Value" [(ngModel)]="priceList.itemValue" #itemValue="ngModel">
+        </div>
+        <small [hidden]="itemValue.valid" class="text-danger">
+          Item value is required.
+        </small>
+      </div>
+      <p-footer>
+        <button type="submit" pButton icon="fa-check"
+                [disabled]="!priceListForm.form.valid" label="Save"></button>
+        <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton icon="fa-close"
+                (click)="deletePriceList(priceList._id)" label="Delete"></button>
+      </p-footer>
+    </p-dialog>
+  </form>
+
   <div class="row justify-content-md-center">
     <app-back-button></app-back-button>
   </div>
