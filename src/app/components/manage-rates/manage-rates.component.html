@@ -1,9 +1,9 @@
 <div class="container">
   <h5>Select a rate to edit the value</h5>
   <app-error-alert [status]="nonExtraPriceListStatus"></app-error-alert>
-  <p-dataTable [value]="nonExtraPriceList" selectionMode="single" scrollable="true" scrollHeight="400px"
-               [(selection)]="selectedNonExtraPriceList" [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner"
-               (onRowSelect)="onPriceListSelect($event)" [metaKeySelection]="false" [responsive]="true">
+  <p-dataTable [value]="nonExtraPriceList" selectionMode="single" [(selection)]="selectedNonExtraPriceList"
+               [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
+               [metaKeySelection]="false" [responsive]="true">
     <p-header>Childcare Rates</p-header>
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
@@ -14,9 +14,9 @@
   </p-dataTable>
   <br>
   <app-error-alert [status]="extraPriceListStatus"></app-error-alert>
-  <p-dataTable [value]="extraPriceList" selectionMode="single" scrollable="true" scrollHeight="400px"
-               [(selection)]="selectedExtraPriceList" [loading]="extraPriceListLoading" loadingIcon="fa-spinner"
-               (onRowSelect)="onPriceListSelect($event)" [metaKeySelection]="false" [responsive]="true">
+  <p-dataTable [value]="extraPriceList" selectionMode="single" [(selection)]="selectedExtraPriceList"
+               [loading]="extraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
+               [metaKeySelection]="false" [responsive]="true">
     <p-header>Extra Items</p-header>
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
@@ -50,7 +50,8 @@
         <label for="itemValue">Item Value</label>
         <div class="input-group">
           <div class="input-group-addon">$</div>
-          <input type="number" min="0" step="0.05" name="itemValue" class="form-control currency" required id="itemValue"
+          <input type="number" min="0" step="0.05" name="itemValue" class="form-control currency" required
+                 id="itemValue"
                  placeholder="Item Value" [(ngModel)]="priceList.itemValue" #itemValue="ngModel">
         </div>
         <small [hidden]="itemValue.valid" class="text-danger">

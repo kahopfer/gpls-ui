@@ -22,7 +22,7 @@
       <br>
       <h5>Select a line item to edit or delete</h5>
       <app-error-alert [status]="lineItemsStatus"></app-error-alert>
-      <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" scrollable="true" scrollHeight="400px"
+      <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
                    [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
@@ -54,7 +54,7 @@
 
     <form *ngIf="lineItem" #lineItemDetailsForm="ngForm" (ngSubmit)="saveLineItem(lineItem)">
       <p-dialog header="Line Item Details" [(visible)]="displayLineItemDialog" [responsive]="true" showEffect="fade"
-                [modal]="true" [width]="400" [resizable]="false">
+                [modal]="true" [width]="500" [resizable]="false">
         <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
         <app-error-alert [status]="lineItemStatus"></app-error-alert>
         <div class="form-group" *ngIf="newLineItem == true">
@@ -108,7 +108,7 @@
             <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}}
               {{user.lastname}}
             </option>
-            <option value="Other">Other</option>
+            <option value="Other" [disabled]="!lineItem.extraItem">Other</option>
           </select>
           <small [hidden]="checkInBy.valid || lineItem.extraItem == true" class="text-danger">
             Checked in by is required.
@@ -126,7 +126,7 @@
             <option *ngFor="let user of users" [value]="user.firstname + ' ' + user.lastname">{{user.firstname}}
               {{user.lastname}}
             </option>
-            <option value="Other">Other</option>
+            <option value="Other" [disabled]="!lineItem.extraItem">Other</option>
           </select>
           <small [hidden]="checkOutBy.valid || lineItem.extraItem == true" class="text-danger">
             Checked out by is required.

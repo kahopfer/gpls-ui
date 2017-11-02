@@ -1,5 +1,7 @@
 <div class="container">
-  <p-dataTable [value]="invoices" scrollable="true" scrollHeight="400px" [(selection)]="selectedInvoice" sortMode="multiple" #dt>
+  <!--TODO: Make tabbed view where invoices can either be viewed by family or in a list of all invoices-->
+  <p-dataTable [value]="invoices" [rows]="10" [paginator]="true" [pageLinks]="3" [(selection)]="selectedInvoice"
+               sortMode="multiple" #dt>
     <p-header>Invoices</p-header>
     <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
     <p-column field="familyName" header="Family Name" [filter]="true" filterPlaceholder="Search"></p-column>
