@@ -43,7 +43,7 @@ export class FamilyListComponent implements OnInit, OnDestroy {
   getFamilies(): void {
     this.loading = true;
     this.familyService.getFamilies().then(families => {
-      this.families = families.json().families;
+      this.families = families['families'];
       this.familiesStatus.success = true;
       this.loading = false;
     }).catch(err => {

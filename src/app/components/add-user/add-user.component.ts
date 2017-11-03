@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {Location} from '@angular/common';
 import {Status} from "../error-alert/error-alert.component";
 import * as CryptoJS from 'crypto-js';
+import {User} from "../../models/user";
 
 @Component({
   selector: 'app-add-user',
@@ -34,7 +35,26 @@ export class AddUserComponent implements OnInit {
     let iv = CryptoJS.enc.Base64.parse("#base64IV#");
     this.encryptedPassword = CryptoJS.AES.encrypt(this.password, key, {iv: iv});
 
-    this.userService.createUser(this.username, this.encryptedPassword.toString(), this.firstname, this.lastname, this.admin).then(() => {
+    let userToCreate: User = {
+      username: this.username,
+      password: this.encryptedPassword.toString(),
+      firstname: this.firstname,
+      lastname: this.lastname,
+      authorities: null
+    };
+
+    if (this.admin) {
+      userToCreate.authorities = [
+        'ROLE_USER',
+        'ROLE_ADMIN'
+      ]
+    } else {
+      userToCreate.authorities = [
+        'ROLE_USER'
+      ]
+    }
+
+    this.userService.createUser(userToCreate).then(() => {
       this.createUserStatus.success = true;
       // this.router.navigate(['/users']);
       this.location.back();

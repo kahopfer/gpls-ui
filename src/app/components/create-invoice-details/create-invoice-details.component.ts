@@ -79,7 +79,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   getStudents(familyUnitID: string) {
     this.studentsLoading = true;
     this.studentService.getStudents(familyUnitID).then(students => {
-      this.students = students.json().students;
+      this.students = students['students'];
       this.studentsStatus.success = true;
       this.studentsLoading = false;
     }).catch(err => {
@@ -99,7 +99,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   getGuardians(familyUnitID: string) {
     this.guardiansLoading = true;
     this.guardianService.getGuardians(familyUnitID).then(guardians => {
-      this.guardians = guardians.json().guardians;
+      this.guardians = guardians['guardians'];
       this.guardiansStatus.success = true;
       this.guardiansLoading = false;
     }).catch(err => {
@@ -122,7 +122,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
 
     this.lineItemsLoading = true;
     this.lineItemService.getLineItemsByFamily(familyID).then(lineItems => {
-      this.lineItems = lineItems.json().lineItems;
+      this.lineItems = lineItems['lineItems'];
 
       for (let lineItemIndex in this.lineItems) {
         individualStudentPromiseArray.push(this.studentService.getStudent(this.lineItems[lineItemIndex].studentID));
@@ -131,8 +131,8 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       Promise.all(individualStudentPromiseArray).then(students => {
         this.lineItemsToDisplay = this.lineItems;
         for (let studentIndex in students) {
-          this.lineItemsToDisplay[studentIndex].studentName = JSON.parse(students[studentIndex]._body).fname + ' ' +
-            JSON.parse(students[studentIndex]._body).lname;
+          this.lineItemsToDisplay[studentIndex].studentName = students[studentIndex]['fname'] + ' ' +
+            students[studentIndex]['lname'];
         }
         this.lineItemsStatus.success = true;
         this.lineItemsLoading = false;
@@ -164,7 +164,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
 
   getUsers(): void {
     this.usersService.getUsers().then(users => {
-      this.users = users.json().users;
+      this.users = users['users'];
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -176,7 +176,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
 
   getExtraItems(): void {
     this.priceListService.getExtraPriceList().then(priceList => {
-      this.extraItems = priceList.json().priceLists;
+      this.extraItems = priceList['priceLists'];
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -248,9 +248,11 @@ export class CreateInvoiceDetailsComponent implements OnInit {
         this.lineItem.serviceType = this.lineItemService.determineServiceType(this.lineItem.checkIn, this.lineItem.checkOut);
       }
 
-      this.lineItemService.createLineItem(this.route.snapshot.params['id'], this.lineItem.studentID, this.lineItem.extraItem, this.lineItem.checkIn,
-        this.lineItem.checkOut, this.lineItem.serviceType, 0.00, 0.00,
-        this.lineItem.checkInBy, this.lineItem.checkOutBy, this.lineItem.notes, this.lineItem.invoiceID).subscribe(() => {
+      this.lineItem.familyID = this.route.snapshot.params['id'];
+      this.lineItem.earlyInLateOutFee = 0;
+      this.lineItem.lineTotalCost = 0;
+
+      this.lineItemService.createLineItem(this.lineItem).subscribe(() => {
         this.lineItemStatus.success = true;
         this.lineItem = null;
         this.displayLineItemDialog = false;
@@ -277,9 +279,9 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   onLineItemSelect(event) {
     this.newLineItem = false;
     this.lineItemService.getLineItem(event.data._id).then(lineItem => {
-      this.lineItem = JSON.parse(lineItem._body);
-      this.lineItem.checkIn = new Date(JSON.parse(lineItem._body).checkIn);
-      this.lineItem.checkOut = new Date(JSON.parse(lineItem._body).checkOut);
+      this.lineItem = lineItem;
+      this.lineItem.checkIn = new Date(lineItem['checkIn']);
+      this.lineItem.checkOut = new Date(lineItem['checkOut']);
       this.displayLineItemDialog = true;
       this.lineItemStatus.success = true;
     }).catch(err => {

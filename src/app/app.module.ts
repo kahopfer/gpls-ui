@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BaseRequestOptions, HttpModule} from "@angular/http";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
@@ -42,6 +41,8 @@ import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice
 import {OrderModule} from "ngx-order-pipe";
 import {LineItemService} from "./service/lineItem.service";
 import {PriceListService} from "./service/priceList.service";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {AuthInterceptor} from "./Interceptor/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -73,7 +74,7 @@ import {PriceListService} from "./service/priceList.service";
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     DataTableModule,
     InputTextModule,
@@ -91,13 +92,17 @@ import {PriceListService} from "./service/priceList.service";
     AuthGuard,
     AdminGuard,
     AuthenticationService,
-    BaseRequestOptions,
     FamilyService,
     StudentService,
     GuardianService,
     UserService,
     LineItemService,
-    PriceListService
+    PriceListService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

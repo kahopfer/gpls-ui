@@ -31,7 +31,7 @@ export class CheckInComponent implements OnInit {
   getStudents() {
     this.studentsLoading = true;
     this.studentService.getCheckedOutStudents().then(students => {
-      this.students = students.json().students;
+      this.students = students['students'];
       this.studentsStatus.success = true;
       this.studentsLoading = false;
     }).catch(err => {

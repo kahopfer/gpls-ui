@@ -1,100 +1,77 @@
 import {Injectable} from "@angular/core";
 import {GPLS_API_URL} from "../app.constants";
-import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {PriceList} from "../models/priceList";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class PriceListService {
   private gplsApiUrl: string;
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getPriceList(id: string): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getPriceList(id: string): Promise<PriceList> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList/${id}`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<PriceList>(url, {headers: headers})
+      .toPromise();
   }
 
-  getNonExtraPriceList(): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getNonExtraPriceList(): Promise<PriceList> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList?itemExtra=false`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<PriceList>(url, {headers: headers})
+      .toPromise();
   }
 
-  getExtraPriceList(): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getExtraPriceList(): Promise<PriceList> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList?itemExtra=true`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<PriceList>(url, {headers: headers})
+      .toPromise();
   }
 
-  createPriceList(itemName: string, itemValue: number) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  createPriceList(priceList: PriceList) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList`;
-    return this.http.post(url, JSON.stringify({
-      itemName: itemName,
-      itemValue: itemValue,
-      itemExtra: true
-    }), {headers: headers});
+    return this.http.post(url, priceList, {
+      headers: headers,
+      responseType: 'text'
+    });
   }
 
-  updatePriceList(priceList: PriceList): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  updatePriceList(priceList: PriceList): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList/${priceList._id}`;
-    return this.http.put(url, JSON.stringify(priceList), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.put(url, priceList, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  deletePriceList(id: string): Promise<void> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
+  deletePriceList(id: string): Promise<string> {
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Accept': 'application/json'
     });
     const url = `${this.gplsApiUrl}/priceList/${id}`;
-    return this.http.delete(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.http.delete(url, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 }

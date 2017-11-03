@@ -7,7 +7,7 @@
     <p-column field="familyName" header="Family Name" [filter]="true" filterPlaceholder="Search"></p-column>
     <p-column field="totalCost" header="Total Cost">
       <ng-template let-col let-rate="rowData" pTemplate="body">
-        {{rate[col.field]|currency:'USD':true }}
+        {{rate[col.field]|currency}}
       </ng-template>
     </p-column>
     <p-column field="invoiceDate" header="Invoice Date" [sortable]="true">

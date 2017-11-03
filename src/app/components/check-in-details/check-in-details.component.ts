@@ -10,6 +10,7 @@ import {GuardianService} from "../../service/guardian.service";
 import {AuthenticationService} from "../../service/authentication.service";
 import {LineItemService} from "../../service/lineItem.service";
 import 'rxjs/add/operator/toPromise';
+import {LineItem} from "../../models/lineItem";
 
 @Component({
   selector: 'app-check-in-details',
@@ -82,12 +83,12 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(students => {
       for (let studentIndex in students) {
-        if (JSON.parse(students[studentIndex]._body).checkedIn === true) {
+        if (students[studentIndex]['checkedIn'] === true) {
           // Just in case someone reloads the page with the student just checked in still in the query params
           console.log("Already checked in");
           continue;
         }
-        this.students.push(JSON.parse(students[studentIndex]._body))
+        this.students.push(students[studentIndex])
       }
       this.studentsStatus.success = true;
       this.getGuardians();
@@ -113,7 +114,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(guardians => {
       for (let guardianIndex in guardians) {
-        this.guardianArray.push(JSON.parse(guardians[guardianIndex]._body).guardians);
+        this.guardianArray.push(guardians[guardianIndex]['guardians']);
       }
       this.guardiansStatus.success = true;
     }).catch(err => {
@@ -134,9 +135,23 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
     let createLineItemPromiseArray: Promise<any>[] = [];
 
     for (let studentIndex in this.students) {
-      createLineItemPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
-        this.students[studentIndex]._id, false, new Date(), null, null, 0.00, 0.00,
-        form.value['checkInBy-' + studentIndex], null, null, null).toPromise());
+      let date: Date = new Date();
+      let lineItemToCreate: LineItem = {
+        _id: null,
+        familyID: this.students[studentIndex].familyUnitID,
+        studentID: this.students[studentIndex]._id,
+        extraItem: false,
+        checkIn: date,
+        checkOut: null,
+        serviceType: null,
+        earlyInLateOutFee: 0.00,
+        lineTotalCost: 0.00,
+        checkInBy: form.value['checkInBy-' + studentIndex],
+        checkOutBy: null,
+        notes: null,
+        invoiceID: null
+      };
+      createLineItemPromiseArray.push(this.lineItemService.createLineItem(lineItemToCreate).toPromise());
     }
 
     Promise.all(createLineItemPromiseArray).then(() => {

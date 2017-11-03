@@ -1,95 +1,69 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
 import {ObjectID} from 'bson';
 import {Guardian} from "../models/guardian";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class GuardianService {
   private gplsApiUrl: string;
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getGuardian(id: string): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getGuardian(id: string): Promise<Guardian> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/guardians/${id}`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<Guardian>(url, {headers: headers})
+      .toPromise();
   }
 
-  getGuardians(familyUnitID: string): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getGuardians(familyUnitID: string): Promise<Guardian> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/guardians?familyUnitID=${familyUnitID}`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<Guardian>(url, {headers: headers})
+      .toPromise();
   }
 
-  createGuardian(id: ObjectID, fname: string, lname: string, mi: string, relationship: string, primPhone: string,
-                 secPhone: string, email: string, familyUnitID: ObjectID) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  createGuardian(guardian: Guardian) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/guardians`;
-    return this.http.post(url, JSON.stringify({
-      _id: id,
-      fname: fname,
-      lname: lname,
-      mi: mi,
-      relationship: relationship,
-      primPhone: primPhone,
-      secPhone: secPhone,
-      email: email,
-      familyUnitID: familyUnitID
-    }), {headers: headers});
+    return this.http.post(url, guardian, {
+      headers: headers,
+      responseType: 'text'
+    });
   }
 
-  updateGuardian(guardian: Guardian): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  updateGuardian(guardian: Guardian): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/guardians/${guardian._id}`;
-    return this.http.put(url, JSON.stringify(guardian), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.put(url, guardian, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  deleteGuardian(id: string): Promise<void> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
+  deleteGuardian(id: string): Promise<string> {
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Accept': 'application/json'
     });
     const url = `${this.gplsApiUrl}/guardians/${id}`;
-    return this.http.delete(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.http.delete(url, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 }

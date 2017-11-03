@@ -1,115 +1,81 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {User} from "../models/user";
 
 @Injectable()
 export class UserService {
   private gplsApiUrl: string;
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getUsers(): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getUsers(): Promise<User> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/users`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<User>(url, {headers: headers})
+      .toPromise();
   }
 
-  createUser(username: string, password: string, firstname: string, lastname: string, admin: boolean): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  createUser(user: User): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/users`;
-    if (admin) {
-      return this.http.post(url, JSON.stringify({
-        username: username,
-        password: password,
-        firstname: firstname,
-        lastname: lastname,
-        authorities: [
-          'ROLE_USER',
-          'ROLE_ADMIN'
-        ]
-      }), {headers: headers})
-        .toPromise()
-        .catch(this.handleError);
-    } else {
-      return this.http.post(url, JSON.stringify({
-        username: username,
-        password: password,
-        firstname: firstname,
-        lastname: lastname,
-        authorities: [
-          'ROLE_USER'
-        ]
-      }), {headers: headers})
-        .toPromise()
-        .catch(this.handleError);
-    }
+    return this.http.post(url, user, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  changePassword(oldPassword: string, newPassword: string): Promise<any> {
+  changePassword(oldPassword: string, newPassword: string): Promise<string> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
       'Old-Password': oldPassword
     });
     const url = `${this.gplsApiUrl}/users`;
 
-    return this.http.put(url, JSON.stringify({
+    return this.http.put(url, {
       username: currentUser.username,
       password: newPassword
-    }), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    }, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  resetPassword(username: string, newPassword: string): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+  resetPassword(username: string, newPassword: string): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/users/resetPassword/${username}`;
 
-    return this.http.put(url, JSON.stringify({
+    return this.http.put(url, {
       username: username,
       password: newPassword
-    }), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    }, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  deleteUser(userToDelete: string): Promise<void> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  deleteUser(userToDelete: string): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/users/${userToDelete}`;
-    return this.http.delete(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.http.delete(url, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 }

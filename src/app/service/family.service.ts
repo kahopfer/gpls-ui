@@ -1,89 +1,69 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import {GPLS_API_URL} from "../app.constants";
 import {ObjectID} from 'bson';
 import {Family} from "../models/family";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class FamilyService {
   private gplsApiUrl: string;
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getFamilies(): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getFamilies(): Promise<Family> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/families`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<Family>(url, {headers: headers})
+      .toPromise();
   }
 
-  getFamily(id: string): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  getFamily(id: string): Promise<Family> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/families/${id}`;
-    return this.http.get(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.get<Family>(url, {headers: headers})
+      .toPromise();
   }
 
-  createFamily(id: ObjectID, familyName: string, students: ObjectID[], guardians: ObjectID[]) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  createFamily(family: Family) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/families/`;
-    return this.http.post(url, JSON.stringify({
-      _id: id,
-      familyName: familyName,
-      students: students,
-      guardians: guardians
-    }), {headers: headers});
+    return this.http.post(url, family, {
+      headers: headers,
+      responseType: 'text'
+    });
   }
 
-  updateFamily(family: Family): Promise<any> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
+  updateFamily(family: Family): Promise<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
     const url = `${this.gplsApiUrl}/families/${family._id}`;
-    return this.http.put(url, JSON.stringify(family), {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
+    return this.http.put(url, family, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 
-  deleteFamily(id: string): Promise<void> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const token = currentUser && currentUser.token;
-    const headers = new Headers({
+  deleteFamily(id: string): Promise<string> {
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + token
+      'Accept': 'application/json'
     });
     const url = `${this.gplsApiUrl}/families/${id}`;
-    return this.http.delete(url, {headers: headers})
-      .toPromise()
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.http.delete(url, {
+      headers: headers,
+      responseType: 'text'
+    })
+      .toPromise();
   }
 }

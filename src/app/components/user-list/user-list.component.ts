@@ -31,7 +31,7 @@ export class UserListComponent implements OnInit {
   getUsers(): void {
     this.loading = true;
     this.usersService.getUsers().then(users => {
-      this.users = users.json().users;
+      this.users = users['users'];
       this.usersStatus.success = true;
       this.loading = false;
     }).catch(err => {

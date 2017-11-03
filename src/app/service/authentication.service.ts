@@ -1,8 +1,8 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {Http, Headers, Response} from '@angular/http';
 import 'rxjs/add/operator/map'
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {GPLS_API_URL} from "../app.constants";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 
 @Injectable()
 export class AuthenticationService {
@@ -24,7 +24,7 @@ export class AuthenticationService {
   // Used for showing the navbar when logged in and hiding it when logged out
   private loggedIn = new BehaviorSubject<boolean>(false);
 
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   private gplsApiUrl: string;
 
@@ -32,7 +32,7 @@ export class AuthenticationService {
     return this.loggedIn.asObservable();
   }
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     // set token if saved in local storage
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
@@ -46,16 +46,16 @@ export class AuthenticationService {
 
   login(username: string, password: string) {
     const url = `${this.gplsApiUrl}/auth`;
-    return this.http.post(url, JSON.stringify({username: username, password: password}), {headers: this.headers})
-      .map((response: Response) => {
+    return this.http.post(url, {username: username, password: password}, {headers: this.headers})
+      .map(response => {
         // login successful if there's a jwt token in the response
-        let token = response.json() && response.json().token;
+        let token = response && response['token'];
 
-        let firstname = response.json() && response.json().firstname;
-        let lastname = response.json() && response.json().lastname;
-        let authorities = response.json() && response.json().authorities;
+        let firstname = response && response['firstname'];
+        let lastname = response && response['lastname'];
+        let authorities = response && response['authorities'];
         let admin: boolean = false;
-        username = response.json() && response.json().username;
+        username = response && response['username'];
 
         for (let i in authorities) {
           if (authorities[i].authority === 'ROLE_ADMIN') {
@@ -88,7 +88,8 @@ export class AuthenticationService {
         this.getFirstName.emit(firstname);
 
         this.getLastName.emit(lastname);
-      });
+      }
+    );
   }
 
   logout(): void {

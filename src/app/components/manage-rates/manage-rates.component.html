@@ -8,7 +8,7 @@
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
       <ng-template let-col let-rate="rowData" pTemplate="body">
-        {{rate[col.field]|currency:'USD':true }}
+        {{rate[col.field]|currency}}
       </ng-template>
     </p-column>
   </p-dataTable>
@@ -21,7 +21,7 @@
     <p-column field="itemName" header="Name"></p-column>
     <p-column field="itemValue" header="Value" [editable]="true">
       <ng-template let-col let-rate="rowData" pTemplate="body">
-        {{rate[col.field]|currency:'USD':true }}
+        {{rate[col.field]|currency}}
       </ng-template>
     </p-column>
     <p-footer>

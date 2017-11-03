@@ -6,6 +6,9 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {ObjectID} from 'bson';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Guardian} from "../../models/guardian";
+import {Family} from "../../models/family";
+import {Student} from "../../models/student";
 
 @Component({
   selector: 'app-enroll-family',
@@ -109,9 +112,17 @@ export class EnrollFamilyComponent implements OnInit {
       for (let studentIndex in model.value.students) {
         let studentID = ObjectID();
         students.push(studentID);
-        this.studentService.createStudent(studentID, model.value.students[studentIndex].fname,
-          model.value.students[studentIndex].lname, model.value.students[studentIndex].mi, model.value.students[studentIndex].notes,
-          false, familyID).subscribe(() => {
+        let studentToCreate: Student = {
+          _id: studentID,
+          fname: model.value.students[studentIndex].fname,
+          lname: model.value.students[studentIndex].lname,
+          mi: model.value.students[studentIndex].mi,
+          notes: model.value.students[studentIndex].notes,
+          checkedIn: false,
+          familyUnitID: familyID
+        };
+
+        this.studentService.createStudent(studentToCreate).subscribe(() => {
           this.enrollStudentStatus.success = true;
         }, err => {
           reject(err);
@@ -126,11 +137,18 @@ export class EnrollFamilyComponent implements OnInit {
       for (let guardianIndex in model.value.guardians) {
         let guardianID = ObjectID();
         guardians.push(guardianID);
-        this.guardianService.createGuardian(guardianID, model.value.guardians[guardianIndex].fname,
-          model.value.guardians[guardianIndex].lname, model.value.guardians[guardianIndex].mi,
-          model.value.guardians[guardianIndex].relationship, model.value.guardians[guardianIndex].primPhone,
-          model.value.guardians[guardianIndex].secPhone, model.value.guardians[guardianIndex].email,
-          familyID).subscribe(() => {
+        let guardianToCreate: Guardian = {
+          _id: guardianID,
+          fname: model.value.guardians[guardianIndex].fname,
+          lname: model.value.guardians[guardianIndex].lname,
+          mi: model.value.guardians[guardianIndex].mi,
+          relationship: model.value.guardians[guardianIndex].relationship,
+          primPhone: model.value.guardians[guardianIndex].primPhone,
+          secPhone: model.value.guardians[guardianIndex].secPhone,
+          email: model.value.guardians[guardianIndex].email,
+          familyUnitID: familyID
+        };
+        this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
           this.enrollGuardianStatus.success = true;
         }, err => {
           reject(err);
@@ -142,7 +160,14 @@ export class EnrollFamilyComponent implements OnInit {
 
     createStudentPromise.then((students: string[]) => {
       createGuardiansPromise.then((guardians: string[]) => {
-        this.familyService.createFamily(familyID, model.value.familyName, students, guardians).subscribe(() => {
+        let familyToCreate: Family = {
+          _id: familyID,
+          familyName: model.value.familyName,
+          students: students,
+          guardians: guardians
+        };
+
+        this.familyService.createFamily(familyToCreate).subscribe(() => {
           this.enrollFamilyStatus.success = true;
           this.location.back();
         }, err => {

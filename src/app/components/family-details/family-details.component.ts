@@ -106,7 +106,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   getStudents(familyUnitID: string) {
     this.studentsLoading = true;
     this.studentService.getStudents(familyUnitID).then(students => {
-      this.students = students.json().students;
+      this.students = students['students'];
       this.studentsStatus.success = true;
       this.studentsLoading = false;
     }).catch(err => {
@@ -126,7 +126,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   getGuardians(familyUnitID: string) {
     this.guardiansLoading = true;
     this.guardianService.getGuardians(familyUnitID).then(guardians => {
-      this.guardians = guardians.json().guardians;
+      this.guardians = guardians['guardians'];
       this.guardiansStatus.success = true;
       this.guardiansLoading = false;
     }).catch(err => {
@@ -145,7 +145,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   getFamily(id: string) {
     this.familyService.getFamily(id).then(family => {
-      this.family = family.json();
+      this.family = family;
       this.familyStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -162,7 +162,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteFamily() {
     this.lineItemService.getUninvoicedLineItemsByFamily(this.route.snapshot.params['id']).then(lineItems => {
-      if (lineItems.json().lineItems.length > 0) {
+      if (lineItems['lineItems'].length > 0) {
         this.familyStatus.success = false;
         this.familyStatus.message = 'You cannot delete a family with uninvoiced line items';
         return;
@@ -252,7 +252,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.lineItemService.getUninvoicedLineItemsByStudent(id).then(lineItems => {
-      if (lineItems.json().lineItems.length > 0) {
+      if (lineItems['lineItems'].length > 0) {
         this.studentStatus.success = false;
         this.studentStatus.message = 'You cannot delete a student with uninvoiced line items';
         return;
@@ -408,8 +408,16 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     } else {
       let createStudentPromise = new Promise((resolve, reject) => {
         let studentID = ObjectID();
-        this.studentService.createStudent(studentID, student.fname, student.lname, student.mi, student.notes,
-          false, this.route.snapshot.params['id']).subscribe(() => {
+        let studentToCreate: Student = {
+          _id: studentID,
+          fname: student.fname,
+          lname: student.lname,
+          mi: student.mi,
+          notes: student.notes,
+          checkedIn: false,
+          familyUnitID: this.route.snapshot.params['id']
+        };
+        this.studentService.createStudent(studentToCreate).subscribe(() => {
           this.studentStatus.success = true;
           resolve(studentID);
         }, err => {
@@ -481,9 +489,18 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     } else {
       let createGuardianPromise = new Promise((resolve, reject) => {
         let guardianID = ObjectID();
-        this.guardianService.createGuardian(guardianID, guardian.fname, guardian.lname, guardian.mi,
-          guardian.relationship, guardian.primPhone, guardian.secPhone, guardian.email,
-          this.route.snapshot.params['id']).subscribe(() => {
+        let guardianToCreate: Guardian = {
+          _id: guardianID,
+          fname: guardian.fname,
+          lname: guardian.lname,
+          mi: guardian.mi,
+          relationship: guardian.relationship,
+          primPhone: guardian.primPhone,
+          secPhone: guardian.secPhone,
+          email: guardian.email,
+          familyUnitID: this.route.snapshot.params['id']
+        };
+        this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
           this.guardianStatus.success = true;
           resolve(guardianID);
         }, err => {
@@ -531,7 +548,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   showUpdateFamilyForm() {
     this.familyService.getFamily(this.route.snapshot.params['id']).then(family => {
-      this.editableFamily = JSON.parse(family._body);
+      this.editableFamily = family;
       this.displayFamilyForm = true;
       this.familyStatus.success = true;
     }).catch(err => {
@@ -573,7 +590,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   onStudentSelect(event) {
     this.newStudent = false;
     this.studentService.getStudent(event.data._id).then(student => {
-      this.student = JSON.parse(student._body);
+      this.student = student;
       this.displayStudentDialog = true;
       this.studentStatus.success = true;
     }).catch(err => {
@@ -593,7 +610,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   onGuardianSelect(event) {
     this.newGuardian = false;
     this.guardianService.getGuardian(event.data._id).then(guardian => {
-      this.guardian = JSON.parse(guardian._body);
+      this.guardian = guardian;
       this.displayGuardianDialog = true;
       this.guardianStatus.success = true;
     }).catch(err => {

@@ -90,12 +90,12 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(students => {
       for (let studentIndex in students) {
-        if (JSON.parse(students[studentIndex]._body).checkedIn === false) {
+        if (students[studentIndex]['checkedIn'] === false) {
           // Just in case someone reloads the page with the student just checked out still in the query params
           console.log("Already checked out");
           continue;
         }
-        this.students.push(JSON.parse(students[studentIndex]._body))
+        this.students.push(students[studentIndex])
       }
       this.studentsStatus.success = true;
       this.getGuardians();
@@ -121,7 +121,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(guardians => {
       for (let guardianIndex in guardians) {
-        this.guardianArray.push(JSON.parse(guardians[guardianIndex]._body).guardians);
+        this.guardianArray.push(guardians[guardianIndex]['guardians']);
       }
       this.guardiansStatus.success = true;
     }).catch(err => {
@@ -139,7 +139,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
   getExtraItems(): void {
     this.priceListService.getExtraPriceList().then(priceList => {
-      this.extraItems = priceList.json().priceLists;
+      this.extraItems = priceList['priceLists'];
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -172,10 +172,10 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       // Go through all the line items returned
       for (let lineItemIndex in lineItems) {
         // Temporary line item used to stage the changes
-        let temporaryLineItem: LineItem = lineItems[lineItemIndex].json().lineItems[0];
+        let temporaryLineItem: LineItem = lineItems[lineItemIndex]['lineItems'][0];
         // Set temp line item values
         temporaryLineItem.checkOut = new Date();
-        temporaryLineItem.serviceType = this.lineItemService.determineServiceType(temporaryLineItem.checkIn, temporaryLineItem.checkOut);
+        temporaryLineItem.serviceType = this.lineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
         // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
         temporaryLineItem.checkOutBy = form.value['checkOutBy-' + lineItemIndex];
         temporaryLineItem.notes = form.value['lineItemNotes-' + lineItemIndex];
@@ -200,9 +200,22 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
               if (form.value['extraItem-' + studentIndex + '-' + extraItemIndex]) {
                 let date: Date = new Date();
                 // ...then add it to the promise array
-                createLineItemExtraPromiseArray.push(this.lineItemService.createLineItem(this.students[studentIndex].familyUnitID,
-                  this.students[studentIndex]._id, true, date, date, this.extraItems[extraItemIndex].itemName,
-                  0, 0, 'Other', 'Other', null, null).toPromise());
+                let lineItemToCreate: LineItem = {
+                  _id: null,
+                  familyID: this.students[studentIndex].familyUnitID,
+                  studentID: this.students[studentIndex]._id,
+                  extraItem: true,
+                  checkIn: date,
+                  checkOut: date,
+                  serviceType: this.extraItems[extraItemIndex].itemName,
+                  earlyInLateOutFee: 0.00,
+                  lineTotalCost: 0.00,
+                  checkInBy: 'Other',
+                  checkOutBy: 'Other',
+                  notes: null,
+                  invoiceID: null
+                };
+                createLineItemExtraPromiseArray.push(this.lineItemService.createLineItem(lineItemToCreate).toPromise());
               }
             }
           }

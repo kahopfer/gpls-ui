@@ -53,7 +53,7 @@ export class ManageRatesComponent implements OnInit {
   getNonExtraPriceList() {
     this.nonExtraPriceListLoading = true;
     this.priceListService.getNonExtraPriceList().then(priceList => {
-      this.nonExtraPriceList = priceList.json().priceLists;
+      this.nonExtraPriceList = priceList['priceLists'];
       this.nonExtraPriceListStatus.success = true;
       this.nonExtraPriceListLoading = false;
     }).catch(err => {
@@ -73,7 +73,7 @@ export class ManageRatesComponent implements OnInit {
   getExtraPriceList() {
     this.extraPriceListLoading = true;
     this.priceListService.getExtraPriceList().then(priceList => {
-      this.extraPriceList = priceList.json().priceLists;
+      this.extraPriceList = priceList['priceLists'];
       this.extraPriceListStatus.success = true;
       this.extraPriceListLoading = false;
     }).catch(err => {
@@ -92,7 +92,7 @@ export class ManageRatesComponent implements OnInit {
 
   deletePriceList(id: string) {
     this.lineItemService.getUninvoicedLineItemsByServiceType(this.priceList.itemName).then(lineItems => {
-      if (lineItems.json().lineItems.length > 0) {
+      if (lineItems['lineItems'].length > 0) {
         this.priceListStatus.success = false;
         this.priceListStatus.message = 'You cannot delete rates that are in uninvoiced line items';
         return;
@@ -164,7 +164,8 @@ export class ManageRatesComponent implements OnInit {
         }
       })
     } else {
-      this.priceListService.createPriceList(this.priceList.itemName, this.priceList.itemValue).subscribe(() => {
+      this.priceList.itemExtra = true;
+      this.priceListService.createPriceList(this.priceList).subscribe(() => {
         this.priceListStatus.success = true;
         this.priceList = null;
         this.displayPriceListDialog = false;
@@ -191,7 +192,7 @@ export class ManageRatesComponent implements OnInit {
   onPriceListSelect(event) {
     this.newPriceList = false;
     this.priceListService.getPriceList(event.data._id).then(priceList => {
-      this.priceList = JSON.parse(priceList._body);
+      this.priceList = priceList;
       this.priceListStatus.success = true;
       this.displayPriceListDialog = true;
     }).catch(err => {
