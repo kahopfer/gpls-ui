@@ -42,7 +42,7 @@ import {OrderModule} from "ngx-order-pipe";
 import {LineItemService} from "./service/lineItem.service";
 import {PriceListService} from "./service/priceList.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {AuthInterceptor} from "./Interceptor/auth.interceptor";
+import {AuthInterceptor} from "./interceptor/auth.interceptor";
 
 @NgModule({
   declarations: [
