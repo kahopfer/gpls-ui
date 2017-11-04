@@ -8,74 +8,58 @@ import {User} from "../models/user";
 export class UserService {
   private gplsApiUrl: string;
 
+  private headers: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json'
+  });
+
   constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getUsers(): Promise<User> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+  getUsers(): Promise<User[]> {
     const url = `${this.gplsApiUrl}/users`;
-    return this.http.get<User>(url, {headers: headers})
+    return this.http.get<User[]>(url, {headers: this.headers})
       .toPromise();
   }
 
   createUser(user: User): Promise<string> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/users`;
     return this.http.post(url, user, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 
   changePassword(oldPassword: string, newPassword: string): Promise<string> {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Old-Password': oldPassword
-    });
     const url = `${this.gplsApiUrl}/users`;
 
     return this.http.put(url, {
       username: currentUser.username,
       password: newPassword
     }, {
-      headers: headers,
+      headers: this.headers.append('Old-Password', oldPassword),
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 
   resetPassword(username: string, newPassword: string): Promise<string> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/users/resetPassword/${username}`;
 
     return this.http.put(url, {
       username: username,
       password: newPassword
     }, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 
   deleteUser(userToDelete: string): Promise<string> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/users/${userToDelete}`;
     return this.http.delete(url, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 }

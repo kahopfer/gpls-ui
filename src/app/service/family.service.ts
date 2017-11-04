@@ -9,61 +9,45 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 export class FamilyService {
   private gplsApiUrl: string;
 
+  private headers: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json'
+  });
+
   constructor(private http: HttpClient) {
     this.gplsApiUrl = GPLS_API_URL;
   }
 
-  getFamilies(): Promise<Family> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+  getFamilies(): Promise<Family[]> {
     const url = `${this.gplsApiUrl}/families`;
-    return this.http.get<Family>(url, {headers: headers})
-      .toPromise();
+    return this.http.get<Family[]>(url, {headers: this.headers}).toPromise();
   }
 
   getFamily(id: string): Promise<Family> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/families/${id}`;
-    return this.http.get<Family>(url, {headers: headers})
-      .toPromise();
+    return this.http.get<Family>(url, {headers: this.headers}).toPromise();
   }
 
   createFamily(family: Family) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/families/`;
     return this.http.post(url, family, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
     });
   }
 
   updateFamily(family: Family): Promise<string> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/families/${family._id}`;
     return this.http.put(url, family, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 
   deleteFamily(id: string): Promise<string> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    });
     const url = `${this.gplsApiUrl}/families/${id}`;
     return this.http.delete(url, {
-      headers: headers,
+      headers: this.headers,
       responseType: 'text'
-    })
-      .toPromise();
+    }).toPromise();
   }
 }
