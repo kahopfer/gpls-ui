@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
 import {Status} from "../error-alert/error-alert.component";
 import {Student} from "../../models/student";
 import {Guardian} from "../../models/guardian";
@@ -12,6 +11,8 @@ import {UserService} from "../../service/user.service";
 import {User} from "../../models/user";
 import {PriceList} from "../../models/priceList";
 import {PriceListService} from "../../service/priceList.service";
+import {InvoiceService} from "../../service/invoice.service";
+import {Invoice} from "../../models/invoice";
 
 @Component({
   selector: 'app-create-invoice-details',
@@ -36,6 +37,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   guardiansStatus: Status;
   lineItemsStatus: Status;
   lineItemStatus: Status;
+  invoiceStatus: Status;
 
   newLineItem: boolean;
   displayLineItemDialog: boolean;
@@ -44,9 +46,9 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   guardiansLoading: boolean = true;
   lineItemsLoading: boolean = true;
 
-  constructor(private location: Location, private studentService: StudentService, private guardianService: GuardianService,
+  constructor(private studentService: StudentService, private guardianService: GuardianService,
               private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService,
-              private priceListService: PriceListService) {
+              private priceListService: PriceListService, private invoiceService: InvoiceService) {
     this.guardiansStatus = {
       success: null,
       message: null
@@ -63,6 +65,11 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     };
 
     this.lineItemStatus = {
+      success: null,
+      message: null
+    };
+
+    this.invoiceStatus = {
       success: null,
       message: null
     };
@@ -305,7 +312,31 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     this.displayLineItemDialog = true;
   }
 
-  goBack() {
-    this.location.back();
+  createInvoice() {
+    let invoice: Invoice = {
+      _id: null,
+      familyID: this.route.snapshot.params['id'],
+      lineItemsID: null,
+      totalCost: 0,
+      paid: false,
+      invoiceFromDate: this.invoiceRange[0],
+      invoiceToDate: this.invoiceRange[1],
+      invoiceDate: new Date()
+    };
+
+    this.invoiceService.createInvoice(invoice).subscribe(() => {
+      this.invoiceStatus.success = true;
+      this.getLineItems(this.route.snapshot.params['id']);
+    }, err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.invoiceStatus.success = false;
+        this.invoiceStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.invoiceStatus.success = false;
+        this.invoiceStatus.message = 'An error occurred while creating the invoice';
+      }
+    })
   }
 }

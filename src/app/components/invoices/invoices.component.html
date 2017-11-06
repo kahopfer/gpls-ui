@@ -1,0 +1,39 @@
+<app-error-alert [status]="invoiceStatus"></app-error-alert>
+<p-dataTable [value]="invoicesToDisplay | orderBy: order" [rows]="10" [paginator]="true" [pageLinks]="3" [(selection)]="selectedInvoice"
+             [loading]="invoicesLoading" loadingIcon="fa-spinner" sortMode="multiple" #dt>
+  <p-header>All Invoices</p-header>
+  <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
+  <p-column field="familyName" header="Family Name" [filter]="true" filterPlaceholder="Search"></p-column>
+  <p-column field="totalCost" header="Total Cost">
+    <ng-template let-col let-rate="rowData" pTemplate="body">
+      {{rate[col.field]|currency}}
+    </ng-template>
+  </p-column>
+  <p-column field="invoiceDate" header="Invoice Date" [sortable]="true">
+    <ng-template let-col let-rate="rowData" pTemplate="body">
+      {{rate[col.field]|date }}
+    </ng-template>
+  </p-column>
+  <p-column field="paid" header="Paid" [filter]="true" filterMatchMode="equals">
+    <ng-template pTemplate="filter" let-col>
+      <p-dropdown [options]="paidOptions" [style]="{'width':'100%'}"
+                  (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                  styleClass="ui-column-filter"></p-dropdown>
+    </ng-template>
+  </p-column>
+  <p-footer>
+    <button type="button" class="btn btn-success" [disabled]="selectedInvoice == null">
+      <i class="fa fa-download"></i>
+      Download Selected Invoice
+    </button>
+    <button type="button" class="btn btn-primary" (click)="markAsPaid(selectedInvoice)" [disabled]="selectedInvoice == null">
+      <i class="fa fa-check"></i>
+      Mark Selected Invoice as Paid
+    </button>
+    <button type="button" class="btn btn-danger" (click)="deleteInvoice(selectedInvoice._id)" [disabled]="selectedInvoice == null">
+      <i class="fa fa-close"></i>
+      Delete Selected Invoice
+    </button>
+  </p-footer>
+</p-dataTable>
+

@@ -7,7 +7,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
   ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
-  PasswordModule, DropdownModule
+  PasswordModule, DropdownModule, TabMenuModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./components/login/login.component";
@@ -43,6 +43,10 @@ import {LineItemService} from "./service/lineItem.service";
 import {PriceListService} from "./service/priceList.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptor/auth.interceptor";
+import {InvoiceService} from "./service/invoice.service";
+import { InvoiceDetailsComponent } from './components/invoice-details/invoice-details.component';
+import { InvoicesComponent } from './components/invoices/invoices.component';
+import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navbar.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +71,10 @@ import {AuthInterceptor} from "./interceptor/auth.interceptor";
     ResetPasswordComponent,
     InvoiceListComponent,
     CreateInvoiceComponent,
-    CreateInvoiceDetailsComponent
+    CreateInvoiceDetailsComponent,
+    InvoiceDetailsComponent,
+    InvoicesComponent,
+    InvoiceNavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +93,8 @@ import {AuthInterceptor} from "./interceptor/auth.interceptor";
     DialogModule,
     InputMaskModule,
     DropdownModule,
-    OrderModule
+    OrderModule,
+    TabMenuModule
   ],
   providers: [
     AuthGuard,
@@ -98,6 +106,7 @@ import {AuthInterceptor} from "./interceptor/auth.interceptor";
     UserService,
     LineItemService,
     PriceListService,
+    InvoiceService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

@@ -20,4 +20,9 @@ export class ErrorAlertComponent implements OnInit {
   ngOnInit() {
   }
 
+  resetStatus() {
+    this.status.success = null;
+    this.status.message = null;
+  }
+
 }

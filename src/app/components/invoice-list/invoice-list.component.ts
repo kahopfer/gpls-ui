@@ -1,4 +1,8 @@
 import {Component, OnInit} from '@angular/core';
+import {Family} from "../../models/family";
+import {Status} from "../error-alert/error-alert.component";
+import {FamilyService} from "../../service/family.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-invoice-list',
@@ -7,76 +11,45 @@ import {Component, OnInit} from '@angular/core';
 })
 export class InvoiceListComponent implements OnInit {
 
-  invoices: any[] = [];
-  selectedInvoice: any;
-  paidOptions: any[] = [];
+  families: Family[] = [];
+  familiesStatus: Status;
+  loading: boolean = true;
+  order: string = 'familyName';
 
-  constructor() {
+  constructor(private familyService: FamilyService,  private router: Router) {
+
+    this.familiesStatus = {
+      success: null,
+      message: null
+    };
   }
 
   ngOnInit() {
-    this.invoices = [{
-      familyName: "Jones",
-      lineItemsID: [
-        "59bec3b9274b8f7ccabf19e1"
-      ],
-      totalCost: 16.00,
-      paid: true,
-      invoiceFromDate: new Date("August 14, 2017 00:00:00"),
-      invoiceToDate: new Date("August 18, 2017 00:00:00"),
-      invoiceDate: new Date("August 20, 2017 00:00:00")
-    }, {
-      familyName: "Seashell",
-      lineItemsID: [
-        "59bec3b9274b8f7ccabf19e1"
-      ],
-      totalCost: 20.00,
-      paid: true,
-      invoiceFromDate: new Date("September 18, 2017 00:00:00"),
-      invoiceToDate: new Date("September 22, 2017 00:00:00"),
-      invoiceDate: new Date("September 30, 2017 00:00:00")
-    }, {
-      familyName: "Redmond",
-      lineItemsID: [
-        "59bec3b9274b8f7ccabf19e1"
-      ],
-      totalCost: 10.75,
-      paid: false,
-      invoiceFromDate: new Date("November 6, 2017 00:00:00"),
-      invoiceToDate: new Date("November 10, 2017 00:00:00"),
-      invoiceDate: new Date("November 12, 2017 00:00:00")
-    }, {
-      familyName: "Winston",
-      lineItemsID: [
-        "59bec3b9274b8f7ccabf19e1"
-      ],
-      totalCost: 3.90,
-      paid: false,
-      invoiceFromDate: new Date("October 16, 2017 00:00:00"),
-      invoiceToDate: new Date("October 20, 2017 00:00:00"),
-      invoiceDate: new Date("October 25, 2017 00:00:00")
-    },{
-      familyName: "Smith",
-      lineItemsID: [
-        "59bec3b9274b8f7ccabf19e1"
-      ],
-      totalCost: 17.80,
-      paid: false,
-      invoiceFromDate: new Date("October 9, 2017 00:00:00"),
-      invoiceToDate: new Date("October 13, 2017 00:00:00"),
-      invoiceDate: new Date("October 17, 2017 00:00:00")
-    }];
-
-    this.paidOptions = [{
-      label: "All",
-      value: null
-    }, {
-      label: "True",
-      value: "true"
-    }, {
-      label: "False",
-      value: "false"
-    }];
+    this.families = [];
+    this.getFamilies();
   }
 
+  getFamilies(): void {
+    this.loading = true;
+    this.familyService.getFamilies().then(families => {
+      this.families = families['families'];
+      this.familiesStatus.success = true;
+      this.loading = false;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.familiesStatus.success = false;
+        this.familiesStatus.message = 'An unexpected error occurred';
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.familiesStatus.success = false;
+        this.familiesStatus.message = 'An error occurred while getting the list of families';
+      }
+      this.loading = false;
+    });
+  }
+
+  onRowSelect(event) {
+    this.router.navigate(['invoices/list', event.data._id]);
+  }
 }

@@ -19,6 +19,9 @@ import {ManageRatesComponent} from "./components/manage-rates/manage-rates.compo
 import {InvoiceListComponent} from "./components/invoice-list/invoice-list.component";
 import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
 import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
+import {InvoiceDetailsComponent} from "./components/invoice-details/invoice-details.component";
+import {InvoicesComponent} from "./components/invoices/invoices.component";
+import {InvoiceNavbarComponent} from "./components/invoice-navbar/invoice-navbar.component";
 
 const routes: Routes = [
   {
@@ -91,8 +94,30 @@ const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
-    path: 'invoice-list',
-    component: InvoiceListComponent,
+    path: 'invoices',
+    component: InvoiceNavbarComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'all',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        component: InvoiceListComponent,
+        canActivate: [AuthGuard, AdminGuard]
+      },
+      {
+        path: 'list/:id',
+        component: InvoiceDetailsComponent,
+        canActivate: [AuthGuard, AdminGuard]
+      },
+      {
+        path: 'all',
+        component: InvoicesComponent,
+        canActivate: [AuthGuard, AdminGuard]
+      }
+    ],
     canActivate: [AuthGuard, AdminGuard]
   },
   {
