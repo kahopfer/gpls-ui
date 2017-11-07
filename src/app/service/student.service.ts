@@ -45,6 +45,14 @@ export class StudentService {
     });
   }
 
+  enrollStudent(student: Student) {
+    const url = `${this.gplsApiUrl}/students/enrollStudent`;
+    return this.http.post(url, student, {
+      headers: this.headers,
+      responseType: 'text'
+    });
+  }
+
   updateStudent(student: Student): Promise<string> {
     const url = `${this.gplsApiUrl}/students/updateStudent/${student._id}`;
     return this.http.put(url, student, {

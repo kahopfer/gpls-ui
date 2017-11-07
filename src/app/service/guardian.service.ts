@@ -35,6 +35,14 @@ export class GuardianService {
     });
   }
 
+  enrollGuardian(guardian: Guardian) {
+    const url = `${this.gplsApiUrl}/guardians/enrollGuardian`;
+    return this.http.post(url, guardian, {
+      headers: this.headers,
+      responseType: 'text'
+    });
+  }
+
   updateGuardian(guardian: Guardian): Promise<string> {
     const url = `${this.gplsApiUrl}/guardians/${guardian._id}`;
     return this.http.put(url, guardian, {

@@ -92,6 +92,7 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.deleteInvoice(id).then(() => {
       this.invoiceStatus.success = true;
       this.invoicesLoading = false;
+      this.selectedInvoice = null;
       this.getInvoices();
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -129,6 +130,7 @@ export class InvoicesComponent implements OnInit {
       invoice1['paid'] = true;
       this.invoiceService.updateInvoice(invoice1).then(() => {
         this.invoiceStatus.success = true;
+        this.selectedInvoice = null;
         this.invoicesLoading = false;
         this.getInvoices();
       }).catch(err => {

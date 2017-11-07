@@ -122,7 +122,7 @@ export class EnrollFamilyComponent implements OnInit {
           familyUnitID: familyID
         };
 
-        this.studentService.createStudent(studentToCreate).subscribe(() => {
+        this.studentService.enrollStudent(studentToCreate).subscribe(() => {
           this.enrollStudentStatus.success = true;
         }, err => {
           reject(err);
@@ -148,7 +148,7 @@ export class EnrollFamilyComponent implements OnInit {
           email: model.value.guardians[guardianIndex].email,
           familyUnitID: familyID
         };
-        this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
+        this.guardianService.enrollGuardian(guardianToCreate).subscribe(() => {
           this.enrollGuardianStatus.success = true;
         }, err => {
           reject(err);

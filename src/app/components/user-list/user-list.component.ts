@@ -52,6 +52,7 @@ export class UserListComponent implements OnInit {
   deleteSelectedUser(username: string): void {
     this.usersService.deleteUser(username).then(() => {
       this.usersStatus.success = true;
+      this.selectedUser = null;
       this.getUsers();
     }).catch(err => {
       if (err.error instanceof Error) {

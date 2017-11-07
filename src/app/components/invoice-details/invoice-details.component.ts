@@ -133,6 +133,7 @@ export class InvoiceDetailsComponent implements OnInit {
     this.invoicesLoading = true;
     this.invoiceService.deleteInvoice(id).then(() => {
       this.invoiceStatus.success = true;
+      this.selectedInvoice = null;
       this.invoicesLoading = false;
       this.getInvoices(this.route.snapshot.params['id']);
     }).catch(err => {
@@ -171,6 +172,7 @@ export class InvoiceDetailsComponent implements OnInit {
       invoice1['paid'] = true;
       this.invoiceService.updateInvoice(invoice1).then(() => {
         this.invoiceStatus.success = true;
+        this.selectedInvoice = null;
         this.invoicesLoading = false;
         this.getInvoices(this.route.snapshot.params['id']);
       }).catch(err => {
