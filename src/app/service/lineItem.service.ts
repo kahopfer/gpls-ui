@@ -27,23 +27,8 @@ export class LineItemService {
     return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
   }
 
-  getUninvoicedLineItemsByStudent(studentID: string): Promise<LineItem[]> {
-    const url = `${this.gplsApiUrl}/lineItems?studentID=${studentID}&invoiced=null`;
-    return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
-  }
-
-  getUninvoicedLineItemsByFamily(familyID: string): Promise<LineItem[]> {
-    const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&invoiced=null`;
-    return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
-  }
-
   getLineItemsWithoutCheckOut(studentID: string): Promise<LineItem[]> {
     const url = `${this.gplsApiUrl}/lineItems?studentID=${studentID}&checkedOut=null`;
-    return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
-  }
-
-  getUninvoicedLineItemsByServiceType(serviceType: string): Promise<LineItem[]> {
-    const url = `${this.gplsApiUrl}/lineItems?serviceType=${serviceType}&invoiced=null`;
     return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
   }
 

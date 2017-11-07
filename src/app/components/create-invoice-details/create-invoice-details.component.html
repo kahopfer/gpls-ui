@@ -154,10 +154,11 @@
           <button type="submit" pButton icon="fa-check"
                   [disabled]="!lineItemDetailsForm.form.valid" label="Save"></button>
           <button *ngIf="newLineItem === false" type="button" pButton icon="fa-close"
-                  (click)="deleteLineItem(lineItem._id)" label="Delete"></button>
+                  (click)="confirmDeleteLineItem(lineItem._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>
     </form>
+    <p-confirmDialog></p-confirmDialog>
   </div>
   <br>
   <div class="row justify-content-center">

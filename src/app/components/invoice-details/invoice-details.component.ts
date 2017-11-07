@@ -7,6 +7,7 @@ import {StudentService} from "../../service/student.service";
 import {ActivatedRoute} from "@angular/router";
 import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-invoice-details',
@@ -32,7 +33,8 @@ export class InvoiceDetailsComponent implements OnInit {
   guardiansLoading: boolean = true;
 
   constructor(private studentService: StudentService, private guardianService: GuardianService,
-              private route: ActivatedRoute, private invoiceService: InvoiceService) {
+              private route: ActivatedRoute, private invoiceService: InvoiceService,
+              private confirmationService: ConfirmationService) {
     this.guardiansStatus = {
       success: null,
       message: null
@@ -149,6 +151,17 @@ export class InvoiceDetailsComponent implements OnInit {
         }
       }
       this.invoicesLoading = false;
+    })
+  }
+
+  confirmDeleteInvoice(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this invoice?',
+      header: 'Delete Invoice Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteInvoice(id);
+      }
     })
   }
 

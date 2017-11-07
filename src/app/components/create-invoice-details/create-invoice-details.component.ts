@@ -13,6 +13,7 @@ import {PriceList} from "../../models/priceList";
 import {PriceListService} from "../../service/priceList.service";
 import {InvoiceService} from "../../service/invoice.service";
 import {Invoice} from "../../models/invoice";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-create-invoice-details',
@@ -48,7 +49,8 @@ export class CreateInvoiceDetailsComponent implements OnInit {
 
   constructor(private studentService: StudentService, private guardianService: GuardianService,
               private lineItemService: LineItemService, private route: ActivatedRoute, private usersService: UserService,
-              private priceListService: PriceListService, private invoiceService: InvoiceService) {
+              private priceListService: PriceListService, private invoiceService: InvoiceService,
+              private confirmationService: ConfirmationService) {
     this.guardiansStatus = {
       success: null,
       message: null
@@ -213,6 +215,17 @@ export class CreateInvoiceDetailsComponent implements OnInit {
           this.lineItemStatus.success = false;
           this.lineItemStatus.message = 'An error occurred while deleting the line item';
         }
+      }
+    })
+  }
+
+  confirmDeleteLineItem(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this line item?',
+      header: 'Delete Line Item Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteLineItem(id);
       }
     })
   }

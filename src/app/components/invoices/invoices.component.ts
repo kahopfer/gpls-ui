@@ -3,6 +3,7 @@ import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
 import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../../service/family.service";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-invoices',
@@ -20,7 +21,7 @@ export class InvoicesComponent implements OnInit {
 
   invoiceStatus: Status;
 
-  constructor(private invoiceService: InvoiceService, private familyService: FamilyService) {
+  constructor(private invoiceService: InvoiceService, private familyService: FamilyService, private confirmationService: ConfirmationService) {
     this.invoiceStatus = {
       success: null,
       message: null
@@ -108,6 +109,17 @@ export class InvoicesComponent implements OnInit {
         }
       }
       this.invoicesLoading = false;
+    })
+  }
+
+  confirmDeleteInvoice(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this invoice?',
+      header: 'Delete Invoice Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteInvoice(id);
+      }
     })
   }
 

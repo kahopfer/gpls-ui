@@ -7,7 +7,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
   ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
-  PasswordModule, DropdownModule, TabMenuModule
+  PasswordModule, DropdownModule, TabMenuModule, ConfirmDialogModule, ConfirmationService
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./components/login/login.component";
@@ -94,7 +94,8 @@ import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navb
     InputMaskModule,
     DropdownModule,
     OrderModule,
-    TabMenuModule
+    TabMenuModule,
+    ConfirmDialogModule
   ],
   providers: [
     AuthGuard,
@@ -107,6 +108,7 @@ import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navb
     LineItemService,
     PriceListService,
     InvoiceService,
+    ConfirmationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

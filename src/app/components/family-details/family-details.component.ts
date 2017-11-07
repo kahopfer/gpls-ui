@@ -12,6 +12,7 @@ import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
 import {LineItemService} from "../../service/lineItem.service";
 import {InvoiceService} from "../../service/invoice.service";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-family-details',
@@ -58,8 +59,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
               private guardianService: GuardianService, private route: ActivatedRoute, private location: Location,
-              private authService: AuthenticationService, private lineItemService: LineItemService,
-              private invoiceService: InvoiceService) {
+              private authService: AuthenticationService, private confirmationService: ConfirmationService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     this.admin = currentUser && currentUser.admin;
@@ -162,6 +162,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     })
   }
 
+  confirmDeleteFamily() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this family? This will also delete all invoices and line items associated with this family.',
+      header: 'Delete Family Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteFamily();
+      }
+    })
+  }
+
   deleteFamily() {
     this.familyService.deleteFamily(this.route.snapshot.params['id']).then(() => {
       this.familyStatus.success = true;
@@ -190,75 +201,39 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       this.studentStatus.message = 'A family must have at least 1 child';
       return;
     }
-
-    this.lineItemService.getUninvoicedLineItemsByStudent(id).then(lineItems => {
-      if (lineItems['lineItems'].length > 0) {
-        this.studentStatus.success = false;
-        this.studentStatus.message = 'You cannot delete a student with uninvoiced line items';
-        return;
-      } else {
-        // Remove student ID from family record
-        let deleteStudentFromFamilyRecord = new Promise((resolve, reject) => {
-          for (let familyIndex in this.family.students) {
-            if (this.family.students[familyIndex] == id) {
-              // If student ID is found in family record, remove it from the student's array
-              this.family.students.splice(+familyIndex, 1);
-              this.familyService.updateFamily(this.family).then(() => {
-                this.studentStatus.success = true;
-              }).catch(err => {
-                reject(err);
-                return;
-              })
-            }
-          }
-          resolve();
-        });
-
-        deleteStudentFromFamilyRecord.then(() => {
-          this.studentService.deleteStudent(id).then(() => {
-            this.studentStatus.success = true;
-            this.student = null;
-            this.displayStudentDialog = false;
-            this.getStudents(this.route.snapshot.params['id']);
-          }).catch(err => {
-            if (err.error instanceof Error) {
-              console.log('An error occurred:', err.error.message);
-              this.studentStatus.success = false;
-              this.studentStatus.message = 'An unexpected error occurred';
-            } else {
-              if (err.status === 404) {
-                this.studentStatus.success = false;
-                this.studentStatus.message = 'Student not found';
-              } else {
-                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-                this.studentStatus.success = false;
-                this.studentStatus.message = 'An error occurred while deleting the student';
-              }
-            }
-          })
-        }).catch(err => {
-          if (err.error instanceof Error) {
-            console.log('An error occurred:', err.error.message);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An unexpected error occurred';
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An error occurred updating the family record';
-          }
-        });
-      }
+    this.studentService.deleteStudent(id).then(() => {
+      this.studentStatus.success = true;
+      this.student = null;
+      this.displayStudentDialog = false;
+      this.getStudents(this.route.snapshot.params['id']);
+      this.getFamily(this.route.snapshot.params['id']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
         this.studentStatus.success = false;
         this.studentStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentStatus.success = false;
-        this.studentStatus.message = 'An error occurred while retrieving the student\'s line items';
+        if (err.status === 404) {
+          this.studentStatus.success = false;
+          this.studentStatus.message = 'Student not found';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.studentStatus.success = false;
+          this.studentStatus.message = 'An error occurred while deleting the student';
+        }
       }
-    });
+    })
+  }
+
+  confirmDeleteStudent(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this student?',
+      header: 'Delete Student Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteStudent(id);
+      }
+    })
   }
 
   deleteGuardian(id: string) {
@@ -267,58 +242,39 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       this.guardianStatus.message = 'A family must have at least 1 guardian';
       return;
     }
-
-    // Remove guardian ID from family record
-    let deleteGuardianFromFamilyRecord = new Promise((resolve, reject) => {
-      for (let familyIndex in this.family.guardians) {
-        if (this.family.guardians[familyIndex] == id) {
-          // If student ID is found in family record, remove it from the student's array
-          this.family.guardians.splice(+familyIndex, 1);
-          this.familyService.updateFamily(this.family).then(() => {
-            this.guardianStatus.success = true;
-          }).catch(err => {
-            reject(err);
-            return;
-          })
-        }
-      }
-      resolve();
-    });
-
-    deleteGuardianFromFamilyRecord.then(() => {
-      // Remove guardian from guardian collection
-      this.guardianService.deleteGuardian(id).then(() => {
-        this.guardianStatus.success = true;
-        this.guardian = null;
-        this.displayGuardianDialog = false;
-        this.getGuardians(this.route.snapshot.params['id']);
-      }).catch(err => {
-        if (err.error instanceof Error) {
-          console.log('An error occurred:', err.error.message);
-          this.guardianStatus.success = false;
-          this.guardianStatus.message = 'An unexpected error occurred';
-        } else {
-          if (err.status === 404) {
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'Guardian not found';
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'An error occurred while deleting the guardian';
-          }
-        }
-      })
+    this.guardianService.deleteGuardian(id).then(() => {
+      this.guardianStatus.success = true;
+      this.guardian = null;
+      this.displayGuardianDialog = false;
+      this.getGuardians(this.route.snapshot.params['id']);
+      this.getFamily(this.route.snapshot.params['id']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
         this.guardianStatus.success = false;
         this.guardianStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.guardianStatus.success = false;
-        this.guardianStatus.message = 'An error occurred updating the family record';
+        if (err.status === 404) {
+          this.guardianStatus.success = false;
+          this.guardianStatus.message = 'Guardian not found';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.guardianStatus.success = false;
+          this.guardianStatus.message = 'An error occurred while deleting the guardian';
+        }
       }
     });
+  }
+
+  confirmDeleteGuardian(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this guardian?',
+      header: 'Delete Guardian Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteGuardian(id);
+      }
+    })
   }
 
   saveStudent(student: Student) {
@@ -346,45 +302,23 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         }
       })
     } else {
-      let createStudentPromise = new Promise((resolve, reject) => {
-        let studentID = ObjectID();
-        let studentToCreate: Student = {
-          _id: studentID,
-          fname: student.fname,
-          lname: student.lname,
-          mi: student.mi,
-          notes: student.notes,
-          checkedIn: false,
-          familyUnitID: this.route.snapshot.params['id']
-        };
-        this.studentService.createStudent(studentToCreate).subscribe(() => {
-          this.studentStatus.success = true;
-          resolve(studentID);
-        }, err => {
-          reject(err);
-          return;
-        });
-      });
-
-      createStudentPromise.then((studentID: string) => {
-        this.family.students.push(studentID);
-        this.familyService.updateFamily(this.family).then(() => {
-          this.studentStatus.success = true;
-          this.student = null;
-          this.displayStudentDialog = false;
-          this.getStudents(this.route.snapshot.params['id']);
-        }).catch(err => {
-          if (err.error instanceof Error) {
-            console.log('An error occurred:', err.error.message);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An unexpected error occurred';
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An error occurred updating the family record';
-          }
-        })
-      }).catch(err => {
+      let studentID = ObjectID();
+      let studentToCreate: Student = {
+        _id: studentID,
+        fname: student.fname,
+        lname: student.lname,
+        mi: student.mi,
+        notes: student.notes,
+        checkedIn: false,
+        familyUnitID: this.route.snapshot.params['id']
+      };
+      this.studentService.createStudent(studentToCreate).subscribe(() => {
+        this.studentStatus.success = true;
+        this.student = null;
+        this.displayStudentDialog = false;
+        this.getStudents(this.route.snapshot.params['id']);
+        this.getFamily(this.route.snapshot.params['id']);
+      }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
           this.studentStatus.success = false;
@@ -399,7 +333,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
             this.studentStatus.message = 'An error occurred while enrolling the student ' + student.fname + ' ' + student.lname;
           }
         }
-      })
+      });
     }
   }
 
@@ -427,47 +361,25 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         }
       })
     } else {
-      let createGuardianPromise = new Promise((resolve, reject) => {
-        let guardianID = ObjectID();
-        let guardianToCreate: Guardian = {
-          _id: guardianID,
-          fname: guardian.fname,
-          lname: guardian.lname,
-          mi: guardian.mi,
-          relationship: guardian.relationship,
-          primPhone: guardian.primPhone,
-          secPhone: guardian.secPhone,
-          email: guardian.email,
-          familyUnitID: this.route.snapshot.params['id']
-        };
-        this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
-          this.guardianStatus.success = true;
-          resolve(guardianID);
-        }, err => {
-          reject(err);
-          return;
-        });
-      });
-
-      createGuardianPromise.then((guardianID: string) => {
-        this.family.guardians.push(guardianID);
-        this.familyService.updateFamily(this.family).then(() => {
-          this.guardianStatus.success = true;
-          this.guardian = null;
-          this.displayGuardianDialog = false;
-          this.getGuardians(this.route.snapshot.params['id']);
-        }).catch(err => {
-          if (err.error instanceof Error) {
-            console.log('An error occurred:', err.error.message);
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'An unexpected error occurred';
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'An error occurred updating the family record';
-          }
-        })
-      }).catch(err => {
+      let guardianID = ObjectID();
+      let guardianToCreate: Guardian = {
+        _id: guardianID,
+        fname: guardian.fname,
+        lname: guardian.lname,
+        mi: guardian.mi,
+        relationship: guardian.relationship,
+        primPhone: guardian.primPhone,
+        secPhone: guardian.secPhone,
+        email: guardian.email,
+        familyUnitID: this.route.snapshot.params['id']
+      };
+      this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
+        this.guardianStatus.success = true;
+        this.guardian = null;
+        this.displayGuardianDialog = false;
+        this.getGuardians(this.route.snapshot.params['id']);
+        this.getFamily(this.route.snapshot.params['id']);
+      }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
           this.guardianStatus.success = false;
@@ -482,7 +394,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
             this.guardianStatus.message = 'An error occurred while creating the guardian ' + guardian.fname + ' ' + guardian.lname;
           }
         }
-      })
+      });
     }
   }
 

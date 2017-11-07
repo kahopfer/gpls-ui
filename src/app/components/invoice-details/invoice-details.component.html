@@ -50,12 +50,13 @@
           <i class="fa fa-check"></i>
           Mark Selected Invoice as Paid
         </button>
-        <button type="button" class="btn btn-danger" (click)="deleteInvoice(selectedInvoice._id)" [disabled]="selectedInvoice == null">
+        <button type="button" class="btn btn-danger" (click)="confirmDeleteInvoice(selectedInvoice._id)" [disabled]="selectedInvoice == null">
           <i class="fa fa-close"></i>
           Delete Selected Invoice
         </button>
       </p-footer>
     </p-dataTable>
+    <p-confirmDialog></p-confirmDialog>
     <br>
   </div>
 </div>

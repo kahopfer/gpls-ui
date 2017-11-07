@@ -34,6 +34,8 @@
   <app-error-alert [status]="familyStatus"></app-error-alert>
   <br>
   <app-error-alert [status]="studentsStatus"></app-error-alert>
+  <br>
+  <app-error-alert [status]="guardiansStatus"></app-error-alert>
 
   <div class="row justify-content-md-center">
     <!--TODO: Maybe make it so only admins can select rows-->
@@ -113,7 +115,7 @@
           <button type="submit" pButton icon="fa-check"
                   [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
           <button *ngIf="newStudent === false" type="button" pButton icon="fa-close"
-                  (click)="deleteStudent(student._id)" label="Delete"></button>
+                  (click)="confirmDeleteStudent(student._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>
     </form>
@@ -201,14 +203,15 @@
           <button type="submit" pButton icon="fa-check"
                   [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
           <button *ngIf="newGuardian === false" type="button" pButton icon="fa-close"
-                  (click)="deleteGuardian(guardian._id)" label="Delete"></button>
+                  (click)="confirmDeleteGuardian(guardian._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>
     </form>
+    <p-confirmDialog></p-confirmDialog>
   </div>
   <div *ngIf="admin === true" class="row justify-content-md-center">
     <div class="col col-lg-2">
-      <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="deleteFamily()">
+      <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="confirmDeleteFamily()">
         <i class="fa fa-close"></i>
         Delete This Family
       </button>

@@ -62,10 +62,11 @@
         <button type="submit" pButton icon="fa-check"
                 [disabled]="!priceListForm.form.valid" label="Save"></button>
         <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton icon="fa-close"
-                (click)="deletePriceList(priceList._id)" label="Delete"></button>
+                (click)="confirmDeletePriceList(priceList._id)" label="Delete"></button>
       </p-footer>
     </p-dialog>
   </form>
+  <p-confirmDialog></p-confirmDialog>
 
   <div class="row justify-content-md-center">
     <app-back-button></app-back-button>

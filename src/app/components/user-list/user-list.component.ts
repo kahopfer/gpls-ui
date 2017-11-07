@@ -3,6 +3,7 @@ import {User} from "../../models/user";
 import {Status} from "../error-alert/error-alert.component";
 import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +17,7 @@ export class UserListComponent implements OnInit {
   selectedUser: User;
   loading: boolean = true;
 
-  constructor(private usersService: UserService, private router: Router) {
+  constructor(private usersService: UserService, private router: Router, private confirmationService: ConfirmationService) {
     this.usersStatus = {
       success: null,
       message: null
@@ -66,6 +67,17 @@ export class UserListComponent implements OnInit {
           this.usersStatus.success = false;
           this.usersStatus.message = 'An error occurred while deleting the user ' + username;
         }
+      }
+    })
+  }
+
+  confirmDeleteUser(username: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this user?',
+      header: 'Delete User Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deleteSelectedUser(username);
       }
     })
   }

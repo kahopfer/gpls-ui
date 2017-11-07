@@ -31,11 +31,6 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(url, {headers: this.headers}).toPromise();
   }
 
-  getUnpaidInvoices(familyID: string): Promise<Invoice[]> {
-    const url = `${this.gplsApiUrl}/invoices?familyID=${familyID}&paid=false`;
-    return this.http.get<Invoice[]>(url, {headers: this.headers}).toPromise();
-  }
-
   createInvoice(invoice: Invoice) {
     const url = `${this.gplsApiUrl}/invoices`;
     return this.http.post(url, invoice, {

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Status} from "../error-alert/error-alert.component";
 import {PriceList} from "../../models/priceList";
 import {PriceListService} from "../../service/priceList.service";
-import {LineItemService} from "../../service/lineItem.service";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-manage-rates',
@@ -28,7 +28,7 @@ export class ManageRatesComponent implements OnInit {
   newPriceList: boolean;
   displayPriceListDialog: boolean;
 
-  constructor(private priceListService: PriceListService, private lineItemService: LineItemService) {
+  constructor(private priceListService: PriceListService, private confirmationService: ConfirmationService) {
     this.nonExtraPriceListStatus = {
       success: null,
       message: null
@@ -91,45 +91,38 @@ export class ManageRatesComponent implements OnInit {
   }
 
   deletePriceList(id: string) {
-    this.lineItemService.getUninvoicedLineItemsByServiceType(this.priceList.itemName).then(lineItems => {
-      if (lineItems['lineItems'].length > 0) {
-        this.priceListStatus.success = false;
-        this.priceListStatus.message = 'You cannot delete rates that are in uninvoiced line items';
-        return;
-      } else {
-        this.priceListService.deletePriceList(id).then(() => {
-          this.priceListStatus.success = true;
-          this.priceList = null;
-          this.displayPriceListDialog = false;
-          this.getExtraPriceList();
-        }).catch(err => {
-          if (err.error instanceof Error) {
-            console.log('An error occurred:', err.error.message);
-            this.priceListStatus.success = false;
-            this.priceListStatus.message = 'An unexpected error occurred';
-          } else {
-            if (err.status === 400) {
-              this.priceListStatus.success = false;
-              this.priceListStatus.message = 'You can only delete extra items'
-            } else {
-              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              this.priceListStatus.success = false;
-              this.priceListStatus.message = 'An error occurred while deleting the rate';
-            }
-          }
-        });
-      }
+    this.priceListService.deletePriceList(id).then(() => {
+      this.priceListStatus.success = true;
+      this.priceList = null;
+      this.displayPriceListDialog = false;
+      this.getExtraPriceList();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
         this.priceListStatus.success = false;
         this.priceListStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.priceListStatus.success = false;
-        this.priceListStatus.message = 'An error occurred while loading the rate\'s line items';
+        if (err.status === 400) {
+          this.priceListStatus.success = false;
+          this.priceListStatus.message = 'You cannot delete rates that are in uninvoiced line items'
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.priceListStatus.success = false;
+          this.priceListStatus.message = 'An error occurred while deleting the rate';
+        }
       }
     });
+  }
+
+  confirmDeletePriceList(id: string) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this rate?',
+      header: 'Delete Rate Confirmation',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.deletePriceList(id);
+      }
+    })
   }
 
   savePriceList(priceList: PriceList) {
