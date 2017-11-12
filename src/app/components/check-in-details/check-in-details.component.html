@@ -9,7 +9,7 @@
         <form #checkInStudentsForm="ngForm" (ngSubmit)="updateStudentCheckedInStatus(checkInStudentsForm)">
           <ng-container *ngFor="let student of students; let i = index">
             <div class="form-group">
-              <label for="checkInBy-{{i}}">Who is checking {{student.fname}} {{student.lname}} in?</label>
+              <label for="checkInBy-{{i}}">Who is dropping {{student.fname}} {{student.lname}} off?</label>
               <select name="checkInBy-{{i}}" class="form-control" required id="checkInBy-{{i}}" #checkInBy ngModel>
                 <option></option>
                 <ng-container *ngFor="let guardian of guardianArray[i]">

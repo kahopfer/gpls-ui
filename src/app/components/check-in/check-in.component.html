@@ -9,9 +9,9 @@
                #dt>
     <p-header>Select students to check in</p-header>
     <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
-    <p-column field="fname" header="First Name"></p-column>
+    <p-column field="fname" header="First Name" [sortable]="true"></p-column>
     <!--<p-column field="mi" header="Middle Initial"></p-column>-->
-    <p-column field="lname" header="Last Name"></p-column>
+    <p-column field="lname" header="Last Name" [sortable]="true"></p-column>
     <p-footer>
       <button type="button" class="btn btn-success" [disabled]="selectedStudents.length === 0"
               (click)="goToCheckInDetails()">

@@ -47,6 +47,7 @@ import {InvoiceService} from "./service/invoice.service";
 import { InvoiceDetailsComponent } from './components/invoice-details/invoice-details.component';
 import { InvoicesComponent } from './components/invoices/invoices.component';
 import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navbar.component';
+import { DownloadInvoiceComponent } from './components/download-invoice/download-invoice.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navb
     CreateInvoiceDetailsComponent,
     InvoiceDetailsComponent,
     InvoicesComponent,
-    InvoiceNavbarComponent
+    InvoiceNavbarComponent,
+    DownloadInvoiceComponent
   ],
   imports: [
     BrowserModule,

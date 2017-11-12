@@ -42,10 +42,7 @@
         </ng-template>
       </p-column>
       <p-footer>
-        <button type="button" class="btn btn-success" [disabled]="selectedInvoice == null">
-          <i class="fa fa-download"></i>
-          Download Selected Invoice
-        </button>
+        <app-download-invoice [selectedInvoice]="selectedInvoice"></app-download-invoice>
         <button type="button" class="btn btn-primary" (click)="markAsPaid(selectedInvoice)" [disabled]="selectedInvoice == null">
           <i class="fa fa-check"></i>
           Mark Selected Invoice as Paid

@@ -38,7 +38,6 @@
   <app-error-alert [status]="guardiansStatus"></app-error-alert>
 
   <div class="row justify-content-md-center">
-    <!--TODO: Maybe make it so only admins can select rows-->
     <p-dataTable [value]="students" selectionMode="single" [(selection)]="selectedStudent" [loading]="studentsLoading"
                  loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false"
                  [responsive]="true">

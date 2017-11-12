@@ -9,7 +9,7 @@
         <form #checkOutStudentsForm="ngForm" (ngSubmit)="updateStudentCheckedInStatus(checkOutStudentsForm)">
           <ng-container *ngFor="let student of students; let i = index">
             <div class="form-group">
-              <label for="checkOutBy-{{i}}">Who is checking {{student.fname}} {{student.lname}} out?</label>
+              <label for="checkOutBy-{{i}}">Who is picking {{student.fname}} {{student.lname}} up?</label>
               <select name="checkOutBy-{{i}}" class="form-control" required id="checkOutBy-{{i}}" #checkOutBy ngModel>
                 <option></option>
                 <ng-container *ngFor="let guardian of guardianArray[i]">
@@ -19,7 +19,7 @@
               </select>
             </div>
             <ng-container *ngIf="extraItems.length > 0">
-              <label>Select which extra items {{student.fname}} had</label>
+              <label>Select which extra items {{student.fname}} {{student.lname}} had</label>
               <br>
               <div class="form-check" *ngFor="let extraItem of extraItems; let j = index">
                 <label class="form-check-label">
@@ -33,7 +33,7 @@
               <label for="lineItemNotes-{{i}}">Notes</label>
               <textarea name="lineItemNotes-{{i}}" type="text" class="form-control" id="lineItemNotes-{{i}}"
                         #lineItemNotes ngModel
-                        placeholder="Write any notes about {{student.fname}}'s day here (optional)"></textarea>
+                        placeholder="Write any notes about {{student.fname}} {{student.lname}}'s day here (optional)"></textarea>
             </div>
             <div *ngIf="students.length > 1 && i !== students.length - 1">
               <hr>

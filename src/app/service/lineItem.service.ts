@@ -23,7 +23,14 @@ export class LineItemService {
   }
 
   getLineItemsByFamily(familyID: string): Promise<LineItem[]> {
+    // TODO: Change back
     const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull&invoiced=null`;
+    // const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull`;
+    return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
+  }
+
+  getLineItemsByInvoiceID(invoiceID: string): Promise<LineItem[]> {
+    const url = `${this.gplsApiUrl}/lineItems?invoiceID=${invoiceID}`;
     return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
   }
 

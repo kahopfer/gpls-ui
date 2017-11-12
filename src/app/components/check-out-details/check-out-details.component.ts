@@ -175,7 +175,8 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         let temporaryLineItem: LineItem = lineItems[lineItemIndex]['lineItems'][0];
         // Set temp line item values
         temporaryLineItem.checkOut = new Date();
-        temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
+        // temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
+        temporaryLineItem.serviceType = 'Child Care';
         // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
         temporaryLineItem.checkOutBy = form.value['checkOutBy-' + lineItemIndex];
         temporaryLineItem.notes = form.value['lineItemNotes-' + lineItemIndex];

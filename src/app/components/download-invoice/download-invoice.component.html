@@ -1,0 +1,5 @@
+<button type="button" class="btn btn-success" [disabled]="selectedInvoice == null"
+        (click)="downloadInvoice(selectedInvoice._id)">
+  <i class="fa fa-download"></i>
+  Download Selected Invoice
+</button>
