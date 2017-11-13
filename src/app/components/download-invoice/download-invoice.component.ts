@@ -11,6 +11,7 @@ import {FamilyService} from "../../service/family.service";
   styleUrls: ['./download-invoice.component.css']
 })
 export class DownloadInvoiceComponent implements OnInit {
+  //TODO: Maybe add students and guardians as input variables
   @Input() selectedInvoice: Invoice;
   lineItems: LineItem[] = [];
 
