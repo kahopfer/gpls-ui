@@ -328,6 +328,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
   }
 
   createInvoice() {
+    let invoiceToDate: Date = new Date(this.invoiceRange[1].getFullYear(), this.invoiceRange[1].getMonth(), this.invoiceRange[1].getDate(), 23, 59, 59);
     let invoice: Invoice = {
       _id: null,
       familyID: this.route.snapshot.params['id'],
@@ -335,7 +336,7 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       totalCost: 0,
       paid: false,
       invoiceFromDate: this.invoiceRange[0],
-      invoiceToDate: this.invoiceRange[1],
+      invoiceToDate: invoiceToDate,
       invoiceDate: new Date()
     };
 
