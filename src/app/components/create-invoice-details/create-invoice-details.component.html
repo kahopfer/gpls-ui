@@ -77,9 +77,10 @@
         <div class="form-group">
           <label for="checkIn">Check In Time</label>
           <br>
+          <!--TODO: Maybe allow only time input-->
           <p-calendar name="checkIn" id="checkIn" [(ngModel)]="lineItem.checkIn" #checkIn="ngModel"
                       [disabled]="lineItem.extraItem == true" [showTime]="true" hourFormat="12"
-                      [required]="lineItem.extraItem == false"></p-calendar>
+                      [required]="lineItem.extraItem == false" [showIcon]="true" [disabledDays]="[0,6]"></p-calendar>
           <br>
           <small [hidden]="checkIn.valid || lineItem.extraItem == true" class="text-danger">
             Check in time is required.
@@ -90,7 +91,7 @@
           <br>
           <p-calendar name="checkOut" id="checkOut" [(ngModel)]="lineItem.checkOut"
                       [disabled]="lineItem.extraItem == true" #checkOut="ngModel" [showTime]="true" hourFormat="12"
-                      [required]="lineItem.extraItem == false"></p-calendar>
+                      [required]="lineItem.extraItem == false" [showIcon]="true" [disabledDays]="[0,6]"></p-calendar>
           <br>
           <small [hidden]="checkOut.valid || lineItem.extraItem == true" class="text-danger">
             Check out time is required.
@@ -164,33 +165,29 @@
   <div class="row justify-content-center">
     <app-error-alert [status]="invoiceStatus"></app-error-alert>
   </div>
+  <!--TODO: Try to make invoice range input wider-->
+  <!--TODO: Maybe make invoice range input invalid if only one date is entered-->
   <div class="row justify-content-center">
-    <form class="form form-inline" #createInvoiceForm="ngForm" (submit)="createInvoice()">
-      <div class="row">
-        <div class="form-group">
-          <div class="col">
-            <label for="invoiceRange">Invoice Range: </label>
-          </div>
-          <div class="col">
-            <p-calendar id="invoiceRange" name="invoiceRange" required [(ngModel)]="invoiceRange"
-                        selectionMode="range" readonlyInput="true" ngModel></p-calendar>
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">
-              <i class="fa fa-check"></i>
-              Create Invoice
-            </button>
-          </div>
-        </div>
+    <form class="form-inline" #createInvoiceForm="ngForm" (submit)="createInvoice()">
+      <div class="form-group">
+        <label for="invoiceRangeText" class="sr-only">Invoice Range Text</label>
+        <input type="text" readonly class="form-control-plaintext" id="invoiceRangeText" value="Invoice Range: ">
       </div>
+      <div class="form-group mx-sm-5">
+        <label for="invoiceRange" class="sr-only">Invoice Range</label>
+        <p-calendar id="invoiceRange" name="invoiceRange" required [(ngModel)]="invoiceRange"
+                    selectionMode="range" readonlyInput="true" [disabledDays]="[0,2,3,4,6]" [showIcon]="true" ngModel></p-calendar>
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">
+        <i class="fa fa-check"></i>
+        Create Invoice
+      </button>
     </form>
-    <br>
-    <br>
   </div>
+  <br>
   <div class="row justify-content-center">
-    <br>
     <app-back-button></app-back-button>
-    <br>
-    <br>
   </div>
 </div>
+<br>
+<br>
