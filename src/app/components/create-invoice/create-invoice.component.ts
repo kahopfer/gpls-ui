@@ -6,6 +6,7 @@ import {FamilyService} from "../../service/family.service";
 import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
 import {LineItemService} from "../../service/lineItem.service";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
   selector: 'app-create-invoice',
@@ -22,7 +23,7 @@ export class CreateInvoiceComponent implements OnInit {
   invoiceRange: Date;
 
   constructor(private familyService: FamilyService, private router: Router, private invoiceService: InvoiceService,
-              private lineItemService: LineItemService) {
+              private lineItemService: LineItemService, private confirmationService: ConfirmationService) {
 
     this.familiesStatus = {
       success: null,
@@ -60,7 +61,18 @@ export class CreateInvoiceComponent implements OnInit {
     });
   }
 
-  createInvoice() {
+  confirmCreateInvoices() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to create invoices for all families?',
+      header: 'Create Invoice Confirmation',
+      icon: 'fa fa-check',
+      accept: () => {
+        this.createInvoices();
+      }
+    })
+  }
+
+  createInvoices() {
     let getLineItemsPromiseArray: Promise<any>[] = [];
     let invoiceToDate: Date = new Date(this.invoiceRange[1].getFullYear(), this.invoiceRange[1].getMonth(), this.invoiceRange[1].getDate(), 23, 59, 59);
     for (let familyIndex in this.families) {

@@ -18,14 +18,14 @@
   <app-error-alert [status]="invoiceStatus"></app-error-alert>
   <app-success-alert [status]="invoiceStatus"></app-success-alert>
   <div class="row justify-content-center">
-    <form class="form-inline" #createInvoiceForm="ngForm" (submit)="createInvoice()">
+    <form class="form-inline" #createInvoiceForm="ngForm" (submit)="confirmCreateInvoices()">
       <div class="form-group">
         <label for="invoiceRangeText" class="sr-only">Invoice Range Text</label>
         <input type="text" readonly class="form-control-plaintext" id="invoiceRangeText" value="Invoice Range: ">
       </div>
       <div class="form-group mx-sm-5">
         <label for="invoiceRange" class="sr-only">Invoice Range</label>
-        <p-calendar id="invoiceRange" name="invoiceRange" required [(ngModel)]="invoiceRange"
+        <p-calendar id="invoiceRange" name="invoiceRange" required validateDateRange [(ngModel)]="invoiceRange"
                     selectionMode="range" readonlyInput="true" [disabledDays]="[0,2,3,4,6]" [showIcon]="true"
                     ngModel></p-calendar>
       </div>
@@ -36,3 +36,4 @@
     </form>
   </div>
 </div>
+<p-confirmDialog></p-confirmDialog>

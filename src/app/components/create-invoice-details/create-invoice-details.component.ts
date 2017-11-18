@@ -327,6 +327,17 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     this.displayLineItemDialog = true;
   }
 
+  confirmCreateInvoice() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to create an invoice for this family?',
+      header: 'Create Invoice Confirmation',
+      icon: 'fa fa-check',
+      accept: () => {
+        this.createInvoice();
+      }
+    })
+  }
+
   createInvoice() {
     let invoiceToDate: Date = new Date(this.invoiceRange[1].getFullYear(), this.invoiceRange[1].getMonth(), this.invoiceRange[1].getDate(), 23, 59, 59);
     let invoice: Invoice = {

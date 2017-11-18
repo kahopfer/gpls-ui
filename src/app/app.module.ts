@@ -48,6 +48,7 @@ import { InvoiceDetailsComponent } from './components/invoice-details/invoice-de
 import { InvoicesComponent } from './components/invoices/invoices.component';
 import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navbar.component';
 import { DownloadInvoiceComponent } from './components/download-invoice/download-invoice.component';
+import {DateRangeValidator} from "./validators/date-range-validator";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { DownloadInvoiceComponent } from './components/download-invoice/download
     InvoiceDetailsComponent,
     InvoicesComponent,
     InvoiceNavbarComponent,
-    DownloadInvoiceComponent
+    DownloadInvoiceComponent,
+    DateRangeValidator
   ],
   imports: [
     BrowserModule,
