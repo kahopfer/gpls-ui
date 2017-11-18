@@ -34,6 +34,8 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   guardiansStatus: Status;
   studentsStatus: Status;
 
+  allCheckedOutByEmployee: boolean;
+
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
               private authService: AuthenticationService, private lineItemService: LineItemService,
@@ -178,7 +180,11 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         // temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
         temporaryLineItem.serviceType = 'Child Care';
         // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
-        temporaryLineItem.checkOutBy = form.value['checkOutBy-' + lineItemIndex];
+        if (this.allCheckedOutByEmployee) {
+          temporaryLineItem.checkOutBy = this.fullName;
+        } else {
+          temporaryLineItem.checkOutBy = form.value['checkOutBy-' + lineItemIndex];
+        }
         temporaryLineItem.notes = form.value['lineItemNotes-' + lineItemIndex];
         // Next, push the edited line item to the update line item promise array
         updateLineItemPromiseArray.push(this.lineItemService.updateLineItem(temporaryLineItem));

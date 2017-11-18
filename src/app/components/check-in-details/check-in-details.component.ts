@@ -30,6 +30,8 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
   guardiansStatus: Status;
   studentsStatus: Status;
 
+  allCheckedInByEmployee: boolean;
+
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
               private authService: AuthenticationService, private lineItemService: LineItemService) {
@@ -146,11 +148,17 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
         serviceType: null,
         earlyInLateOutFee: 0.00,
         lineTotalCost: 0.00,
-        checkInBy: form.value['checkInBy-' + studentIndex],
+        checkInBy: null,
         checkOutBy: null,
         notes: null,
         invoiceID: null
       };
+
+      if (this.allCheckedInByEmployee) {
+        lineItemToCreate.checkInBy = this.fullName;
+      } else {
+        lineItemToCreate.checkInBy = form.value['checkInBy-' + studentIndex];
+      }
       createLineItemPromiseArray.push(this.lineItemService.createLineItem(lineItemToCreate).toPromise());
     }
 

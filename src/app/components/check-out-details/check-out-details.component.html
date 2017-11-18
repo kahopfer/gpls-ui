@@ -7,10 +7,19 @@
       <app-error-alert [status]="guardiansStatus"></app-error-alert>
       <div *ngIf="students.length > 0">
         <form #checkOutStudentsForm="ngForm" (ngSubmit)="updateStudentCheckedInStatus(checkOutStudentsForm)">
+          <div class="form-group">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="allCheckedOutByEmployee"
+                     [(ngModel)]="allCheckedOutByEmployee">
+              Check if all students are being picked up by an employee
+            </label>
+          </div>
+          <hr>
           <ng-container *ngFor="let student of students; let i = index">
             <div class="form-group">
               <label for="checkOutBy-{{i}}">Who is picking {{student.fname}} {{student.lname}} up?</label>
-              <select name="checkOutBy-{{i}}" class="form-control" required id="checkOutBy-{{i}}" #checkOutBy ngModel>
+              <select name="checkOutBy-{{i}}" class="form-control" required id="checkOutBy-{{i}}"
+                      [disabled]="allCheckedOutByEmployee" #checkOutBy ngModel>
                 <option></option>
                 <ng-container *ngFor="let guardian of guardianArray[i]">
                   <option value="{{guardian.fname}} {{guardian.lname}}">{{guardian.fname}} {{guardian.lname}}</option>

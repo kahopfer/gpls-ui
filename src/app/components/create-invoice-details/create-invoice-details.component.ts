@@ -349,9 +349,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
         this.invoiceStatus.success = false;
         this.invoiceStatus.message = 'An unexpected error occurred';
       } else {
-        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An error occurred while creating the invoice';
+        if (err.status === 400) {
+          this.invoiceStatus.success = false;
+          this.invoiceStatus.message = 'There are no uninvoiced line items within the selected range.';
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.invoiceStatus.success = false;
+          this.invoiceStatus.message = 'An error occurred while creating the invoice';
+        }
       }
     })
   }

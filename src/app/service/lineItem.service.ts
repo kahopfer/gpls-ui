@@ -39,6 +39,11 @@ export class LineItemService {
     return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
   }
 
+  getLineItemsByRange(familyID: string, fromDate: Date, toDate: Date): Promise<LineItem[]> {
+    const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull&invoiced=null&fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`;
+    return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
+  }
+
   createLineItem(lineItem: LineItem) {
     const url = `${this.gplsApiUrl}/lineItems`;
     return this.http.post(url, lineItem, {

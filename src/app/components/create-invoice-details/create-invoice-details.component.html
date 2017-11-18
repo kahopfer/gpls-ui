@@ -162,11 +162,9 @@
     <p-confirmDialog></p-confirmDialog>
   </div>
   <br>
-  <div class="row justify-content-center">
-    <app-error-alert [status]="invoiceStatus"></app-error-alert>
-  </div>
   <!--TODO: Try to make invoice range input wider-->
   <!--TODO: Maybe make invoice range input invalid if only one date is entered-->
+  <app-error-alert [status]="invoiceStatus"></app-error-alert>
   <div class="row justify-content-center">
     <form class="form-inline" #createInvoiceForm="ngForm" (submit)="createInvoice()">
       <div class="form-group">
