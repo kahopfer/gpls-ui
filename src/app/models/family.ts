@@ -3,4 +3,5 @@ export class Family {
   familyName: string;
   students: string[];
   guardians: string[];
+  active: boolean;
 }

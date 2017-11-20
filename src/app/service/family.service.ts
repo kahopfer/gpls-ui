@@ -27,6 +27,11 @@ export class FamilyService {
     return this.http.get<Family>(url, {headers: this.headers}).toPromise();
   }
 
+  getInactiveFamilies(): Promise<Family[]> {
+    const url = `${this.gplsApiUrl}/families/inactive`;
+    return this.http.get<Family[]>(url, {headers: this.headers}).toPromise();
+  }
+
   createFamily(family: Family) {
     const url = `${this.gplsApiUrl}/families/`;
     return this.http.post(url, family, {
@@ -37,6 +42,14 @@ export class FamilyService {
 
   updateFamily(family: Family): Promise<string> {
     const url = `${this.gplsApiUrl}/families/${family._id}`;
+    return this.http.put(url, family, {
+      headers: this.headers,
+      responseType: 'text'
+    }).toPromise();
+  }
+
+  updateActiveFamily(family: Family): Promise<string> {
+    const url = `${this.gplsApiUrl}/families/updateActive/${family._id}`;
     return this.http.put(url, family, {
       headers: this.headers,
       responseType: 'text'

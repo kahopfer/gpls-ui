@@ -8,4 +8,5 @@ export class Guardian {
   secPhone: string;
   email: string;
   familyUnitID: string;
+  active: boolean;
 }

@@ -10,8 +10,6 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
-import {LineItemService} from "../../service/lineItem.service";
-import {InvoiceService} from "../../service/invoice.service";
 import {ConfirmationService} from "primeng/primeng";
 
 @Component({
@@ -310,7 +308,8 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         mi: student.mi,
         notes: student.notes,
         checkedIn: false,
-        familyUnitID: this.route.snapshot.params['id']
+        familyUnitID: this.route.snapshot.params['id'],
+        active: true
       };
       this.studentService.createStudent(studentToCreate).subscribe(() => {
         this.studentStatus.success = true;
@@ -371,7 +370,8 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         primPhone: guardian.primPhone,
         secPhone: guardian.secPhone,
         email: guardian.email,
-        familyUnitID: this.route.snapshot.params['id']
+        familyUnitID: this.route.snapshot.params['id'],
+        active: true
       };
       this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
         this.guardianStatus.success = true;

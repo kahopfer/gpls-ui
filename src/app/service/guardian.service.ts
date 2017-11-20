@@ -27,6 +27,11 @@ export class GuardianService {
     return this.http.get<Guardian[]>(url, {headers: this.headers}).toPromise();
   }
 
+  getInactiveGuardians(familyUnitID: string): Promise<Guardian[]> {
+    const url = `${this.gplsApiUrl}/guardians/inactive?familyUnitID=${familyUnitID}`;
+    return this.http.get<Guardian[]>(url, {headers: this.headers}).toPromise();
+  }
+
   createGuardian(guardian: Guardian) {
     const url = `${this.gplsApiUrl}/guardians`;
     return this.http.post(url, guardian, {
@@ -45,6 +50,14 @@ export class GuardianService {
 
   updateGuardian(guardian: Guardian): Promise<string> {
     const url = `${this.gplsApiUrl}/guardians/${guardian._id}`;
+    return this.http.put(url, guardian, {
+      headers: this.headers,
+      responseType: 'text'
+    }).toPromise();
+  }
+
+  updateActiveGuardian(guardian: Guardian): Promise<string> {
+    const url = `${this.gplsApiUrl}/guardians/updateActive/${guardian._id}`;
     return this.http.put(url, guardian, {
       headers: this.headers,
       responseType: 'text'

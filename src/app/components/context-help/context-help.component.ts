@@ -70,6 +70,12 @@ export class ContextHelpComponent implements OnInit {
       case 'user-profile':
         this.helpMessage = 'User profile help';
         break;
+      case 'inactive-family-list':
+        this.helpMessage = 'Inactive family list help';
+        break;
+      case 'inactive-family-details':
+        this.helpMessage = 'Inactive family details help';
+        break;
       default:
         this.helpMessage = 'N/A';
     }

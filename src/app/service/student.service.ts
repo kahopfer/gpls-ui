@@ -27,6 +27,11 @@ export class StudentService {
     return this.http.get<Student[]>(url, {headers: this.headers}).toPromise();
   }
 
+  getInactiveStudents(familyUnitID: string): Promise<Student[]> {
+    const url = `${this.gplsApiUrl}/students/inactive?familyUnitID=${familyUnitID}`;
+    return this.http.get<Student[]>(url, {headers: this.headers}).toPromise();
+  }
+
   getCheckedOutStudents(): Promise<Student[]> {
     const url = `${this.gplsApiUrl}/students?checkedIn=false`;
     return this.http.get<Student[]>(url, {headers: this.headers}).toPromise();
@@ -55,6 +60,14 @@ export class StudentService {
 
   updateStudent(student: Student): Promise<string> {
     const url = `${this.gplsApiUrl}/students/updateStudent/${student._id}`;
+    return this.http.put(url, student, {
+      headers: this.headers,
+      responseType: 'text'
+    }).toPromise();
+  }
+
+  updateActiveStudent(student: Student): Promise<string> {
+    const url = `${this.gplsApiUrl}/students/updateActive/${student._id}`;
     return this.http.put(url, student, {
       headers: this.headers,
       responseType: 'text'

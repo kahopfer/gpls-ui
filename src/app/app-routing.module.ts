@@ -22,6 +22,8 @@ import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details
 import {InvoiceDetailsComponent} from "./components/invoice-details/invoice-details.component";
 import {InvoicesComponent} from "./components/invoices/invoices.component";
 import {InvoiceNavbarComponent} from "./components/invoice-navbar/invoice-navbar.component";
+import {InactiveFamilyListComponent} from "./components/inactive-family-list/inactive-family-list.component";
+import {InactiveFamilyDetailsComponent} from "./components/inactive-family-details/inactive-family-details.component";
 
 const routes: Routes = [
   {
@@ -128,6 +130,16 @@ const routes: Routes = [
   {
     path: 'create-invoice-details/:id',
     component: CreateInvoiceDetailsComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'inactive-family-list',
+    component: InactiveFamilyListComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'inactive-family-details/:id',
+    component: InactiveFamilyDetailsComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

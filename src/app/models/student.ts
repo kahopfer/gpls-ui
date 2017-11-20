@@ -7,4 +7,5 @@ export class Student {
   notes: string;
   checkedIn: boolean;
   familyUnitID: string;
+  active: boolean;
 }

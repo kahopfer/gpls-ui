@@ -37,6 +37,9 @@
             <button *ngIf="admin == true" class="dropdown-item" [routerLink]="['manage-rates']">Manage Child Care
               Rates
             </button>
+            <button *ngIf="admin == true" class="dropdown-item" [routerLink]="['inactive-family-list']">View
+              Inactive Families
+            </button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" [routerLink]="['login']">Log Out</button>
           </div>

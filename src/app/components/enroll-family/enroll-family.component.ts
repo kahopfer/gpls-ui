@@ -119,7 +119,8 @@ export class EnrollFamilyComponent implements OnInit {
           mi: model.value.students[studentIndex].mi,
           notes: model.value.students[studentIndex].notes,
           checkedIn: false,
-          familyUnitID: familyID
+          familyUnitID: familyID,
+          active: true
         };
 
         this.studentService.enrollStudent(studentToCreate).subscribe(() => {
@@ -146,7 +147,8 @@ export class EnrollFamilyComponent implements OnInit {
           primPhone: model.value.guardians[guardianIndex].primPhone,
           secPhone: model.value.guardians[guardianIndex].secPhone,
           email: model.value.guardians[guardianIndex].email,
-          familyUnitID: familyID
+          familyUnitID: familyID,
+          active: true
         };
         this.guardianService.enrollGuardian(guardianToCreate).subscribe(() => {
           this.enrollGuardianStatus.success = true;
@@ -164,7 +166,8 @@ export class EnrollFamilyComponent implements OnInit {
           _id: familyID,
           familyName: model.value.familyName,
           students: students,
-          guardians: guardians
+          guardians: guardians,
+          active: true
         };
 
         this.familyService.createFamily(familyToCreate).subscribe(() => {

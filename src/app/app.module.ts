@@ -7,7 +7,8 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./not-found.component";
 import {
   ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
-  PasswordModule, DropdownModule, TabMenuModule, ConfirmDialogModule, ConfirmationService, SidebarModule
+  PasswordModule, DropdownModule, TabMenuModule, ConfirmDialogModule, ConfirmationService, SidebarModule,
+  MessagesModule, MessageModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./components/login/login.component";
@@ -44,12 +45,14 @@ import {PriceListService} from "./service/priceList.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptor/auth.interceptor";
 import {InvoiceService} from "./service/invoice.service";
-import { InvoiceDetailsComponent } from './components/invoice-details/invoice-details.component';
-import { InvoicesComponent } from './components/invoices/invoices.component';
-import { InvoiceNavbarComponent } from './components/invoice-navbar/invoice-navbar.component';
-import { DownloadInvoiceComponent } from './components/download-invoice/download-invoice.component';
+import {InvoiceDetailsComponent} from './components/invoice-details/invoice-details.component';
+import {InvoicesComponent} from './components/invoices/invoices.component';
+import {InvoiceNavbarComponent} from './components/invoice-navbar/invoice-navbar.component';
+import {DownloadInvoiceComponent} from './components/download-invoice/download-invoice.component';
 import {DateRangeValidator} from "./validators/date-range-validator";
-import { ContextHelpComponent } from './components/context-help/context-help.component';
+import {ContextHelpComponent} from './components/context-help/context-help.component';
+import {InactiveFamilyListComponent} from './components/inactive-family-list/inactive-family-list.component';
+import {InactiveFamilyDetailsComponent} from './components/inactive-family-details/inactive-family-details.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,9 @@ import { ContextHelpComponent } from './components/context-help/context-help.com
     InvoiceNavbarComponent,
     DownloadInvoiceComponent,
     DateRangeValidator,
-    ContextHelpComponent
+    ContextHelpComponent,
+    InactiveFamilyListComponent,
+    InactiveFamilyDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +107,9 @@ import { ContextHelpComponent } from './components/context-help/context-help.com
     OrderModule,
     TabMenuModule,
     ConfirmDialogModule,
-    SidebarModule
+    SidebarModule,
+    MessagesModule,
+    MessageModule
   ],
   providers: [
     AuthGuard,
