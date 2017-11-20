@@ -37,10 +37,14 @@ export class CreateInvoiceComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the list of families'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while getting the list of families'
+        });
       }
       this.loading = false;
     });
@@ -83,26 +87,38 @@ export class CreateInvoiceComponent implements OnInit {
       }
       if (createInvoicesPromiseArray.length > 0) {
         Promise.all(createInvoicesPromiseArray).then(() => {
-          this.msgs.push({severity:'success', summary:'Success Message', detail:'Invoices successfully created'});
+          this.msgs.push({severity: 'success', summary: 'Success Message', detail: 'Invoices successfully created'});
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the invoice'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while creating the invoice'
+            });
           }
         })
       } else {
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'There are no uninvoiced line items within the selected range'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'There are no uninvoiced line items within the selected range'
+        });
       }
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while retrieving the line items'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while retrieving the line items'
+        });
       }
     })
   }

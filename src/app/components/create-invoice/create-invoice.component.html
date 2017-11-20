@@ -1,16 +1,16 @@
 <div class="container">
   <app-context-help [pageName]="'create-invoice'"></app-context-help>
-      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
-      <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
-        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-        <input #gb type="text" pInputText size="50" placeholder="Global Filter">
-      </div>
-      <p-dataTable [value]="families | orderBy: order" [rows]="10" [rows]="10" [paginator]="true" [pageLinks]="3"
-                   [globalFilter]="gb" selectionMode="single" [responsive]="true" [loading]="loading"
-                   loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) " #dt>
-        <p-header>Families</p-header>
-        <p-column field="familyName" header="Family Name"></p-column>
-      </p-dataTable>
+  <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
+  <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+    <input #gb type="text" pInputText size="50" placeholder="Global Filter">
+  </div>
+  <p-dataTable [value]="families | orderBy: order" [rows]="10" [rows]="10" [paginator]="true" [pageLinks]="3"
+               [globalFilter]="gb" selectionMode="single" [responsive]="true" [loading]="loading"
+               loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) " #dt>
+    <p-header>Families</p-header>
+    <p-column field="familyName" header="Family Name"></p-column>
+  </p-dataTable>
   <br>
   <div class="row justify-content-center">
     <form class="form-inline" #createInvoiceForm="ngForm" (submit)="confirmCreateInvoices()">

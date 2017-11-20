@@ -55,13 +55,21 @@ export class AddUserComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail: 'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 409) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail: 'A user already exists with that username'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'A user already exists with that username'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail: 'An error occurred while creating this user'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while creating this user'
+          });
         }
       }
     })

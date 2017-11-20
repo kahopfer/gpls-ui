@@ -32,10 +32,14 @@ export class CheckInComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the students'
+        });
       }
       this.studentsLoading = false;
     });
@@ -43,7 +47,7 @@ export class CheckInComponent implements OnInit {
 
   goToCheckInDetails() {
     let idArray: String[] = [];
-    for(let studentIndex in this.selectedStudents) {
+    for (let studentIndex in this.selectedStudents) {
       idArray.push(this.selectedStudents[studentIndex]._id);
     }
     this.router.navigate(['sign-in-details'], {queryParams: {id: [idArray]}});

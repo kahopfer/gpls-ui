@@ -41,10 +41,14 @@ export class ManageRatesComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the price list'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the price list'
+        });
       }
       this.nonExtraPriceListLoading = false;
     });
@@ -58,10 +62,14 @@ export class ManageRatesComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the price list'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the price list'
+        });
       }
       this.extraPriceListLoading = false;
     });
@@ -75,13 +83,21 @@ export class ManageRatesComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete rates that are in uninvoiced line items'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'You cannot delete rates that are in uninvoiced line items'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the rate'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the rate'
+          });
         }
       }
     });
@@ -114,13 +130,21 @@ export class ManageRatesComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'The item value cannot be less than zero'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'The item value cannot be less than zero'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the rate information'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while updating the rate information'
+            });
           }
         }
       })
@@ -133,13 +157,21 @@ export class ManageRatesComponent implements OnInit {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'The item value cannot be less than zero'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'The item value cannot be less than zero'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the new rate'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while creating the new rate'
+            });
           }
         }
       })
@@ -154,10 +186,14 @@ export class ManageRatesComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the rate information'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the rate information'
+        });
       }
     });
     this.displayPriceListDialog = true;

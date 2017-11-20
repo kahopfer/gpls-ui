@@ -159,28 +159,40 @@ export class EnrollFamilyComponent implements OnInit {
         }, err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the ' + model.value.familyName + ' family'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while enrolling the ' + model.value.familyName + ' family'
+            });
           }
         });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the guardian'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while enrolling the guardian'
+          });
         }
       });
     }).catch((err) => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the student'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while enrolling the student'
+        });
       }
     })
   }

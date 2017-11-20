@@ -19,7 +19,8 @@ export class InvoicesComponent implements OnInit {
   order: string = 'familyName';
   msgs: Message[] = [];
 
-  constructor(private invoiceService: InvoiceService, private familyService: FamilyService, private confirmationService: ConfirmationService) {
+  constructor(private invoiceService: InvoiceService, private familyService: FamilyService,
+              private confirmationService: ConfirmationService) {
   }
 
   ngOnInit() {
@@ -57,20 +58,28 @@ export class InvoicesComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the family names for the invoices'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while loading the family names for the invoices'
+          });
         }
         this.invoicesLoading = false;
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the invoices'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the invoices'
+        });
       }
       this.invoicesLoading = false;
     })
@@ -85,13 +94,17 @@ export class InvoicesComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete an unpaid invoice'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'You cannot delete an unpaid invoice'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the invoice'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the invoice'
+          });
         }
       }
       this.invoicesLoading = false;
@@ -120,20 +133,28 @@ export class InvoicesComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the invoice'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while updating the invoice'
+          });
         }
         this.invoicesLoading = false;
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the invoice'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while getting the invoice'
+        });
       }
       this.invoicesLoading = false;
     })

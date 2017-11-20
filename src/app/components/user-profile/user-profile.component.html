@@ -4,7 +4,7 @@
       <app-context-help [pageName]="'user-profile'"></app-context-help>
       <h2>Current Profile</h2>
       <br>
-      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
       <br>
       <p>First Name: {{firstname}}</p>
       <p>Last Name: {{lastname}}</p>

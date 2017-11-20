@@ -18,7 +18,7 @@
 <div class="row justify-content-center">
   <div class="col-12">
     <br>
-    <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
+    <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
     <p-dataTable [value]="invoices" [rows]="10" [paginator]="true" [pageLinks]="3" [(selection)]="selectedInvoice"
                  [loading]="invoicesLoading" loadingIcon="fa-spinner" sortMode="multiple" #dt>
       <p-header>Invoices</p-header>

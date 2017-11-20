@@ -3,7 +3,7 @@
     <div class="col-md-8 col-md-offset-2">
       <app-context-help [pageName]="'sign-in-details'"></app-context-help>
       <h2>Student Sign In</h2>
-      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
       <div *ngIf="students.length > 0">
         <form #checkInStudentsForm="ngForm" (ngSubmit)="updateStudentCheckedInStatus(checkInStudentsForm)">
           <div class="form-group">

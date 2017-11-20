@@ -52,18 +52,30 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     this.userService.changePassword(encodeURI(encryptedPasswordOld.toString()), encryptedPasswordNew.toString()).then(() => {
       this.authService.login(this.username, encryptedPasswordNew.toString()).subscribe(() => {
-        this.msgs.push({severity:'success', summary:'Success Message', detail:'You have successfully changed your password'});
+        this.msgs.push({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: 'You have successfully changed your password'
+        });
         changePasswordForm.resetForm();
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 401) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while reauthorizing your account'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while reauthorizing your account'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected server error occurred'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An unexpected server error occurred'
+            });
           }
         }
       })
@@ -71,13 +83,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'Old password is incorrect'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Old password is incorrect'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while changing your password'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while changing your password'
+          });
         }
       }
     })

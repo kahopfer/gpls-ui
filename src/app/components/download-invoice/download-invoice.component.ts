@@ -15,7 +15,8 @@ export class DownloadInvoiceComponent implements OnInit {
   @Input() selectedInvoice: Invoice;
   lineItems: LineItem[] = [];
 
-  constructor(private lineItemService: LineItemService, private familyService: FamilyService) { }
+  constructor(private lineItemService: LineItemService, private familyService: FamilyService) {
+  }
 
   ngOnInit() {
   }
@@ -71,8 +72,6 @@ export class DownloadInvoiceComponent implements OnInit {
         // doc.text('Total Cost: ' + this.selectedInvoice.totalCost, 10, 70);
 
         doc.save(family['familyName'] + '_' + invoiceDate + '.pdf');
-
-
 
 
       }).catch(err => {

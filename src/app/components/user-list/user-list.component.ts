@@ -32,10 +32,14 @@ export class UserListComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the list of users'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while getting the list of users'
+        });
       }
       this.loading = false;
     });
@@ -48,13 +52,21 @@ export class UserListComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete yourself from the system'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'You cannot delete yourself from the system'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the user ' + username});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the user ' + username
+          });
         }
       }
     })

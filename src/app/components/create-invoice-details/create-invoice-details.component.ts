@@ -64,10 +64,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the students'
+        });
       }
       this.studentsLoading = false;
     });
@@ -81,10 +85,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardians'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the guardians'
+        });
       }
       this.guardiansLoading = false;
     });
@@ -112,20 +120,28 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the student names for the line items'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while loading the student names for the line items'
+          });
         }
         this.lineItemsLoading = false;
       });
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the line items'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the line items'
+        });
       }
       this.lineItemsLoading = false;
     });
@@ -137,10 +153,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the system users'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the system users'
+        });
       }
     });
   }
@@ -151,10 +171,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the child care rates'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the child care rates'
+        });
       }
     });
   }
@@ -167,13 +191,17 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 404) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'Student not found'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Student not found'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the line item'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the line item'
+          });
         }
       }
     })
@@ -204,13 +232,21 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Check in time must be earlier than check out time'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Check in time must be earlier than check out time'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the line item'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while updating the line item'
+            });
           }
         }
       })
@@ -237,13 +273,21 @@ export class CreateInvoiceDetailsComponent implements OnInit {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Check in time must be earlier than check out time'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Check in time must be earlier than check out time'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred creating the line item'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred creating the line item'
+            });
           }
         }
       })
@@ -260,10 +304,14 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the line item'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the line item'
+        });
       }
     });
     this.displayLineItemDialog = true;
@@ -305,13 +353,21 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     }, err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'There are no uninvoiced line items within the selected range'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'There are no uninvoiced line items within the selected range'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the invoice'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while creating the invoice'
+          });
         }
       }
     })

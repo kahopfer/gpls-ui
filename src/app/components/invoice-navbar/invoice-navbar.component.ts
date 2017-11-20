@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MenuItem} from "primeng/primeng";
 
 @Component({
@@ -10,7 +10,8 @@ export class InvoiceNavbarComponent implements OnInit {
 
   items: MenuItem[];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     this.items = [

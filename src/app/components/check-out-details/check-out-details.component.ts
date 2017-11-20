@@ -92,10 +92,14 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the students'
+        });
       }
     })
   }
@@ -114,10 +118,14 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardians'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the guardians'
+        });
       }
     })
   }
@@ -215,45 +223,61 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
           }).catch(err => {
             if (err.error instanceof Error) {
               console.log('An error occurred:', err.error.message);
-              this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
             } else {
               if (err.status === 400) {
-                this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
               } else {
                 console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-                this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the extra line items'});
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'An error occurred while creating the extra line items'
+                });
               }
             }
           });
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             if (err.status === 400) {
-              this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the students'});
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'An error occurred while updating the students'
+              });
             }
           }
         });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the line items'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while updating the line items'
+          });
         }
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while retrieving the line items'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while retrieving the line items'
+        });
       }
     });
   }

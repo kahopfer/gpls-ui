@@ -81,10 +81,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the students'
+        });
       }
       this.studentsLoading = false;
     });
@@ -98,10 +102,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardians'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the guardians'
+        });
       }
       this.guardiansLoading = false;
     });
@@ -113,10 +121,10 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An occurred while loading the family'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An occurred while loading the family'});
       }
     })
   }
@@ -138,13 +146,21 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete a family with either uninvoiced line items or unpaid invoices'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'You cannot delete a family with either uninvoiced line items or unpaid invoices'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the family'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the family'
+          });
         }
       }
     });
@@ -152,7 +168,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteStudent(id: string) {
     if (this.family.students.length === 1) {
-      this.msgs.push({severity:'error', summary:'Error Message', detail:'A family must have at least 1 child'});
+      this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'A family must have at least 1 child'});
       return;
     }
     this.studentService.deleteStudent(id).then(() => {
@@ -163,13 +179,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 404) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'Student not found'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Student not found'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the student'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the student'
+          });
         }
       }
     })
@@ -188,7 +208,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteGuardian(id: string) {
     if (this.family.guardians.length === 1) {
-      this.msgs.push({severity:'error', summary:'Error Message', detail:'A family must have at least 1 guardian'});
+      this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'A family must have at least 1 guardian'});
       return;
     }
     this.guardianService.deleteGuardian(id).then(() => {
@@ -199,13 +219,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 404) {
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'Guardian not found'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Guardian not found'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the guardian'});
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the guardian'
+          });
         }
       }
     });
@@ -232,13 +256,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the student'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while updating the student'
+            });
           }
         }
       })
@@ -262,13 +290,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the student ' + student.fname + ' ' + student.lname});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while enrolling the student ' + student.fname + ' ' + student.lname
+            });
           }
         }
       });
@@ -284,13 +316,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the guardian'});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while updating the guardian'
+            });
           }
         }
       })
@@ -316,13 +352,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the guardian ' + guardian.fname + ' ' + guardian.lname});
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while creating the guardian ' + guardian.fname + ' ' + guardian.lname
+            });
           }
         }
       });
@@ -336,10 +376,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the family'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the family'
+        });
       }
     })
   }
@@ -356,10 +400,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while saving the family'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while saving the family'
+        });
       }
     })
   }
@@ -372,10 +420,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the student'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the student'
+        });
       }
     });
     this.displayStudentDialog = true;
@@ -389,10 +441,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardian'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the guardian'
+        });
       }
     });
     this.displayGuardianDialog = true;

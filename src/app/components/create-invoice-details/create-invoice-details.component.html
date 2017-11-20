@@ -20,7 +20,7 @@
     <div class="col-12">
       <br>
       <h5>Select a line item to edit or delete</h5>
-      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
       <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
                    [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
@@ -170,7 +170,8 @@
       <div class="form-group mx-sm-5">
         <label for="invoiceRange" class="sr-only">Invoice Range</label>
         <p-calendar id="invoiceRange" name="invoiceRange" required validateDateRange [(ngModel)]="invoiceRange"
-                    selectionMode="range" readonlyInput="true" [disabledDays]="[0,2,3,4,6]" [showIcon]="true" ngModel></p-calendar>
+                    selectionMode="range" readonlyInput="true" [disabledDays]="[0,2,3,4,6]" [showIcon]="true"
+                    ngModel></p-calendar>
       </div>
       <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">
         <i class="fa fa-plus"></i>

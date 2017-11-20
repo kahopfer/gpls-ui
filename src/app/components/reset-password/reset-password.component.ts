@@ -35,15 +35,23 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     const encryptedPasswordNew = CryptoJS.AES.encrypt(this.newPassword, key, {iv: iv});
 
     this.usersService.resetPassword(this.username, encryptedPasswordNew.toString()).then(() => {
-      this.msgs.push({severity:'success', summary:'Success Message', detail:'You have successfully reset the password for ' + this.username});
+      this.msgs.push({
+        severity: 'success',
+        summary: 'Success Message',
+        detail: 'You have successfully reset the password for ' + this.username
+      });
       resetPasswordForm.reset();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while resetting the password'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while resetting the password'
+        });
       }
     })
   }

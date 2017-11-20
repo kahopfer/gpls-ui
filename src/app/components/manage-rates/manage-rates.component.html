@@ -2,7 +2,7 @@
   <app-context-help [pageName]="'manage-rates'"></app-context-help>
   <h5>Select a rate to edit the value</h5>
   <br>
-  <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
+  <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
   <p-dataTable [value]="nonExtraPriceList" selectionMode="single" [(selection)]="selectedNonExtraPriceList"
                [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
                [metaKeySelection]="false" [responsive]="true">
@@ -61,7 +61,8 @@
       <p-footer>
         <button type="submit" pButton icon="fa-check"
                 [disabled]="!priceListForm.form.valid" label="Save"></button>
-        <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton class="ui-button-danger" icon="fa-close"
+        <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton class="ui-button-danger"
+                icon="fa-close"
                 (click)="confirmDeletePriceList(priceList._id)" label="Delete"></button>
       </p-footer>
     </p-dialog>

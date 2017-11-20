@@ -16,7 +16,7 @@ export class InvoiceListComponent implements OnInit {
   order: string = 'familyName';
   msgs: Message[] = [];
 
-  constructor(private familyService: FamilyService,  private router: Router) {
+  constructor(private familyService: FamilyService, private router: Router) {
   }
 
   ngOnInit() {
@@ -32,10 +32,14 @@ export class InvoiceListComponent implements OnInit {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the list of families'});
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while getting the list of families'
+        });
       }
       this.loading = false;
     });
