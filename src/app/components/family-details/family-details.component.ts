@@ -351,7 +351,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
           this.msgs.push({
             severity: 'error',
             summary: 'Error Message',
-            detail: 'Cannot delete a student with uninvoiced line items'
+            detail: 'Cannot deactivate a student with uninvoiced line items'
           });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
