@@ -7,6 +7,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
 import {ConfirmationService, Message} from "primeng/primeng";
+import {FamilyService} from "../../service/family.service";
+import {Family} from "../../models/family";
 
 @Component({
   selector: 'app-invoice-details',
@@ -15,6 +17,7 @@ import {ConfirmationService, Message} from "primeng/primeng";
 })
 export class InvoiceDetailsComponent implements OnInit {
 
+  family: Family;
   students: Student[] = [];
   guardians: Guardian[] = [];
 
@@ -31,7 +34,7 @@ export class InvoiceDetailsComponent implements OnInit {
 
   constructor(private studentService: StudentService, private guardianService: GuardianService,
               private route: ActivatedRoute, private invoiceService: InvoiceService,
-              private confirmationService: ConfirmationService) {
+              private confirmationService: ConfirmationService, private familyService: FamilyService) {
 
     this.paidOptions = [{
       label: "All",
@@ -46,37 +49,58 @@ export class InvoiceDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getStudents(this.route.snapshot.params['id']);
-    this.getGuardians(this.route.snapshot.params['id']);
+    this.getStudentsAndGuardians(this.route.snapshot.params['id']);
     this.getInvoices(this.route.snapshot.params['id']);
   }
 
-  getStudents(familyUnitID: string) {
-    this.studentsLoading = true;
-    this.studentService.getStudents(familyUnitID).then(students => {
-      this.students = students['students'];
-      this.studentsLoading = false;
-    }).catch(err => {
-      if (err.error instanceof Error) {
-        console.log('An error occurred:', err.error.message);
-        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
-      } else {
-        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the students'
-        });
-      }
-      this.studentsLoading = false;
-    });
-  }
+  getStudentsAndGuardians(familyUnitID: string) {
+    let getStudentsPromiseArray: Promise<Student>[] = [];
+    let getGuardiansPromiseArray: Promise<Guardian>[] = [];
 
-  getGuardians(familyUnitID: string) {
-    this.guardiansLoading = true;
-    this.guardianService.getGuardians(familyUnitID).then(guardians => {
-      this.guardians = guardians['guardians'];
-      this.guardiansLoading = false;
+    this.familyService.getFamily(familyUnitID).then(family => {
+      this.family = family;
+      for (let studentIndex in this.family.students) {
+        getStudentsPromiseArray.push(this.studentService.getStudent(this.family.students[studentIndex]));
+      }
+      this.studentsLoading = true;
+      Promise.all(getStudentsPromiseArray).then(students => {
+        this.students = students;
+        this.studentsLoading = false;
+      }).catch(err => {
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while loading the students'
+          });
+        }
+        this.studentsLoading = false;
+      });
+      for (let guardianIndex in this.family.guardians) {
+        getGuardiansPromiseArray.push(this.guardianService.getGuardian(this.family.guardians[guardianIndex]));
+      }
+      this.guardiansLoading = true;
+      Promise.all(getGuardiansPromiseArray).then(guardians => {
+        this.guardians = guardians;
+        this.guardiansLoading = false;
+      }).catch(err => {
+        if (err.error instanceof Error) {
+          console.log('An error occurred:', err.error.message);
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while loading the guardians'
+          });
+        }
+        this.guardiansLoading = false;
+      });
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -86,11 +110,10 @@ export class InvoiceDetailsComponent implements OnInit {
         this.msgs.push({
           severity: 'error',
           summary: 'Error Message',
-          detail: 'An error occurred while loading the guardians'
+          detail: 'An error occurred while loading the family'
         });
       }
-      this.guardiansLoading = false;
-    });
+    })
   }
 
   getInvoices(familyUnitID: string) {

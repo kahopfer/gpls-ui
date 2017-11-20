@@ -9,7 +9,7 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
-import {ConfirmationService, Message} from "primeng/primeng";
+import {ConfirmationService, MenuItem, Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-family-details',
@@ -24,6 +24,8 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   family: Family = new Family;
   students: Student[] = [];
   guardians: Guardian[] = [];
+  inactiveStudents: Student[] = [];
+  inactiveGuardians: Guardian[] = [];
 
   selectedStudent: Student;
   selectedGuardian: Guardian;
@@ -50,6 +52,18 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   studentsLoading: boolean = true;
   guardiansLoading: boolean = true;
 
+  inactiveStudentsLoading: boolean = true;
+  inactiveGuardiansLoading: boolean = true;
+
+  studentItems: MenuItem[];
+  guardianItems: MenuItem[];
+
+  displayActiveStudents: boolean = true;
+  displayInactiveStudents: boolean = false;
+
+  displayActiveGuardians: boolean = true;
+  displayInactiveGuardians: boolean = false;
+
   constructor(private familyService: FamilyService, private studentService: StudentService,
               private guardianService: GuardianService, private route: ActivatedRoute, private location: Location,
               private authService: AuthenticationService, private confirmationService: ConfirmationService) {
@@ -63,6 +77,49 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.getFamily(this.route.snapshot.params['id']);
     this.getStudents(this.route.snapshot.params['id']);
     this.getGuardians(this.route.snapshot.params['id']);
+    if (this.admin) {
+      this.getInactiveStudents(this.route.snapshot.params['id']);
+      this.getInactiveGuardians(this.route.snapshot.params['id']);
+      this.studentItems = [
+        {
+          label: 'Active Students', command: () => {
+          this.showActiveStudents();
+        }
+        },
+        {
+          label: 'Inactive Students', command: () => {
+          this.showInactiveStudents();
+        }
+        }
+      ];
+      this.guardianItems = [
+        {
+          label: 'Active Guardians', command: () => {
+          this.showActiveGuardians();
+        }
+        },
+        {
+          label: 'Inactive Guardians', command: () => {
+          this.showInactiveGuardians();
+        }
+        }
+      ];
+    } else {
+      this.studentItems = [
+        {
+          label: 'Active Students', command: () => {
+          this.showActiveStudents();
+        }
+        }
+      ];
+      this.guardianItems = [
+        {
+          label: 'Active Guardians', command: () => {
+          this.showActiveGuardians();
+        }
+        }
+      ];
+    }
   }
 
   ngOnDestroy() {
@@ -129,6 +186,68 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     })
   }
 
+  getInactiveStudents(familyUnitID: string) {
+    this.inactiveStudentsLoading = true;
+    this.studentService.getInactiveStudents(familyUnitID).then(students => {
+      this.inactiveStudents = students['students'];
+      this.inactiveStudentsLoading = false;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the inactive students'
+        });
+      }
+      this.inactiveStudentsLoading = false;
+    });
+  }
+
+  getInactiveGuardians(familyUnitID: string) {
+    this.inactiveGuardiansLoading = true;
+    this.guardianService.getInactiveGuardians(familyUnitID).then(guardians => {
+      this.inactiveGuardians = guardians['guardians'];
+      this.inactiveGuardiansLoading = false;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while loading the inactive guardians'
+        });
+      }
+      this.inactiveGuardiansLoading = false;
+    });
+  }
+
+  showActiveStudents() {
+    this.displayActiveStudents = true;
+    this.displayInactiveStudents = false;
+  }
+
+  showInactiveStudents() {
+    this.displayActiveStudents = false;
+    this.displayInactiveStudents = true;
+  }
+
+  showActiveGuardians() {
+    this.displayActiveGuardians = true;
+    this.displayInactiveGuardians = false;
+  }
+
+  showInactiveGuardians() {
+    this.displayActiveGuardians = false;
+    this.displayInactiveGuardians = true;
+  }
+
   confirmDeleteFamily() {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this family? This will also delete all invoices and line items associated with this family.',
@@ -166,16 +285,61 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteStudent(id: string) {
+  confirmDeactivateFamily() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to deactivate this family?',
+      header: 'Deactivate Family Confirmation',
+      icon: 'fa fa-close',
+      accept: () => {
+        this.deactivateFamily();
+      }
+    })
+  }
+
+  deactivateFamily() {
+    this.family.active = false;
+    this.familyService.updateActiveFamily(this.family).then(() => {
+      this.location.back();
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        if (err.status === 400) {
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'You cannot deactivate a family with either uninvoiced line items or unpaid invoices'
+          });
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while deleting the family'
+          });
+        }
+      }
+      this.family.active = true;
+    });
+  }
+
+  deactivateStudent(student: Student) {
     if (this.family.students.length === 1) {
-      this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'A family must have at least 1 child'});
+      this.msgs.push({
+        severity: 'error',
+        summary: 'Error Message',
+        detail: 'A family must have at least 1 active child'
+      });
       return;
     }
-    this.studentService.deleteStudent(id).then(() => {
+    student.active = false;
+    this.studentService.updateActiveStudent(this.student).then(() => {
       this.student = null;
       this.displayStudentDialog = false;
       this.getStudents(this.route.snapshot.params['id']);
       this.getFamily(this.route.snapshot.params['id']);
+      this.getInactiveStudents(this.route.snapshot.params['id']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -183,39 +347,52 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       } else {
         if (err.status === 404) {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Student not found'});
+        } else if (err.status === 400) {
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'Cannot delete a student with uninvoiced line items'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
           this.msgs.push({
             severity: 'error',
             summary: 'Error Message',
-            detail: 'An error occurred while deleting the student'
+            detail: 'An error occurred while deactivating the student'
           });
         }
       }
+      student.active = true;
     })
   }
 
-  confirmDeleteStudent(id: string) {
+  confirmDeactivateStudent(student: Student) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this student?',
-      header: 'Delete Student Confirmation',
-      icon: 'fa fa-trash',
+      message: 'Are you sure you want to deactivate this student?',
+      header: 'Deactivate Student Confirmation',
+      icon: 'fa fa-close',
       accept: () => {
-        this.deleteStudent(id);
+        this.deactivateStudent(student);
       }
     })
   }
 
-  deleteGuardian(id: string) {
+  deactivateGuardian(guardian: Guardian) {
     if (this.family.guardians.length === 1) {
-      this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'A family must have at least 1 guardian'});
+      this.msgs.push({
+        severity: 'error',
+        summary: 'Error Message',
+        detail: 'A family must have at least 1 active guardian'
+      });
       return;
     }
-    this.guardianService.deleteGuardian(id).then(() => {
+    guardian.active = false;
+    this.guardianService.updateActiveGuardian(guardian).then(() => {
       this.guardian = null;
       this.displayGuardianDialog = false;
       this.getGuardians(this.route.snapshot.params['id']);
       this.getFamily(this.route.snapshot.params['id']);
+      this.getInactiveGuardians(this.route.snapshot.params['id']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -228,20 +405,99 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
           this.msgs.push({
             severity: 'error',
             summary: 'Error Message',
-            detail: 'An error occurred while deleting the guardian'
+            detail: 'An error occurred while deactivating the guardian'
           });
         }
       }
+      guardian.active = true;
     });
   }
 
-  confirmDeleteGuardian(id: string) {
+  confirmDeactivateGuardian(guardian: Guardian) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this guardian?',
-      header: 'Delete Guardian Confirmation',
-      icon: 'fa fa-trash',
+      message: 'Are you sure you want to deactivate this guardian?',
+      header: 'Deactivate Guardian Confirmation',
+      icon: 'fa fa-close',
       accept: () => {
-        this.deleteGuardian(id);
+        this.deactivateGuardian(guardian);
+      }
+    })
+  }
+
+  reactivateStudent(student: Student) {
+    student.active = true;
+    this.studentService.updateActiveStudent(this.student).then(() => {
+      this.student = null;
+      this.displayStudentDialog = false;
+      this.getStudents(this.route.snapshot.params['id']);
+      this.getFamily(this.route.snapshot.params['id']);
+      this.getInactiveStudents(this.route.snapshot.params['id']);
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        if (err.status === 404) {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Student not found'});
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while reactivating the student'
+          });
+        }
+      }
+      student.active = false;
+    })
+  }
+
+  confirmReactivateStudent(student: Student) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to reactivate this student?',
+      header: 'Reactivate Student Confirmation',
+      icon: 'fa fa-check',
+      accept: () => {
+        this.reactivateStudent(student);
+      }
+    })
+  }
+
+  reactivateGuardian(guardian: Guardian) {
+    guardian.active = true;
+    this.guardianService.updateActiveGuardian(guardian).then(() => {
+      this.guardian = null;
+      this.displayGuardianDialog = false;
+      this.getGuardians(this.route.snapshot.params['id']);
+      this.getFamily(this.route.snapshot.params['id']);
+      this.getInactiveGuardians(this.route.snapshot.params['id']);
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        if (err.status === 404) {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Guardian not found'});
+        } else {
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'An error occurred while reactivating the guardian'
+          });
+        }
+      }
+      guardian.active = false;
+    });
+  }
+
+  confirmReactivateGuardian(guardian: Guardian) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to reactivate this guardian?',
+      header: 'Reactivate Guardian Confirmation',
+      icon: 'fa fa-check',
+      accept: () => {
+        this.reactivateGuardian(guardian);
       }
     })
   }
@@ -457,12 +713,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   showDialogToAddStudent() {
     this.newStudent = true;
     this.student = new Student();
+    this.student.active = true;
     this.displayStudentDialog = true;
   }
 
   showDialogToAddGuardian() {
     this.newGuardian = true;
     this.guardian = new Guardian();
+    this.guardian.active = true;
     this.displayGuardianDialog = true;
   }
 }

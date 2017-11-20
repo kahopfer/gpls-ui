@@ -7,6 +7,13 @@
 <p-dataTable [value]="families | orderBy: order" [rows]="10" [rows]="10" [paginator]="true" [pageLinks]="3"
              [globalFilter]="gb" selectionMode="single" [responsive]="true" [loading]="loading"
              loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) " #dt>
-  <p-header>Families</p-header>
+  <p-header>Active Families</p-header>
+  <p-column field="familyName" header="Family Name"></p-column>
+</p-dataTable>
+<br>
+<p-dataTable [value]="inactiveFamilies | orderBy: order" [rows]="10" [rows]="10" [paginator]="true" [pageLinks]="3"
+             [globalFilter]="gb" selectionMode="single" [responsive]="true" [loading]="inactiveFamiliesLoading"
+             loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) " #dt1>
+  <p-header>Inactive Families</p-header>
   <p-column field="familyName" header="Family Name"></p-column>
 </p-dataTable>

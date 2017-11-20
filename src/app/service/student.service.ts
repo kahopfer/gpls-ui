@@ -82,11 +82,11 @@ export class StudentService {
     }).toPromise();
   }
 
-  deleteStudent(id: string): Promise<string> {
-    const url = `${this.gplsApiUrl}/students/${id}`;
-    return this.http.delete(url, {
-      headers: this.headers,
-      responseType: 'text'
-    }).toPromise();
-  }
+  // deleteStudent(id: string): Promise<string> {
+  //   const url = `${this.gplsApiUrl}/students/${id}`;
+  //   return this.http.delete(url, {
+  //     headers: this.headers,
+  //     responseType: 'text'
+  //   }).toPromise();
+  // }
 }

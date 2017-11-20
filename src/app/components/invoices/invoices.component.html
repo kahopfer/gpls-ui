@@ -1,11 +1,11 @@
 <app-context-help [pageName]="'invoices'"></app-context-help>
 <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
-<p-dataTable [value]="invoicesToDisplay | orderBy: order" [rows]="10" [paginator]="true" [pageLinks]="3"
+<p-dataTable [value]="invoicesToDisplay | orderBy: 'invoiceDate' : true" [rows]="10" [paginator]="true" [pageLinks]="3"
              [(selection)]="selectedInvoice" [loading]="invoicesLoading" loadingIcon="fa-spinner" sortMode="multiple"
              #dt>
   <p-header>All Invoices</p-header>
   <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
-  <p-column field="familyName" header="Family Name" [filter]="true" filterPlaceholder="Search"></p-column>
+  <p-column field="familyName" header="Family Name" [sortable]="true"[filter]="true" filterPlaceholder="Search"></p-column>
   <p-column field="totalCost" header="Total Cost">
     <ng-template let-col let-rate="rowData" pTemplate="body">
       {{rate[col.field]|currency}}
@@ -32,7 +32,7 @@
     </button>
     <button type="button" class="btn btn-danger" (click)="confirmDeleteInvoice(selectedInvoice._id)"
             [disabled]="selectedInvoice == null">
-      <i class="fa fa-close"></i>
+      <i class="fa fa-trash"></i>
       Delete Selected Invoice
     </button>
   </p-footer>

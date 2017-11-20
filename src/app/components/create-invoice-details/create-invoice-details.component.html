@@ -152,7 +152,7 @@
         <p-footer>
           <button type="submit" pButton icon="fa-check"
                   [disabled]="!lineItemDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newLineItem === false" type="button" pButton class="ui-button-danger" icon="fa-close"
+          <button *ngIf="newLineItem === false" type="button" pButton class="ui-button-danger" icon="fa-trash"
                   (click)="confirmDeleteLineItem(lineItem._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>

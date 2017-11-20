@@ -62,8 +62,7 @@
         <button type="submit" pButton icon="fa-check"
                 [disabled]="!priceListForm.form.valid" label="Save"></button>
         <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton class="ui-button-danger"
-                icon="fa-close"
-                (click)="confirmDeletePriceList(priceList._id)" label="Delete"></button>
+                icon="fa-trash" (click)="confirmDeletePriceList(priceList._id)" label="Delete"></button>
       </p-footer>
     </p-dialog>
   </form>

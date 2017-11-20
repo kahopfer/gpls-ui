@@ -16,7 +16,6 @@ export class InvoicesComponent implements OnInit {
   selectedInvoice: Invoice;
   paidOptions: any[] = [];
   invoicesLoading: boolean = true;
-  order: string = 'familyName';
   msgs: Message[] = [];
 
   constructor(private invoiceService: InvoiceService, private familyService: FamilyService,

@@ -12,7 +12,9 @@ import {Message} from "primeng/primeng";
 export class InvoiceListComponent implements OnInit {
 
   families: Family[] = [];
+  inactiveFamilies: Family[] = [];
   loading: boolean = true;
+  inactiveFamiliesLoading: boolean = true;
   order: string = 'familyName';
   msgs: Message[] = [];
 
@@ -22,6 +24,7 @@ export class InvoiceListComponent implements OnInit {
   ngOnInit() {
     this.families = [];
     this.getFamilies();
+    this.getInactiveFamilies();
   }
 
   getFamilies(): void {
@@ -42,6 +45,27 @@ export class InvoiceListComponent implements OnInit {
         });
       }
       this.loading = false;
+    });
+  }
+
+  getInactiveFamilies(): void {
+    this.inactiveFamiliesLoading = true;
+    this.familyService.getInactiveFamilies().then(families => {
+      this.inactiveFamilies = families['families'];
+      this.inactiveFamiliesLoading = false;
+    }).catch(err => {
+      if (err.error instanceof Error) {
+        console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+      } else {
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.msgs.push({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'An error occurred while getting the list of inactive families'
+        });
+      }
+      this.inactiveFamiliesLoading = false;
     });
   }
 
