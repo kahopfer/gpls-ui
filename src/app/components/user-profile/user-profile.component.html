@@ -4,8 +4,7 @@
       <app-context-help [pageName]="'user-profile'"></app-context-help>
       <h2>Current Profile</h2>
       <br>
-      <app-error-alert [status]="changePasswordStatus"></app-error-alert>
-      <app-success-alert [status]="changePasswordStatus"></app-success-alert>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
       <br>
       <p>First Name: {{firstname}}</p>
       <p>Last Name: {{lastname}}</p>

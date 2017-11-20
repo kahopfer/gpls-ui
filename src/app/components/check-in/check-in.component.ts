@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Student} from "../../models/student";
 import {Router} from "@angular/router";
-import {Status} from "../error-alert/error-alert.component";
 import {StudentService} from "../../service/student.service";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-check-in',
@@ -13,15 +13,11 @@ export class CheckInComponent implements OnInit {
 
   students: Student[] = [];
   selectedStudents: Student[] = [];
-  studentsStatus: Status;
   studentsLoading: boolean = true;
   order: string = 'lname';
+  msgs: Message[] = [];
 
   constructor(private router: Router, private studentService: StudentService) {
-    this.studentsStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -32,17 +28,14 @@ export class CheckInComponent implements OnInit {
     this.studentsLoading = true;
     this.studentService.getCheckedOutStudents().then(students => {
       this.students = students['students'];
-      this.studentsStatus.success = true;
       this.studentsLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while loading the students';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
       }
       this.studentsLoading = false;
     });

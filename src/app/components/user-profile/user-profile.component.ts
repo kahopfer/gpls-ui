@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import {UserService} from "../../service/user.service";
-import {Status} from "../error-alert/error-alert.component";
 import {AuthenticationService} from "../../service/authentication.service";
 import {NgForm} from "@angular/forms";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-user-profile',
@@ -11,8 +11,6 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-  changePasswordStatus: Status;
-
   private firstNameSub: any;
   firstname: string;
 
@@ -25,11 +23,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   oldPassword: string;
   newPassword: string;
 
+  msgs: Message[] = [];
+
   constructor(private userService: UserService, private authService: AuthenticationService) {
-    this.changePasswordStatus = {
-      success: null,
-      message: null
-    };
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.username = currentUser && currentUser.username;
     this.firstname = currentUser && currentUser.firstname;
@@ -56,22 +52,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     this.userService.changePassword(encodeURI(encryptedPasswordOld.toString()), encryptedPasswordNew.toString()).then(() => {
       this.authService.login(this.username, encryptedPasswordNew.toString()).subscribe(() => {
-        this.changePasswordStatus.success = true;
-        this.changePasswordStatus.message = 'You have successfully changed your password';
+        this.msgs.push({severity:'success', summary:'Success Message', detail:'You have successfully changed your password'});
         changePasswordForm.resetForm();
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.changePasswordStatus.success = false;
-          this.changePasswordStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 401) {
-            this.changePasswordStatus.success = false;
-            this.changePasswordStatus.message = 'An error occurred while reauthorizing your account';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while reauthorizing your account'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.changePasswordStatus.success = false;
-            this.changePasswordStatus.message = 'An unexpected server error occurred';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected server error occurred'});
           }
         }
       })
@@ -79,16 +71,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.changePasswordStatus.success = false;
-        this.changePasswordStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.changePasswordStatus.success = false;
-          this.changePasswordStatus.message = 'Old password is incorrect';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'Old password is incorrect'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.changePasswordStatus.success = false;
-          this.changePasswordStatus.message = 'An unexpected server error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while changing your password'});
         }
       }
     })

@@ -8,18 +8,16 @@ import {PageNotFoundComponent} from "./not-found.component";
 import {
   ButtonModule, CalendarModule, DataTableModule, DialogModule, InputMaskModule, InputSwitchModule, InputTextModule,
   PasswordModule, DropdownModule, TabMenuModule, ConfirmDialogModule, ConfirmationService, SidebarModule,
-  MessagesModule, MessageModule
+  MessagesModule, MessageModule, GrowlModule
 } from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./components/login/login.component";
 import {NavbarComponent} from "./components/navbar/navbar.component";
-import {ErrorAlertComponent} from "./components/error-alert/error-alert.component";
 import {UserListComponent} from "./components/user-list/user-list.component";
 import {AddUserComponent} from "./components/add-user/add-user.component";
 import {FamilyListComponent} from "./components/family-list/family-list.component";
 import {FamilyDetailsComponent} from "./components/family-details/family-details.component";
 import {UserProfileComponent} from "./components/user-profile/user-profile.component";
-import {SuccessAlertComponent} from "./components/success-alert/success-alert.component";
 import {BackButtonComponent} from "./components/back-button/back-button.component";
 import {EnrollFamilyComponent} from "./components/enroll-family/enroll-family.component";
 import {CheckInComponent} from "./components/check-in/check-in.component";
@@ -60,13 +58,11 @@ import {InactiveFamilyDetailsComponent} from './components/inactive-family-detai
     PageNotFoundComponent,
     LoginComponent,
     NavbarComponent,
-    ErrorAlertComponent,
     UserListComponent,
     AddUserComponent,
     FamilyListComponent,
     FamilyDetailsComponent,
     UserProfileComponent,
-    SuccessAlertComponent,
     BackButtonComponent,
     EnrollFamilyComponent,
     CheckInComponent,
@@ -109,7 +105,8 @@ import {InactiveFamilyDetailsComponent} from './components/inactive-family-detai
     ConfirmDialogModule,
     SidebarModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    GrowlModule
   ],
   providers: [
     AuthGuard,

@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Status} from "../error-alert/error-alert.component";
 import {PriceList} from "../../models/priceList";
 import {PriceListService} from "../../service/priceList.service";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-manage-rates',
@@ -14,10 +13,6 @@ export class ManageRatesComponent implements OnInit {
   nonExtraPriceList: PriceList[];
   extraPriceList: PriceList[];
 
-  nonExtraPriceListStatus: Status;
-  extraPriceListStatus: Status;
-  priceListStatus: Status;
-
   selectedNonExtraPriceList: PriceList;
   selectedExtraPriceList: PriceList;
   priceList: PriceList = new PriceList();
@@ -28,21 +23,9 @@ export class ManageRatesComponent implements OnInit {
   newPriceList: boolean;
   displayPriceListDialog: boolean;
 
+  msgs: Message[] = [];
+
   constructor(private priceListService: PriceListService, private confirmationService: ConfirmationService) {
-    this.nonExtraPriceListStatus = {
-      success: null,
-      message: null
-    };
-
-    this.extraPriceListStatus = {
-      success: null,
-      message: null
-    };
-
-    this.priceListStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -54,17 +37,14 @@ export class ManageRatesComponent implements OnInit {
     this.nonExtraPriceListLoading = true;
     this.priceListService.getNonExtraPriceList().then(priceList => {
       this.nonExtraPriceList = priceList['priceLists'];
-      this.nonExtraPriceListStatus.success = true;
       this.nonExtraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.nonExtraPriceListStatus.success = false;
-        this.nonExtraPriceListStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.nonExtraPriceListStatus.success = false;
-        this.nonExtraPriceListStatus.message = 'An error occurred while loading the price list';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the price list'});
       }
       this.nonExtraPriceListLoading = false;
     });
@@ -74,17 +54,14 @@ export class ManageRatesComponent implements OnInit {
     this.extraPriceListLoading = true;
     this.priceListService.getExtraPriceList().then(priceList => {
       this.extraPriceList = priceList['priceLists'];
-      this.extraPriceListStatus.success = true;
       this.extraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.extraPriceListStatus.success = false;
-        this.extraPriceListStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.extraPriceListStatus.success = false;
-        this.extraPriceListStatus.message = 'An error occurred while loading the price list';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the price list'});
       }
       this.extraPriceListLoading = false;
     });
@@ -92,23 +69,19 @@ export class ManageRatesComponent implements OnInit {
 
   deletePriceList(id: string) {
     this.priceListService.deletePriceList(id).then(() => {
-      this.priceListStatus.success = true;
       this.priceList = null;
       this.displayPriceListDialog = false;
       this.getExtraPriceList();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.priceListStatus.success = false;
-        this.priceListStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.priceListStatus.success = false;
-          this.priceListStatus.message = 'You cannot delete rates that are in uninvoiced line items'
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete rates that are in uninvoiced line items'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.priceListStatus.success = false;
-          this.priceListStatus.message = 'An error occurred while deleting the rate';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the rate'});
         }
       }
     });
@@ -129,8 +102,6 @@ export class ManageRatesComponent implements OnInit {
     // If the priceList is not new, then update the selected priceList
     if (this.newPriceList === false) {
       this.priceListService.updatePriceList(priceList).then(() => {
-
-        this.priceListStatus.success = true;
         this.priceList = null;
 
         if (priceList.itemExtra) {
@@ -143,39 +114,32 @@ export class ManageRatesComponent implements OnInit {
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.priceListStatus.success = false;
-          this.priceListStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.priceListStatus.success = false;
-            this.priceListStatus.message = 'The item value cannot be less than zero'
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'The item value cannot be less than zero'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.priceListStatus.success = false;
-            this.priceListStatus.message = 'An error occurred while updating the rate information';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the rate information'});
           }
         }
       })
     } else {
       this.priceList.itemExtra = true;
       this.priceListService.createPriceList(this.priceList).subscribe(() => {
-        this.priceListStatus.success = true;
         this.priceList = null;
         this.displayPriceListDialog = false;
         this.getExtraPriceList()
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.priceListStatus.success = false;
-          this.priceListStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.priceListStatus.success = false;
-            this.priceListStatus.message = 'The item value cannot be less than zero'
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'The item value cannot be less than zero'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.priceListStatus.success = false;
-            this.priceListStatus.message = 'An error occurred while creating the new rate';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the new rate'});
           }
         }
       })
@@ -186,17 +150,14 @@ export class ManageRatesComponent implements OnInit {
     this.newPriceList = false;
     this.priceListService.getPriceList(event.data._id).then(priceList => {
       this.priceList = priceList;
-      this.priceListStatus.success = true;
       this.displayPriceListDialog = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.priceListStatus.success = false;
-        this.priceListStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.priceListStatus.success = false;
-        this.priceListStatus.message = 'An error occurred while loading the rate information';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the rate information'});
       }
     });
     this.displayPriceListDialog = true;

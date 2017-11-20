@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../../models/family";
 import {FamilyService} from "../../service/family.service";
 import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-family-list',
@@ -14,20 +14,15 @@ import {AuthenticationService} from "../../service/authentication.service";
 export class FamilyListComponent implements OnInit, OnDestroy {
 
   families: Family[] = [];
-  familiesStatus: Status;
   loading: boolean = true;
   private adminSub: any;
   admin: boolean;
   order: string = 'familyName';
+  msgs: Message[] = [];
 
   constructor(private familyService: FamilyService, private authService: AuthenticationService, private router: Router) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.admin = currentUser && currentUser.admin;
-
-    this.familiesStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -44,17 +39,14 @@ export class FamilyListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.familyService.getFamilies().then(families => {
       this.families = families['families'];
-      this.familiesStatus.success = true;
       this.loading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familiesStatus.success = false;
-        this.familiesStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.familiesStatus.success = false;
-        this.familiesStatus.message = 'An error occurred while getting the list of families';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the list of families'});
       }
       this.loading = false;
     });

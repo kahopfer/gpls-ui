@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from '@angular/common';
 import {Student} from "../../models/student";
 import {NgForm} from "@angular/forms";
-import {Status} from "../error-alert/error-alert.component";
 import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {AuthenticationService} from "../../service/authentication.service";
@@ -13,6 +12,7 @@ import {LineItem} from "../../models/lineItem";
 import {PriceListService} from "../../service/priceList.service";
 import {PriceList} from "../../models/priceList";
 import 'rxjs/add/operator/toPromise';
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-check-out-details',
@@ -31,10 +31,9 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   students: Student[] = [];
   guardianArray: any[] = [];
 
-  guardiansStatus: Status;
-  studentsStatus: Status;
-
   allCheckedOutByEmployee: boolean;
+
+  msgs: Message[] = [];
 
   constructor(private router: Router, private location: Location, private route: ActivatedRoute,
               private studentService: StudentService, private guardianService: GuardianService,
@@ -42,16 +41,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
               private priceListService: PriceListService) {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.fullName = currentUser && currentUser.firstname + ' ' + currentUser.lastname;
-
-    this.studentsStatus = {
-      success: null,
-      message: null
-    };
-
-    this.guardiansStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -99,17 +88,14 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         }
         this.students.push(students[studentIndex])
       }
-      this.studentsStatus.success = true;
       this.getGuardians();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while loading the students';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
       }
     })
   }
@@ -125,16 +111,13 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       for (let guardianIndex in guardians) {
         this.guardianArray.push(guardians[guardianIndex]['guardians']);
       }
-      this.guardiansStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.guardiansStatus.success = false;
-        this.guardiansStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.guardiansStatus.success = false;
-        this.guardiansStatus.message = 'An error occurred while loading the guardians';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardians'});
       }
     })
   }
@@ -228,60 +211,49 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
           }
 
           Promise.all(createLineItemExtraPromiseArray).then(() => {
-            this.studentsStatus.success = true;
             this.router.navigate(['/sign-out']);
           }).catch(err => {
             if (err.error instanceof Error) {
               console.log('An error occurred:', err.error.message);
-              this.studentsStatus.success = false;
-              this.studentsStatus.message = 'An unexpected error occurred';
+              this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
             } else {
               if (err.status === 400) {
-                this.studentsStatus.success = false;
-                this.studentsStatus.message = 'Missing a required field';
+                this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
               } else {
                 console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-                this.studentsStatus.success = false;
-                this.studentsStatus.message = 'An error occurred while creating the extra line items';
+                this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the extra line items'});
               }
             }
           });
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.studentsStatus.success = false;
-            this.studentsStatus.message = 'An unexpected error occurred';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
           } else {
             if (err.status === 400) {
-              this.studentsStatus.success = false;
-              this.studentsStatus.message = 'Missing a required field';
+              this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              this.studentsStatus.success = false;
-              this.studentsStatus.message = 'An error occurred while updating the students';
+              this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the students'});
             }
           }
         });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.studentsStatus.success = false;
-          this.studentsStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.studentsStatus.success = false;
-          this.studentsStatus.message = 'An error occurred while updating the line items';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the line items'});
         }
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while retrieving the line items';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while retrieving the line items'});
       }
     });
   }

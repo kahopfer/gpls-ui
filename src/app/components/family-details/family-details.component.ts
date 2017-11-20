@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Location} from '@angular/common';
-import {Status} from "../error-alert/error-alert.component";
 import {Family} from "../../models/family";
 import {Student} from "../../models/student";
 import {Guardian} from "../../models/guardian";
@@ -10,7 +9,7 @@ import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
 import {ObjectID} from 'bson';
 import {AuthenticationService} from "../../service/authentication.service";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-family-details',
@@ -46,11 +45,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   mask: any[] = ['+', '1', ' ', '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
-  studentStatus: Status;
-  studentsStatus: Status;
-  guardianStatus: Status;
-  guardiansStatus: Status;
-  familyStatus: Status;
+  msgs: Message[] = [];
 
   studentsLoading: boolean = true;
   guardiansLoading: boolean = true;
@@ -61,31 +56,6 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     this.admin = currentUser && currentUser.admin;
-
-    this.studentStatus = {
-      success: null,
-      message: null
-    };
-
-    this.studentsStatus = {
-      success: null,
-      message: null
-    };
-
-    this.guardianStatus = {
-      success: null,
-      message: null
-    };
-
-    this.guardiansStatus = {
-      success: null,
-      message: null
-    };
-
-    this.familyStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit(): void {
@@ -107,17 +77,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.studentsLoading = true;
     this.studentService.getStudents(familyUnitID).then(students => {
       this.students = students['students'];
-      this.studentsStatus.success = true;
       this.studentsLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentsStatus.success = false;
-        this.studentsStatus.message = 'An error occurred while loading the students';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the students'});
       }
       this.studentsLoading = false;
     });
@@ -127,17 +94,14 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.guardiansLoading = true;
     this.guardianService.getGuardians(familyUnitID).then(guardians => {
       this.guardians = guardians['guardians'];
-      this.guardiansStatus.success = true;
       this.guardiansLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.guardiansStatus.success = false;
-        this.guardiansStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.guardiansStatus.success = false;
-        this.guardiansStatus.message = 'An error occurred while loading the guardians';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardians'});
       }
       this.guardiansLoading = false;
     });
@@ -146,16 +110,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   getFamily(id: string) {
     this.familyService.getFamily(id).then(family => {
       this.family = family;
-      this.familyStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An occurred while loading the family';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An occurred while loading the family'});
       }
     })
   }
@@ -173,21 +134,17 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteFamily() {
     this.familyService.deleteFamily(this.route.snapshot.params['id']).then(() => {
-      this.familyStatus.success = true;
       this.location.back();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.familyStatus.success = false;
-          this.familyStatus.message = 'You cannot delete a family with either uninvoiced line items or unpaid invoices'
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete a family with either uninvoiced line items or unpaid invoices'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.familyStatus.success = false;
-          this.familyStatus.message = 'An error occurred while deleting the family';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the family'});
         }
       }
     });
@@ -195,12 +152,10 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteStudent(id: string) {
     if (this.family.students.length === 1) {
-      this.studentStatus.success = false;
-      this.studentStatus.message = 'A family must have at least 1 child';
+      this.msgs.push({severity:'error', summary:'Error Message', detail:'A family must have at least 1 child'});
       return;
     }
     this.studentService.deleteStudent(id).then(() => {
-      this.studentStatus.success = true;
       this.student = null;
       this.displayStudentDialog = false;
       this.getStudents(this.route.snapshot.params['id']);
@@ -208,16 +163,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentStatus.success = false;
-        this.studentStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 404) {
-          this.studentStatus.success = false;
-          this.studentStatus.message = 'Student not found';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'Student not found'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.studentStatus.success = false;
-          this.studentStatus.message = 'An error occurred while deleting the student';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the student'});
         }
       }
     })
@@ -236,12 +188,10 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   deleteGuardian(id: string) {
     if (this.family.guardians.length === 1) {
-      this.guardianStatus.success = false;
-      this.guardianStatus.message = 'A family must have at least 1 guardian';
+      this.msgs.push({severity:'error', summary:'Error Message', detail:'A family must have at least 1 guardian'});
       return;
     }
     this.guardianService.deleteGuardian(id).then(() => {
-      this.guardianStatus.success = true;
       this.guardian = null;
       this.displayGuardianDialog = false;
       this.getGuardians(this.route.snapshot.params['id']);
@@ -249,16 +199,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.guardianStatus.success = false;
-        this.guardianStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 404) {
-          this.guardianStatus.success = false;
-          this.guardianStatus.message = 'Guardian not found';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'Guardian not found'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.guardianStatus.success = false;
-          this.guardianStatus.message = 'An error occurred while deleting the guardian';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the guardian'});
         }
       }
     });
@@ -279,23 +226,19 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     // If the student is not new, then update the selected student
     if (this.newStudent === false) {
       this.studentService.updateStudent(student).then(() => {
-        this.studentStatus.success = true;
         this.student = null;
         this.displayStudentDialog = false;
         this.getStudents(this.route.snapshot.params['id']);
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.studentStatus.success = false;
-          this.studentStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'Missing a required field';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An error occurred while updating the student';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the student'});
           }
         }
       })
@@ -312,7 +255,6 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         active: true
       };
       this.studentService.createStudent(studentToCreate).subscribe(() => {
-        this.studentStatus.success = true;
         this.student = null;
         this.displayStudentDialog = false;
         this.getStudents(this.route.snapshot.params['id']);
@@ -320,16 +262,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.studentStatus.success = false;
-          this.studentStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'Missing a required field';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.studentStatus.success = false;
-            this.studentStatus.message = 'An error occurred while enrolling the student ' + student.fname + ' ' + student.lname;
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the student ' + student.fname + ' ' + student.lname});
           }
         }
       });
@@ -339,23 +278,19 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   saveGuardian(guardian: Guardian) {
     if (this.newGuardian === false) {
       this.guardianService.updateGuardian(guardian).then(() => {
-        this.guardianStatus.success = true;
         this.guardian = null;
         this.displayGuardianDialog = false;
         this.getGuardians(this.route.snapshot.params['id']);
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.guardianStatus.success = false;
-          this.guardianStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'Missing a required field';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'An error occurred while updating the guardian';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the guardian'});
           }
         }
       })
@@ -374,7 +309,6 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
         active: true
       };
       this.guardianService.createGuardian(guardianToCreate).subscribe(() => {
-        this.guardianStatus.success = true;
         this.guardian = null;
         this.displayGuardianDialog = false;
         this.getGuardians(this.route.snapshot.params['id']);
@@ -382,16 +316,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       }, err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.guardianStatus.success = false;
-          this.guardianStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           if (err.status === 400) {
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'Missing a required field';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'Missing a required field'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.guardianStatus.success = false;
-            this.guardianStatus.message = 'An error occurred while creating the guardian ' + guardian.fname + ' ' + guardian.lname;
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the guardian ' + guardian.fname + ' ' + guardian.lname});
           }
         }
       });
@@ -402,16 +333,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.familyService.getFamily(this.route.snapshot.params['id']).then(family => {
       this.editableFamily = family;
       this.displayFamilyForm = true;
-      this.familyStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An error occurred while loading the family';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the family'});
       }
     })
   }
@@ -422,19 +350,16 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
 
   updateFamilyName() {
     this.familyService.updateFamily(this.editableFamily).then(() => {
-      this.familyStatus.success = true;
       this.displayFamilyForm = false;
       this.editableFamily = null;
       this.getFamily(this.route.snapshot.params['id']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.familyStatus.success = false;
-        this.familyStatus.message = 'An error occurred while saving the family';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while saving the family'});
       }
     })
   }
@@ -444,16 +369,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.studentService.getStudent(event.data._id).then(student => {
       this.student = student;
       this.displayStudentDialog = true;
-      this.studentStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.studentStatus.success = false;
-        this.studentStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.studentStatus.success = false;
-        this.studentStatus.message = 'An error occurred while loading the student';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the student'});
       }
     });
     this.displayStudentDialog = true;
@@ -464,16 +386,13 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
     this.guardianService.getGuardian(event.data._id).then(guardian => {
       this.guardian = guardian;
       this.displayGuardianDialog = true;
-      this.guardianStatus.success = true;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.guardianStatus.success = false;
-        this.guardianStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.guardianStatus.success = false;
-        this.guardianStatus.message = 'An error occurred while loading the guardian';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the guardian'});
       }
     });
     this.displayGuardianDialog = true;

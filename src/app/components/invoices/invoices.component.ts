@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
-import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../../service/family.service";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-invoices',
@@ -18,14 +17,9 @@ export class InvoicesComponent implements OnInit {
   paidOptions: any[] = [];
   invoicesLoading: boolean = true;
   order: string = 'familyName';
-
-  invoiceStatus: Status;
+  msgs: Message[] = [];
 
   constructor(private invoiceService: InvoiceService, private familyService: FamilyService, private confirmationService: ConfirmationService) {
-    this.invoiceStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -59,29 +53,24 @@ export class InvoicesComponent implements OnInit {
         for (let familyIndex in families) {
           this.invoicesToDisplay[familyIndex].familyName = families[familyIndex]['familyName'];
         }
-        this.invoiceStatus.success = true;
         this.invoicesLoading = false;
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'An error occurred while loading the family names for the invoices';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the family names for the invoices'});
         }
         this.invoicesLoading = false;
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An error occurred while loading the invoices';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while loading the invoices'});
       }
       this.invoicesLoading = false;
     })
@@ -90,23 +79,19 @@ export class InvoicesComponent implements OnInit {
   deleteInvoice(id: string) {
     this.invoicesLoading = true;
     this.invoiceService.deleteInvoice(id).then(() => {
-      this.invoiceStatus.success = true;
       this.invoicesLoading = false;
       this.selectedInvoice = null;
       this.getInvoices();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         if (err.status === 400) {
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'You cannot delete an unpaid invoice'
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'You cannot delete an unpaid invoice'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'An error occurred while deleting the invoice';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while deleting the invoice'});
         }
       }
       this.invoicesLoading = false;
@@ -129,31 +114,26 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoice(invoice._id).then(invoice1 => {
       invoice1['paid'] = true;
       this.invoiceService.updateInvoice(invoice1).then(() => {
-        this.invoiceStatus.success = true;
         this.selectedInvoice = null;
         this.invoicesLoading = false;
         this.getInvoices();
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.invoiceStatus.success = false;
-          this.invoiceStatus.message = 'An error occurred while updating the invoice';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while updating the invoice'});
         }
         this.invoicesLoading = false;
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An error occurred while getting the invoice';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the invoice'});
       }
       this.invoicesLoading = false;
     })

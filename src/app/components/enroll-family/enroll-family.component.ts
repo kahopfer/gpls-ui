@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
-import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../../service/family.service";
 import {StudentService} from "../../service/student.service";
 import {GuardianService} from "../../service/guardian.service";
@@ -9,6 +8,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Guardian} from "../../models/guardian";
 import {Family} from "../../models/family";
 import {Student} from "../../models/student";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-enroll-family',
@@ -19,27 +19,13 @@ export class EnrollFamilyComponent implements OnInit {
 
   public enrollFamilyForm: FormGroup;
 
-  enrollFamilyStatus: Status;
-  enrollStudentStatus: Status;
-  enrollGuardianStatus: Status;
+  msgs: Message[] = [];
 
   mask: any[] = ['+', '1', ' ', '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   constructor(private familyService: FamilyService, private studentService: StudentService,
               private guardianService: GuardianService, private location: Location,
               private formBuilder: FormBuilder) {
-    this.enrollFamilyStatus = {
-      success: null,
-      message: null
-    };
-    this.enrollStudentStatus = {
-      success: null,
-      message: null
-    };
-    this.enrollGuardianStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -124,7 +110,6 @@ export class EnrollFamilyComponent implements OnInit {
         };
 
         this.studentService.enrollStudent(studentToCreate).subscribe(() => {
-          this.enrollStudentStatus.success = true;
         }, err => {
           reject(err);
           return;
@@ -151,7 +136,6 @@ export class EnrollFamilyComponent implements OnInit {
           active: true
         };
         this.guardianService.enrollGuardian(guardianToCreate).subscribe(() => {
-          this.enrollGuardianStatus.success = true;
         }, err => {
           reject(err);
           return;
@@ -171,39 +155,32 @@ export class EnrollFamilyComponent implements OnInit {
         };
 
         this.familyService.createFamily(familyToCreate).subscribe(() => {
-          this.enrollFamilyStatus.success = true;
           this.location.back();
         }, err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.enrollFamilyStatus.success = false;
-            this.enrollFamilyStatus.message = 'An unexpected error occurred';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.enrollFamilyStatus.success = false;
-            this.enrollFamilyStatus.message = 'An error occurred while enrolling the ' + model.value.familyName + ' family';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the ' + model.value.familyName + ' family'});
           }
         });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
-          this.enrollGuardianStatus.success = false;
-          this.enrollGuardianStatus.message = 'An unexpected error occurred';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.enrollGuardianStatus.success = false;
-          this.enrollGuardianStatus.message = 'An error occurred while enrolling the guardian';
+          this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the guardian'});
         }
       });
     }).catch((err) => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.enrollStudentStatus.success = false;
-        this.enrollStudentStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.enrollStudentStatus.success = false;
-        this.enrollStudentStatus.message = 'An error occurred while enrolling the student';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while enrolling the student'});
       }
     })
   }

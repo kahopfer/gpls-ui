@@ -38,11 +38,7 @@
   <br>
   <h5 *ngIf="admin === true">Select a student or guardian to edit or delete</h5>
   <h5 *ngIf="!admin">Select a student or guardian to view their details</h5>
-  <app-error-alert [status]="familyStatus"></app-error-alert>
-  <br>
-  <app-error-alert [status]="studentsStatus"></app-error-alert>
-  <br>
-  <app-error-alert [status]="guardiansStatus"></app-error-alert>
+  <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
 
   <!--<div class="row justify-content-md-center">-->
   <p-dataTable [value]="students" selectionMode="single" [(selection)]="selectedStudent" [loading]="studentsLoading"
@@ -86,7 +82,6 @@
     <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
               [modal]="true" [width]="400" [resizable]="false">
       <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
-      <app-error-alert [status]="studentStatus"></app-error-alert>
       <div class="form-group">
         <label for="studentFname">First Name</label>
         <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"
@@ -130,7 +125,6 @@
     <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
               [modal]="true" [width]="550" [resizable]="false">
       <!--[modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">-->
-      <app-error-alert [status]="guardianStatus"></app-error-alert>
 
       <div class="form-group">
         <label for="guardianFname">First Name</label>

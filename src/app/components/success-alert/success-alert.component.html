@@ -1,9 +1,0 @@
-<div *ngIf="status != undefined
-&& null != status.success
-&& status.success" class="alert alert-success alert-dismissable fade show" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  Your request was successfully completed
-  <div *ngIf="status.message != undefined"><strong>Success</strong>: {{status.message}}</div>
-</div>

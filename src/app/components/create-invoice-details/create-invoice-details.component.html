@@ -1,7 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-6">
-      <app-error-alert [status]="studentsStatus"></app-error-alert>
       <p-dataTable [value]="students" [loading]="studentsLoading" loadingIcon="fa-spinner">
         <p-header>Students</p-header>
         <p-column field="fname" header="First Name"></p-column>
@@ -10,7 +9,6 @@
     </div>
     <div class="col-6">
       <app-context-help [pageName]="'create-invoice-details'"></app-context-help>
-      <app-error-alert [status]="guardiansStatus"></app-error-alert>
       <p-dataTable [value]="guardians" [loading]="guardiansLoading" loadingIcon="fa-spinner">
         <p-header>Guardians</p-header>
         <p-column field="fname" header="First Name"></p-column>
@@ -22,7 +20,7 @@
     <div class="col-12">
       <br>
       <h5>Select a line item to edit or delete</h5>
-      <app-error-alert [status]="lineItemsStatus"></app-error-alert>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
       <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
                    [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
@@ -57,7 +55,6 @@
       <p-dialog header="Line Item Details" [(visible)]="displayLineItemDialog" [responsive]="true" showEffect="fade"
                 [modal]="true" [width]="500" [resizable]="false">
         <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
-        <app-error-alert [status]="lineItemStatus"></app-error-alert>
         <div class="form-group" *ngIf="newLineItem == true">
           <label class="form-check-label">
             <input class="form-check-input" type="checkbox" name="extraItem" [(ngModel)]="lineItem.extraItem">
@@ -164,7 +161,6 @@
   </div>
   <br>
   <!--TODO: Try to make invoice range input wider-->
-  <app-error-alert [status]="invoiceStatus"></app-error-alert>
   <div class="row justify-content-center">
     <form class="form-inline" #createInvoiceForm="ngForm" (submit)="confirmCreateInvoice()">
       <div class="form-group">

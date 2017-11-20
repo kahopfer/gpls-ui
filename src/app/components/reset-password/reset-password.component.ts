@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../service/user.service";
-import {Status} from "../error-alert/error-alert.component";
 import * as CryptoJS from 'crypto-js';
 import {NgForm} from "@angular/forms";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-reset-password',
@@ -14,13 +14,9 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   username: string;
   newPassword: string;
   private usernameSub: any;
-  resetPasswordStatus: Status;
+  msgs: Message[] = [];
 
   constructor(private usersService: UserService, private route: ActivatedRoute) {
-    this.resetPasswordStatus = {
-      success: null,
-      message: null
-    }
   }
 
   ngOnInit() {
@@ -39,18 +35,15 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     const encryptedPasswordNew = CryptoJS.AES.encrypt(this.newPassword, key, {iv: iv});
 
     this.usersService.resetPassword(this.username, encryptedPasswordNew.toString()).then(() => {
-      this.resetPasswordStatus.success = true;
-      this.resetPasswordStatus.message = 'You have successfully reset the password for ' + this.username;
+      this.msgs.push({severity:'success', summary:'Success Message', detail:'You have successfully reset the password for ' + this.username});
       resetPasswordForm.reset();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.resetPasswordStatus.success = false;
-        this.resetPasswordStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.resetPasswordStatus.success = false;
-        this.resetPasswordStatus.message = 'An unexpected server error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while resetting the password'});
       }
     })
   }

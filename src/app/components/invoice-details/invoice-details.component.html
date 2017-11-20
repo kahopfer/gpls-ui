@@ -1,6 +1,5 @@
 <div class="row justify-content-center">
   <div class="col-6">
-    <app-error-alert [status]="studentsStatus"></app-error-alert>
     <p-dataTable [value]="students" [loading]="studentsLoading" loadingIcon="fa-spinner">
       <p-header>Students</p-header>
       <p-column field="fname" header="First Name"></p-column>
@@ -9,7 +8,6 @@
   </div>
   <div class="col-6">
     <app-context-help [pageName]="'invoice-details'"></app-context-help>
-    <app-error-alert [status]="guardiansStatus"></app-error-alert>
     <p-dataTable [value]="guardians" [loading]="guardiansLoading" loadingIcon="fa-spinner">
       <p-header>Guardians</p-header>
       <p-column field="fname" header="First Name"></p-column>
@@ -20,7 +18,7 @@
 <div class="row justify-content-center">
   <div class="col-12">
     <br>
-    <app-error-alert [status]="invoiceStatus"></app-error-alert>
+    <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
     <p-dataTable [value]="invoices" [rows]="10" [paginator]="true" [pageLinks]="3" [(selection)]="selectedInvoice"
                  [loading]="invoicesLoading" loadingIcon="fa-spinner" sortMode="multiple" #dt>
       <p-header>Invoices</p-header>

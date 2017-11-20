@@ -4,7 +4,7 @@
       <app-context-help [pageName]="'enroll-family'"></app-context-help>
       <h2>Enroll a New Family</h2>
       <br>
-      <app-error-alert [status]="enrollFamilyStatus"></app-error-alert>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
       <br>
 
       <form [formGroup]="enrollFamilyForm" novalidate (ngSubmit)="enrollFamily(enrollFamilyForm)">
@@ -22,7 +22,6 @@
         <br>
         <div formArrayName="students">
           <div *ngFor="let student of getStudents(enrollFamilyForm); let i=index">
-            <app-error-alert [status]="enrollStudentStatus"></app-error-alert>
             <div class="card">
               <div class="card-header">
                 <span>Student {{i + 1}}</span>
@@ -85,7 +84,6 @@
         <br>
         <div formArrayName="guardians">
           <div *ngFor="let guardian of getGuardians(enrollFamilyForm); let i=index">
-            <app-error-alert [status]="enrollGuardianStatus"></app-error-alert>
             <div class="card">
               <div class="card-header">
                 <span>Guardian {{i + 1}}</span>

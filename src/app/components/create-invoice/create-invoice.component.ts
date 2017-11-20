@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {Family} from "../../models/family";
-import {Status} from "../error-alert/error-alert.component";
 import {FamilyService} from "../../service/family.service";
 import {Invoice} from "../../models/invoice";
 import {InvoiceService} from "../../service/invoice.service";
 import {LineItemService} from "../../service/lineItem.service";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-create-invoice',
@@ -16,24 +15,13 @@ import {ConfirmationService} from "primeng/primeng";
 export class CreateInvoiceComponent implements OnInit {
 
   families: Family[] = [];
-  familiesStatus: Status;
-  invoiceStatus: Status;
   loading: boolean = true;
   order: string = 'familyName';
   invoiceRange: Date;
+  msgs: Message[] = [];
 
   constructor(private familyService: FamilyService, private router: Router, private invoiceService: InvoiceService,
               private lineItemService: LineItemService, private confirmationService: ConfirmationService) {
-
-    this.familiesStatus = {
-      success: null,
-      message: null
-    };
-
-    this.invoiceStatus = {
-      success: null,
-      message: null
-    };
   }
 
   ngOnInit() {
@@ -45,17 +33,14 @@ export class CreateInvoiceComponent implements OnInit {
     this.loading = true;
     this.familyService.getFamilies().then(families => {
       this.families = families['families'];
-      this.familiesStatus.success = true;
       this.loading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.familiesStatus.success = false;
-        this.familiesStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.familiesStatus.success = false;
-        this.familiesStatus.message = 'An error occurred while getting the list of families';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while getting the list of families'});
       }
       this.loading = false;
     });
@@ -98,32 +83,26 @@ export class CreateInvoiceComponent implements OnInit {
       }
       if (createInvoicesPromiseArray.length > 0) {
         Promise.all(createInvoicesPromiseArray).then(() => {
-          this.invoiceStatus.success = true;
-          this.invoiceStatus.message = 'Invoices successfully created';
+          this.msgs.push({severity:'success', summary:'Success Message', detail:'Invoices successfully created'});
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
-            this.invoiceStatus.success = false;
-            this.invoiceStatus.message = 'An unexpected error occurred';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.invoiceStatus.success = false;
-            this.invoiceStatus.message = 'An error occurred while creating the invoice';
+            this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while creating the invoice'});
           }
         })
       } else {
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'There are no uninvoiced line items within the selected range.'
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'There are no uninvoiced line items within the selected range'});
       }
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.invoiceStatus.success = false;
-        this.invoiceStatus.message = 'An error occurred while retrieving the line items';
+        this.msgs.push({severity:'error', summary:'Error Message', detail:'An error occurred while retrieving the line items'});
       }
     })
   }

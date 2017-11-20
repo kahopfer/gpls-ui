@@ -2,7 +2,7 @@
   <app-context-help [pageName]="'manage-rates'"></app-context-help>
   <h5>Select a rate to edit the value</h5>
   <br>
-  <app-error-alert [status]="nonExtraPriceListStatus"></app-error-alert>
+  <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
   <p-dataTable [value]="nonExtraPriceList" selectionMode="single" [(selection)]="selectedNonExtraPriceList"
                [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
                [metaKeySelection]="false" [responsive]="true">
@@ -15,7 +15,6 @@
     </p-column>
   </p-dataTable>
   <br>
-  <app-error-alert [status]="extraPriceListStatus"></app-error-alert>
   <p-dataTable [value]="extraPriceList" selectionMode="single" [(selection)]="selectedExtraPriceList"
                [loading]="extraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
                [metaKeySelection]="false" [responsive]="true">
@@ -39,7 +38,6 @@
   <form *ngIf="priceList" #priceListForm="ngForm" (ngSubmit)="savePriceList(priceList)">
     <p-dialog header="Rate Information" [(visible)]="displayPriceListDialog" [responsive]="true" showEffect="fade"
               [modal]="true" [width]="400" [resizable]="false">
-      <app-error-alert [status]="priceListStatus"></app-error-alert>
       <div class="form-group">
         <label for="itemName">Item Name</label>
         <input type="text" name="itemName" class="form-control" required id="itemName" placeholder="Item Name"

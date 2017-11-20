@@ -1,6 +1,6 @@
 <div class="container">
   <app-context-help [pageName]="'user-list'"></app-context-help>
-  <app-error-alert [status]="usersStatus"></app-error-alert>
+  <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
   <p-dataTable [value]="users" [(selection)]="selectedUser" [loading]="loading" loadingIcon="fa-spinner">
     <p-header>Current Users in the System</p-header>
     <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>

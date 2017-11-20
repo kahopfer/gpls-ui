@@ -1,6 +1,6 @@
 <div class="container">
   <app-context-help [pageName]="'create-invoice'"></app-context-help>
-      <app-error-alert [status]="familiesStatus"></app-error-alert>
+      <p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
       <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
         <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
         <input #gb type="text" pInputText size="50" placeholder="Global Filter">
@@ -12,8 +12,6 @@
         <p-column field="familyName" header="Family Name"></p-column>
       </p-dataTable>
   <br>
-  <app-error-alert [status]="invoiceStatus"></app-error-alert>
-  <app-success-alert [status]="invoiceStatus"></app-success-alert>
   <div class="row justify-content-center">
     <form class="form-inline" #createInvoiceForm="ngForm" (submit)="confirmCreateInvoices()">
       <div class="form-group">

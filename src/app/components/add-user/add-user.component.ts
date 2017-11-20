@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../service/user.service";
-import {Router} from "@angular/router";
 import {Location} from '@angular/common';
-import {Status} from "../error-alert/error-alert.component";
 import * as CryptoJS from 'crypto-js';
 import {User} from "../../models/user";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-add-user',
@@ -12,19 +11,15 @@ import {User} from "../../models/user";
   styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
-  createUserStatus: Status;
   username: string;
   password: string;
   encryptedPassword: string;
   firstname: string;
   lastname: string;
   admin: boolean;
+  msgs: Message[] = [];
 
-  constructor(private userService: UserService, private router: Router, private location: Location) {
-    this.createUserStatus = {
-      success: null,
-      message: null
-    };
+  constructor(private userService: UserService, private location: Location) {
   }
 
   ngOnInit() {
@@ -55,22 +50,18 @@ export class AddUserComponent implements OnInit {
     }
 
     this.userService.createUser(userToCreate).then(() => {
-      this.createUserStatus.success = true;
       // this.router.navigate(['/users']);
       this.location.back();
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
-        this.createUserStatus.success = false;
-        this.createUserStatus.message = 'An unexpected error occurred';
+        this.msgs.push({severity:'error', summary:'Error Message', detail: 'An unexpected error occurred'});
       } else {
         if (err.status === 409) {
-          this.createUserStatus.success = false;
-          this.createUserStatus.message = 'A user already exists with that username';
+          this.msgs.push({severity:'error', summary:'Error Message', detail: 'A user already exists with that username'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.createUserStatus.success = false;
-          this.createUserStatus.message = 'An error occurred while creating this user';
+          this.msgs.push({severity:'error', summary:'Error Message', detail: 'An error occurred while creating this user'});
         }
       }
     })

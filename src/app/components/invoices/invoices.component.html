@@ -1,5 +1,5 @@
 <app-context-help [pageName]="'invoices'"></app-context-help>
-<app-error-alert [status]="invoiceStatus"></app-error-alert>
+<p-growl [(value)]="msgs" [baseZIndex]="9999"></p-growl>
 <p-dataTable [value]="invoicesToDisplay | orderBy: order" [rows]="10" [paginator]="true" [pageLinks]="3"
              [(selection)]="selectedInvoice" [loading]="invoicesLoading" loadingIcon="fa-spinner" sortMode="multiple"
              #dt>
