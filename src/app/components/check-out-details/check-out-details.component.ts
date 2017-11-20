@@ -229,7 +229,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
           Promise.all(createLineItemExtraPromiseArray).then(() => {
             this.studentsStatus.success = true;
-            this.router.navigate(['/check-out']);
+            this.router.navigate(['/sign-out']);
           }).catch(err => {
             if (err.error instanceof Error) {
               console.log('An error occurred:', err.error.message);

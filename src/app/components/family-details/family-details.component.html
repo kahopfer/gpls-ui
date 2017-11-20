@@ -1,4 +1,6 @@
 <div class="container">
+  <app-context-help *ngIf="admin" [pageName]="'family-details-admin'"></app-context-help>
+  <app-context-help *ngIf="!admin" [pageName]="'family-details-regular'"></app-context-help>
   <div class="row" *ngIf="displayFamilyForm === false">
     <div class="col col-lg-10">
       <h2>{{family.familyName}}</h2>
@@ -10,204 +12,209 @@
       </button>
     </div>
   </div>
-  <form *ngIf="displayFamilyForm === true" #updateFamilyForm="ngForm" (ngSubmit)="updateFamilyName()">
-    <div class="form-group">
-      <label for="familyname">Family Name</label>
-      <input type="text" name="familyname" class="form-control" required id="familyname" placeholder="Family Name"
-             value="{{family.familyName}}"
-             [(ngModel)]="editableFamily.familyName" #familyFamilyName="ngModel">
-      <small *ngIf="!familyFamilyName.valid" class="text-danger">
-        Family name is required.
-      </small>
+  <div class="row" *ngIf="displayFamilyForm">
+    <div class="col col-lg-4">
+      <form *ngIf="displayFamilyForm === true" #updateFamilyForm="ngForm" (ngSubmit)="updateFamilyName()">
+        <div class="form-group">
+          <label for="familyname">Family Name</label>
+          <input type="text" name="familyname" class="form-control" required id="familyname" placeholder="Family Name"
+                 value="{{family.familyName}}"
+                 [(ngModel)]="editableFamily.familyName" #familyFamilyName="ngModel">
+          <small *ngIf="!familyFamilyName.valid" class="text-danger">
+            Family name is required.
+          </small>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!updateFamilyForm.form.valid">
+          <i class="fa fa-check"></i>
+          Save
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="hideUpdateFamilyForm()">
+          <i class="fa fa-ban"></i>
+          Cancel
+        </button>
+      </form>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!updateFamilyForm.form.valid">
-      <i class="fa fa-check"></i>
-      Save
-    </button>
-    <button type="button" class="btn btn-secondary" (click)="hideUpdateFamilyForm()">
-      <i class="fa fa-ban"></i>
-      Cancel
-    </button>
-  </form>
+  </div>
   <br>
   <h5 *ngIf="admin === true">Select a student or guardian to edit or delete</h5>
+  <h5 *ngIf="!admin">Select a student or guardian to view their details</h5>
   <app-error-alert [status]="familyStatus"></app-error-alert>
   <br>
   <app-error-alert [status]="studentsStatus"></app-error-alert>
   <br>
   <app-error-alert [status]="guardiansStatus"></app-error-alert>
 
-  <div class="row justify-content-md-center">
-    <p-dataTable [value]="students" selectionMode="single" [(selection)]="selectedStudent" [loading]="studentsLoading"
-                 loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false"
-                 [responsive]="true">
-      <p-header>Students</p-header>
-      <p-column field="fname" header="First Name"></p-column>
-      <!--<p-column field="mi" header="Middle Initial"></p-column>-->
-      <p-column field="lname" header="Last Name"></p-column>
-      <p-column field="notes" header="Notes"></p-column>
+  <!--<div class="row justify-content-md-center">-->
+  <p-dataTable [value]="students" selectionMode="single" [(selection)]="selectedStudent" [loading]="studentsLoading"
+               loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false"
+               [responsive]="true">
+    <p-header>Students</p-header>
+    <p-column field="fname" header="First Name"></p-column>
+    <!--<p-column field="mi" header="Middle Initial"></p-column>-->
+    <p-column field="lname" header="Last Name"></p-column>
+    <p-column field="notes" header="Notes"></p-column>
+    <p-footer *ngIf="admin === true">
+      <div class="ui-helper-clearfix" style="width:100%">
+        <button type="button" pButton class="ui-button-success" icon="fa-plus" style="float:left"
+                (click)="showDialogToAddStudent()"
+                label="Add new student"></button>
+      </div>
+    </p-footer>
+  </p-dataTable>
+  <br>
+  <p-dataTable [value]="guardians" selectionMode="single" [(selection)]="selectedGuardian"
+               [loading]="guardiansLoading" [metaKeySelection]="false"
+               loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
+    <p-header>Guardians</p-header>
+    <p-column field="fname" header="First Name"></p-column>
+    <!--<p-column field="mi" header="Middle Initial"></p-column>-->
+    <p-column field="lname" header="Last Name"></p-column>
+    <p-column field="relationship" header="Relationship"></p-column>
+    <p-column field="primPhone" header="Primary Phone"></p-column>
+    <p-column field="secPhone" header="Secondary Phone"></p-column>
+    <p-footer *ngIf="admin === true">
+      <div class="ui-helper-clearfix" style="width:100%">
+        <button type="button" pButton class="ui-button-success" icon="fa-plus" style="float:left"
+                (click)="showDialogToAddGuardian()"
+                label="Add new guardian"></button>
+      </div>
+    </p-footer>
+  </p-dataTable>
+  <br>
+
+  <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
+    <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
+              [modal]="true" [width]="400" [resizable]="false">
+      <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
+      <app-error-alert [status]="studentStatus"></app-error-alert>
+      <div class="form-group">
+        <label for="studentFname">First Name</label>
+        <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"
+               [(ngModel)]="student.fname" [readonly]="!admin" #studentFname="ngModel">
+        <small [hidden]="studentFname.valid" class="text-danger">
+          First name is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="studentMi">Middle Initial</label>
+        <input type="text" name="mi" class="form-control" id="studentMi" placeholder="Middle Initial"
+               [(ngModel)]="student.mi" [readonly]="!admin" maxlength="1" #studentMi="ngModel">
+        <small [hidden]="studentMi.valid" class="text-danger">
+          Maximum 1 character.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="studentLname">Last Name</label>
+        <input type="text" name="lname" class="form-control" required id="studentLname" placeholder="Last Name"
+               [(ngModel)]="student.lname" [readonly]="!admin" #studentLname="ngModel">
+        <small [hidden]="studentLname.valid" class="text-danger">
+          Last name is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="studentNotes">Notes</label>
+        <textarea type="text" name="notes" [readonly]="!admin" class="form-control" id="studentNotes"
+                  placeholder="Write any special notes about the student here (optional)"
+                  [(ngModel)]="student.notes"></textarea>
+      </div>
       <p-footer *ngIf="admin === true">
-        <div class="ui-helper-clearfix" style="width:100%">
-          <button type="button" pButton icon="fa-plus" style="float:left"
-                  (click)="showDialogToAddStudent()"
-                  label="Add new student"></button>
-        </div>
+        <button type="submit" pButton icon="fa-check"
+                [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
+        <button *ngIf="newStudent === false" type="button" pButton class="ui-button-danger" icon="fa-close"
+                (click)="confirmDeleteStudent(student._id)" label="Delete"></button>
       </p-footer>
-    </p-dataTable>
-    <br>
-    <p-dataTable [value]="guardians" selectionMode="single" [(selection)]="selectedGuardian"
-                 [loading]="guardiansLoading" [metaKeySelection]="false"
-                 loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
-      <p-header>Guardians</p-header>
-      <p-column field="fname" header="First Name"></p-column>
-      <!--<p-column field="mi" header="Middle Initial"></p-column>-->
-      <p-column field="lname" header="Last Name"></p-column>
-      <p-column field="relationship" header="Relationship"></p-column>
-      <p-column field="primPhone" header="Primary Phone"></p-column>
-      <p-column field="secPhone" header="Secondary Phone"></p-column>
+    </p-dialog>
+  </form>
+
+  <form *ngIf="guardian" #guardianDetailsForm="ngForm" (ngSubmit)="saveGuardian(guardian)">
+    <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
+              [modal]="true" [width]="550" [resizable]="false">
+      <!--[modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">-->
+      <app-error-alert [status]="guardianStatus"></app-error-alert>
+
+      <div class="form-group">
+        <label for="guardianFname">First Name</label>
+        <input type="text" name="fname" class="form-control" required id="guardianFname" placeholder="First Name"
+               [(ngModel)]="guardian.fname" [readonly]="!admin" #guardianFname="ngModel">
+        <small [hidden]="guardianFname.valid" class="text-danger">
+          First name is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianMi">Middle Initial</label>
+        <input type="text" name="mi" class="form-control" id="guardianMi" placeholder="Middle Initial"
+               [(ngModel)]="guardian.mi" [readonly]="!admin" #guardianMi="ngModel" maxlength="1">
+        <small [hidden]="guardianMi.valid" class="text-danger">
+          Maximum 1 character.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianLname">Last Name</label>
+        <input type="text" name="lname" class="form-control" required id="guardianLname" placeholder="Last Name"
+               [(ngModel)]="guardian.lname" [readonly]="!admin" #guardianLname="ngModel">
+        <small [hidden]="guardianLname.valid" class="text-danger">
+          Last name is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianRelationship">Relationship</label>
+        <select name="relationship" class="custom-select" required id="guardianRelationship"
+                [(ngModel)]="guardian.relationship" [disabled]="!admin" #guardianRelationship="ngModel">
+          <option></option>
+          <option value="Father">Father</option>
+          <option value="Mother">Mother</option>
+          <option value="Grandfather">Grandfather</option>
+          <option value="Grandmother">Grandmother</option>
+          <option value="Stepfather">Stepfather</option>
+          <option value="Stepmother">Stepmother</option>
+          <option value="Aunt">Aunt</option>
+          <option value="Uncle">Uncle</option>
+          <option value="Neighbor">Neighbor</option>
+          <option value="Other">Other</option>
+        </select>
+        <small [hidden]="guardianRelationship.valid || !admin" class="text-danger">
+          Relationship is required.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianPrimPhone">Primary Phone</label>
+        <input type="text" name="primPhone" class="form-control" required id="guardianPrimPhone"
+               placeholder="+1 (123) 456-7890" [readonly]="!admin"
+               pattern="\+\d \(\d{3}\) \d{3}-\d{4}" [textMask]="{mask: mask}" [(ngModel)]="guardian.primPhone"
+               #guardianPrimPhone="ngModel">
+        <small [hidden]="guardianPrimPhone.valid" class="text-danger">
+          Primary phone is required (must match pattern +1 (111) 111-1111).
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianSecPhone">Secondary Phone</label>
+        <input type="text" name="secPhone" class="form-control" id="guardianSecPhone"
+               placeholder="+1 (123) 456-7890 (optional)" [readonly]="!admin"
+               pattern="\+\d \(\d{3}\) \d{3}-\d{4}" [textMask]="{mask: mask}" [(ngModel)]="guardian.secPhone"
+               #guardianSecPhone="ngModel">
+        <small [hidden]="guardianSecPhone.valid" class="text-danger">
+          Must match pattern +1 (111) 111-1111.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="guardianEmail">Email</label>
+        <input type="text" name="email" class="form-control" required id="guardianEmail" placeholder="Email"
+               pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
+               [(ngModel)]="guardian.email" [readonly]="!admin" #guardianEmail="ngModel">
+        <small [hidden]="guardianEmail.valid" class="text-danger">
+          Email address is required (must match pattern example@example.com).
+        </small>
+      </div>
       <p-footer *ngIf="admin === true">
-        <div class="ui-helper-clearfix" style="width:100%">
-          <button type="button" pButton icon="fa-plus" style="float:left"
-                  (click)="showDialogToAddGuardian()"
-                  label="Add new guardian"></button>
-        </div>
+        <button type="submit" pButton icon="fa-check"
+                [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
+        <button *ngIf="newGuardian === false" type="button" pButton class="ui-button-danger" icon="fa-close"
+                (click)="confirmDeleteGuardian(guardian._id)" label="Delete"></button>
       </p-footer>
-    </p-dataTable>
-    <br>
-
-    <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
-      <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
-                [modal]="true" [width]="400" [resizable]="false">
-        <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
-        <app-error-alert [status]="studentStatus"></app-error-alert>
-        <div class="form-group">
-          <label for="studentFname">First Name</label>
-          <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"
-                 [(ngModel)]="student.fname" [readonly]="!admin" #studentFname="ngModel">
-          <small [hidden]="studentFname.valid" class="text-danger">
-            First name is required.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="studentMi">Middle Initial</label>
-          <input type="text" name="mi" class="form-control" id="studentMi" placeholder="Middle Initial"
-                 [(ngModel)]="student.mi" [readonly]="!admin" maxlength="1" #studentMi="ngModel">
-          <small [hidden]="studentMi.valid" class="text-danger">
-            Maximum 1 character.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="studentLname">Last Name</label>
-          <input type="text" name="lname" class="form-control" required id="studentLname" placeholder="Last Name"
-                 [(ngModel)]="student.lname" [readonly]="!admin" #studentLname="ngModel">
-          <small [hidden]="studentLname.valid" class="text-danger">
-            Last name is required.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="studentNotes">Notes</label>
-          <textarea type="text" name="notes" [readonly]="!admin" class="form-control" id="studentNotes"
-                    placeholder="Write any special notes about the student here (optional)"
-                    [(ngModel)]="student.notes"></textarea>
-        </div>
-        <p-footer *ngIf="admin === true">
-          <button type="submit" pButton icon="fa-check"
-                  [disabled]="!studentDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newStudent === false" type="button" pButton icon="fa-close"
-                  (click)="confirmDeleteStudent(student._id)" label="Delete"></button>
-        </p-footer>
-      </p-dialog>
-    </form>
-
-    <form *ngIf="guardian" #guardianDetailsForm="ngForm" (ngSubmit)="saveGuardian(guardian)">
-      <p-dialog header="Guardian Details" [(visible)]="displayGuardianDialog" [responsive]="true" showEffect="fade"
-                [modal]="true" [width]="550" [resizable]="false">
-        <!--[modal]="true" [minWidth]="278" [width]="550" [minHeight]="684" [height]="820">-->
-        <app-error-alert [status]="guardianStatus"></app-error-alert>
-
-        <div class="form-group">
-          <label for="guardianFname">First Name</label>
-          <input type="text" name="fname" class="form-control" required id="guardianFname" placeholder="First Name"
-                 [(ngModel)]="guardian.fname" [readonly]="!admin" #guardianFname="ngModel">
-          <small [hidden]="guardianFname.valid" class="text-danger">
-            First name is required.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianMi">Middle Initial</label>
-          <input type="text" name="mi" class="form-control" id="guardianMi" placeholder="Middle Initial"
-                 [(ngModel)]="guardian.mi" [readonly]="!admin" #guardianMi="ngModel" maxlength="1">
-          <small [hidden]="guardianMi.valid" class="text-danger">
-            Maximum 1 character.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianLname">Last Name</label>
-          <input type="text" name="lname" class="form-control" required id="guardianLname" placeholder="Last Name"
-                 [(ngModel)]="guardian.lname" [readonly]="!admin" #guardianLname="ngModel">
-          <small [hidden]="guardianLname.valid" class="text-danger">
-            Last name is required.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianRelationship">Relationship</label>
-          <select name="relationship" class="custom-select" required id="guardianRelationship"
-                  [(ngModel)]="guardian.relationship" [disabled]="!admin" #guardianRelationship="ngModel">
-            <option></option>
-            <option value="Father">Father</option>
-            <option value="Mother">Mother</option>
-            <option value="Grandfather">Grandfather</option>
-            <option value="Grandmother">Grandmother</option>
-            <option value="Stepfather">Stepfather</option>
-            <option value="Stepmother">Stepmother</option>
-            <option value="Aunt">Aunt</option>
-            <option value="Uncle">Uncle</option>
-            <option value="Neighbor">Neighbor</option>
-            <option value="Other">Other</option>
-          </select>
-          <small [hidden]="guardianRelationship.valid || !admin" class="text-danger">
-            Relationship is required.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianPrimPhone">Primary Phone</label>
-          <input type="text" name="primPhone" class="form-control" required id="guardianPrimPhone"
-                 placeholder="+1 (123) 456-7890" [readonly]="!admin"
-                 pattern="\+\d \(\d{3}\) \d{3}-\d{4}" [textMask]="{mask: mask}" [(ngModel)]="guardian.primPhone"
-                 #guardianPrimPhone="ngModel">
-          <small [hidden]="guardianPrimPhone.valid" class="text-danger">
-            Primary phone is required (must match pattern +1 (111) 111-1111).
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianSecPhone">Secondary Phone</label>
-          <input type="text" name="secPhone" class="form-control" id="guardianSecPhone"
-                 placeholder="+1 (123) 456-7890 (optional)" [readonly]="!admin"
-                 pattern="\+\d \(\d{3}\) \d{3}-\d{4}" [textMask]="{mask: mask}" [(ngModel)]="guardian.secPhone"
-                 #guardianSecPhone="ngModel">
-          <small [hidden]="guardianSecPhone.valid" class="text-danger">
-            Must match pattern +1 (111) 111-1111.
-          </small>
-        </div>
-        <div class="form-group">
-          <label for="guardianEmail">Email</label>
-          <input type="text" name="email" class="form-control" required id="guardianEmail" placeholder="Email"
-                 pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
-                 [(ngModel)]="guardian.email" [readonly]="!admin" #guardianEmail="ngModel">
-          <small [hidden]="guardianEmail.valid" class="text-danger">
-            Email address is required (must match pattern example@example.com).
-          </small>
-        </div>
-        <p-footer *ngIf="admin === true">
-          <button type="submit" pButton icon="fa-check"
-                  [disabled]="!guardianDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newGuardian === false" type="button" pButton icon="fa-close"
-                  (click)="confirmDeleteGuardian(guardian._id)" label="Delete"></button>
-        </p-footer>
-      </p-dialog>
-    </form>
-    <p-confirmDialog></p-confirmDialog>
-  </div>
+    </p-dialog>
+  </form>
+  <p-confirmDialog></p-confirmDialog>
+  <!--</div>-->
   <div *ngIf="admin === true" class="row justify-content-md-center">
     <div class="col col-lg-2">
       <button *ngIf="admin === true" type="button" class="btn btn-danger" (click)="confirmDeleteFamily()">

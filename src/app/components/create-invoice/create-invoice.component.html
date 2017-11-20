@@ -1,6 +1,5 @@
 <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-12">
+  <app-context-help [pageName]="'create-invoice'"></app-context-help>
       <app-error-alert [status]="familiesStatus"></app-error-alert>
       <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
         <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -12,8 +11,6 @@
         <p-header>Families</p-header>
         <p-column field="familyName" header="Family Name"></p-column>
       </p-dataTable>
-    </div>
-  </div>
   <br>
   <app-error-alert [status]="invoiceStatus"></app-error-alert>
   <app-success-alert [status]="invoiceStatus"></app-success-alert>
@@ -30,7 +27,7 @@
                     ngModel></p-calendar>
       </div>
       <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">
-        <i class="fa fa-check"></i>
+        <i class="fa fa-plus"></i>
         Create All Invoices
       </button>
     </form>

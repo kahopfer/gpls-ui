@@ -53,6 +53,6 @@ export class CheckOutComponent implements OnInit {
     for(let studentIndex in this.selectedStudents) {
       idArray.push(this.selectedStudents[studentIndex]._id);
     }
-    this.router.navigate(['check-out-details'], {queryParams: {id: [idArray]}});
+    this.router.navigate(['sign-out-details'], {queryParams: {id: [idArray]}});
   }
 }

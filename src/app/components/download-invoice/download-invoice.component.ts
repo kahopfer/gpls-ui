@@ -45,11 +45,11 @@ export class DownloadInvoiceComponent implements OnInit {
         doc.text(phoneNumber, 10, 25);
         doc.text(website, 10, 30);
         doc.text(federalTaxID, 10, 35);
-        doc.text('Check In', 10, 60);
-        doc.text('Check Out', 60, 60);
+        doc.text('Sign In Time', 10, 60);
+        doc.text('Sign Out Time', 60, 60);
         doc.text('Service Type', 105, 60);
-        doc.text('Dropped Off By', 155, 60);
-        doc.text('Picked Up By', 185, 60);
+        doc.text('Signed In By', 155, 60);
+        doc.text('Signed Out By', 185, 60);
         doc.text('Early Drop-off/Late Arrival', 215, 60);
         doc.text('Amount', 260, 60);
 

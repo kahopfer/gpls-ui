@@ -170,7 +170,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
       Promise.all(updateStudentPromiseArray).then(() => {
         this.studentsStatus.success = true;
-        this.router.navigate(['/check-in']);
+        this.router.navigate(['/sign-in']);
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);

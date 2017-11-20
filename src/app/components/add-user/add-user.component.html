@@ -1,7 +1,8 @@
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col-md-8 col-md-offset-2">
-      <h2>Add a New User</h2>
+      <app-context-help [pageName]="'add-user'"></app-context-help>
+      <h2>Create a New User</h2>
       <br>
       <app-error-alert [status]="createUserStatus"></app-error-alert>
       <br>
@@ -25,7 +26,7 @@
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" name="username" class="form-control" required id="username" placeholder="Username"
-                 [(ngModel)]="username" #userUsername="ngModel">
+                 [(ngModel)]="username" #userUsername="ngModel" maxlength="20">
           <small [hidden]="userUsername.valid" class="text-danger">
             Username is required.
           </small>
@@ -33,7 +34,7 @@
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" name="password" class="form-control" required id="password" placeholder="Password"
-                 [(ngModel)]="password" #userPassword="ngModel" minlength="8" pPassword>
+                 [(ngModel)]="password" #userPassword="ngModel" minlength="8" maxlength="20" pPassword>
           <small [hidden]="userPassword.valid" class="text-danger">
             Password is required (minimum 8 characters).
           </small>
@@ -46,7 +47,7 @@
         </div>
         <button type="submit" class="btn btn-primary" [disabled]="!createUserForm.form.valid">
           <i class="fa fa-check"></i>
-          Create
+          Save
         </button>
         <button type="button" class="btn btn-secondary" (click)="cancel()">
           <i class="fa fa-ban"></i>

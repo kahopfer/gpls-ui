@@ -53,6 +53,6 @@ export class CheckInComponent implements OnInit {
     for(let studentIndex in this.selectedStudents) {
       idArray.push(this.selectedStudents[studentIndex]._id);
     }
-    this.router.navigate(['check-in-details'], {queryParams: {id: [idArray]}});
+    this.router.navigate(['sign-in-details'], {queryParams: {id: [idArray]}});
   }
 }

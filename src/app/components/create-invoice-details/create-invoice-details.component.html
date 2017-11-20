@@ -9,6 +9,7 @@
       </p-dataTable>
     </div>
     <div class="col-6">
+      <app-context-help [pageName]="'create-invoice-details'"></app-context-help>
       <app-error-alert [status]="guardiansStatus"></app-error-alert>
       <p-dataTable [value]="guardians" [loading]="guardiansLoading" loadingIcon="fa-spinner">
         <p-header>Guardians</p-header>
@@ -27,23 +28,23 @@
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
         <p-column field="studentName" header="Student Name"></p-column>
-        <p-column field="checkIn" header="Check In Time">
+        <p-column field="checkIn" header="Sign In Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="checkInBy" header="Checked In By"></p-column>
-        <p-column field="checkOut" header="Check Out Time">
+        <p-column field="checkInBy" header="Signed In By"></p-column>
+        <p-column field="checkOut" header="Sign Out Time">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="checkOutBy" header="Checked Out By"></p-column>
+        <p-column field="checkOutBy" header="Signed Out By"></p-column>
         <p-column field="notes" header="Notes"></p-column>
         <p-column field="serviceType" header="Service Type"></p-column>
         <p-footer>
           <div class="ui-helper-clearfix" style="width:100%">
-            <button type="button" pButton icon="fa-plus" style="float:left"
+            <button type="button" pButton icon="fa-plus" class="ui-button-success" style="float:left"
                     (click)="showDialogToAddLineItem()"
                     label="Add new line item"></button>
           </div>
@@ -75,7 +76,7 @@
           </small>
         </div>
         <div class="form-group">
-          <label for="checkIn">Check In Time</label>
+          <label for="checkIn">Sign In Time</label>
           <br>
           <!--TODO: Maybe allow only time input-->
           <p-calendar name="checkIn" id="checkIn" [(ngModel)]="lineItem.checkIn" #checkIn="ngModel"
@@ -87,7 +88,7 @@
           </small>
         </div>
         <div class="form-group">
-          <label for="checkOut">Check Out Time</label>
+          <label for="checkOut">Sign Out Time</label>
           <br>
           <p-calendar name="checkOut" id="checkOut" [(ngModel)]="lineItem.checkOut"
                       [disabled]="lineItem.extraItem == true" #checkOut="ngModel" [showTime]="true" hourFormat="12"
@@ -98,7 +99,7 @@
           </small>
         </div>
         <div class="form-group">
-          <label for="checkInBy">Dropped Off By</label>
+          <label for="checkInBy">Signed In By</label>
           <select name="checkInBy" class="form-control" [required]="lineItem.extraItem == false" id="checkInBy"
                   [disabled]="lineItem.extraItem == true" [(ngModel)]="lineItem.checkInBy" #checkInBy="ngModel">
             <option></option>
@@ -116,7 +117,7 @@
           </small>
         </div>
         <div class="form-group">
-          <label for="checkOutBy">Picked Up By</label>
+          <label for="checkOutBy">Signed Out By</label>
           <select name="checkOutBy" class="form-control" [required]="lineItem.extraItem == false" id="checkOutBy"
                   [disabled]="lineItem.extraItem == true" [(ngModel)]="lineItem.checkOutBy" #checkOutBy="ngModel">
             <option></option>
@@ -154,7 +155,7 @@
         <p-footer>
           <button type="submit" pButton icon="fa-check"
                   [disabled]="!lineItemDetailsForm.form.valid" label="Save"></button>
-          <button *ngIf="newLineItem === false" type="button" pButton icon="fa-close"
+          <button *ngIf="newLineItem === false" type="button" pButton class="ui-button-danger" icon="fa-close"
                   (click)="confirmDeleteLineItem(lineItem._id)" label="Delete"></button>
         </p-footer>
       </p-dialog>
@@ -176,7 +177,7 @@
                     selectionMode="range" readonlyInput="true" [disabledDays]="[0,2,3,4,6]" [showIcon]="true" ngModel></p-calendar>
       </div>
       <button type="submit" class="btn btn-success" [disabled]="!createInvoiceForm.form.valid">
-        <i class="fa fa-check"></i>
+        <i class="fa fa-plus"></i>
         Create Invoice
       </button>
     </form>

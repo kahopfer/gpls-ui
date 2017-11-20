@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col-md-8 col-md-offset-2">
+      <app-context-help [pageName]="'user-profile'"></app-context-help>
       <h2>Current Profile</h2>
       <br>
       <app-error-alert [status]="changePasswordStatus"></app-error-alert>
@@ -23,7 +24,7 @@
           <label for="newPassword">Password</label>
           <input type="password" name="newPassword" class="form-control" required id="newPassword"
                  placeholder="New Password" [(ngModel)]="newPassword" #userNewPassword="ngModel" minlength="8"
-                 pPassword>
+                 maxlength="20" pPassword>
           <small [hidden]="userNewPassword.valid" class="text-danger">
             New password is required (minimum 8 characters).
           </small>

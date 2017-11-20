@@ -1,31 +1,30 @@
 <div class="container">
+  <app-context-help [pageName]="'user-list'"></app-context-help>
   <app-error-alert [status]="usersStatus"></app-error-alert>
-  <div class="row justify-content-md-center">
-    <p-dataTable [value]="users" [(selection)]="selectedUser" [loading]="loading" loadingIcon="fa-spinner">
-      <p-header>Current Users in the System</p-header>
-      <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
-      <p-column field="username" header="Username"></p-column>
-      <p-column field="firstname" header="First Name"></p-column>
-      <p-column field="lastname" header="Last Name"></p-column>
-      <p-column field="authorities" header="Authorities"></p-column>
-      <p-footer>
-        <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">
-          <i class="fa fa-plus"></i>
-          Create a New User
-        </button>
-        <button type="button" class="btn btn-primary" [disabled]="selectedUser == null"
-                (click)="goToResetPasswordForm(selectedUser.username)">
-          <i class="fa fa-repeat"></i>
-          Reset Password for Selected User
-        </button>
-        <button type="button" class="btn btn-danger" [disabled]="selectedUser == null"
-                (click)="confirmDeleteUser(selectedUser.username)">
-          <i class="fa fa-close"></i>
-          Delete Selected User
-        </button>
-        <app-back-button></app-back-button>
-      </p-footer>
-    </p-dataTable>
-    <p-confirmDialog></p-confirmDialog>
-  </div>
+  <p-dataTable [value]="users" [(selection)]="selectedUser" [loading]="loading" loadingIcon="fa-spinner">
+    <p-header>Current Users in the System</p-header>
+    <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
+    <p-column field="username" header="Username"></p-column>
+    <p-column field="firstname" header="First Name"></p-column>
+    <p-column field="lastname" header="Last Name"></p-column>
+    <p-column field="authorities" header="Authorities"></p-column>
+    <p-footer>
+      <button type="button" class="btn btn-success" (click)="goToCreateUserForm()">
+        <i class="fa fa-plus"></i>
+        Create a New User
+      </button>
+      <button type="button" class="btn btn-primary" [disabled]="selectedUser == null"
+              (click)="goToResetPasswordForm(selectedUser.username)">
+        <i class="fa fa-repeat"></i>
+        Reset Password for Selected User
+      </button>
+      <button type="button" class="btn btn-danger" [disabled]="selectedUser == null"
+              (click)="confirmDeleteUser(selectedUser.username)">
+        <i class="fa fa-close"></i>
+        Delete Selected User
+      </button>
+      <app-back-button></app-back-button>
+    </p-footer>
+  </p-dataTable>
+  <p-confirmDialog></p-confirmDialog>
 </div>

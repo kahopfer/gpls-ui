@@ -1,5 +1,7 @@
 <div class="container">
+  <app-context-help [pageName]="'manage-rates'"></app-context-help>
   <h5>Select a rate to edit the value</h5>
+  <br>
   <app-error-alert [status]="nonExtraPriceListStatus"></app-error-alert>
   <p-dataTable [value]="nonExtraPriceList" selectionMode="single" [(selection)]="selectedNonExtraPriceList"
                [loading]="nonExtraPriceListLoading" loadingIcon="fa-spinner" (onRowSelect)="onPriceListSelect($event)"
@@ -26,7 +28,7 @@
     </p-column>
     <p-footer>
       <div class="ui-helper-clearfix" style="width:100%">
-        <button type="button" pButton icon="fa-plus" style="float:left"
+        <button type="button" pButton icon="fa-plus" class="ui-button-success" style="float:left"
                 (click)="showDialogToAddPriceList()"
                 label="Add new extra item"></button>
       </div>
@@ -61,7 +63,7 @@
       <p-footer>
         <button type="submit" pButton icon="fa-check"
                 [disabled]="!priceListForm.form.valid" label="Save"></button>
-        <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton icon="fa-close"
+        <button *ngIf="!newPriceList && priceList.itemExtra" type="button" pButton class="ui-button-danger" icon="fa-close"
                 (click)="confirmDeletePriceList(priceList._id)" label="Delete"></button>
       </p-footer>
     </p-dialog>

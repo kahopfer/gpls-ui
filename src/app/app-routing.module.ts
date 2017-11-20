@@ -26,7 +26,7 @@ import {InvoiceNavbarComponent} from "./components/invoice-navbar/invoice-navbar
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/check-in',
+    redirectTo: '/sign-in',
     pathMatch: 'full'
   },
   {
@@ -69,22 +69,22 @@ const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
-    path: 'check-in',
+    path: 'sign-in',
     component: CheckInComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'check-out',
+    path: 'sign-out',
     component: CheckOutComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'check-in-details',
+    path: 'sign-in-details',
     component: CheckInDetailsComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'check-out-details',
+    path: 'sign-out-details',
     component: CheckOutDetailsComponent,
     canActivate: [AuthGuard]
   },
