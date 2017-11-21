@@ -76,7 +76,6 @@ export class DownloadInvoiceComponent implements OnInit {
 
             doc.setFontSize(10);
 
-            // TODO: Make columns more even
             for (let lineItemIndex in this.lineItems) {
 
               if (currentHeight >= (pageHeight - 40)) {
@@ -99,8 +98,10 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.text(federalTaxID, 13, 40);
 
                 doc.setFontSize(25);
+                doc.setFontType('bold');
                 doc.text('Statement', 155, 19);
 
+                doc.setFontType('normal');
                 doc.setFontSize(10);
 
                 // Rectangle around date
@@ -115,7 +116,7 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.rect(85, 35, 60, 8);
 
                 doc.text('Range', 110, 33);
-                doc.text(invoiceFromDate + ' - ' + invoiceToDate, 98, 40);
+                doc.text(invoiceFromDate + ' - ' + invoiceToDate, 96, 40);
 
                 // Rectangles around guardians
                 doc.rect(10, 50, 135, 7);
