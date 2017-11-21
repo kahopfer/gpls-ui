@@ -89,12 +89,12 @@ export class DownloadInvoiceComponent implements OnInit {
                 // Rectangle around school info
                 doc.rect(10, 10, 65, 33);
 
-                doc.text(schoolName, 15, 15);
-                doc.text(addressLine1, 15, 20);
-                doc.text(addressLine2, 15, 25);
-                doc.text(phoneNumber, 15, 30);
-                doc.text(website, 15, 35);
-                doc.text(federalTaxID, 15, 40);
+                doc.text(schoolName, 13, 15);
+                doc.text(addressLine1, 13, 20);
+                doc.text(addressLine2, 13, 25);
+                doc.text(phoneNumber, 13, 30);
+                doc.text(website, 13, 35);
+                doc.text(federalTaxID, 13, 40);
 
                 doc.setFontSize(25);
                 doc.text('Statement', 155, 19);
@@ -111,7 +111,7 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.rect(10, 50, 133, 7);
                 doc.rect(10, 57, 133, 25);
 
-                doc.text('To:', 15, 55);
+                doc.text('To:', 13, 55);
                 let toText: string = '';
                 for (let guardianIndex in this.guardians) {
                   if (+guardianIndex === this.guardians.length - 1) {
@@ -121,7 +121,7 @@ export class DownloadInvoiceComponent implements OnInit {
                   }
                 }
                 let splitToText = doc.splitTextToSize(toText, 125);
-                doc.text(splitToText, 15, 62);
+                doc.text(splitToText, 13, 62);
 
                 // Rectangles around amount
                 doc.rect(160, 50, 30, 7);
@@ -132,31 +132,31 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.text(totalCost, 169, 62);
 
 
-                doc.rect(10, 95, 25, 18);
-                doc.text('Student', 15, 105);
+                doc.rect(10, 95, 35, 18);
+                doc.text('Student', 13, 105);
 
-                doc.rect(35, 95, 35, 18);
-                doc.text('Sign In Time', 40, 105);
+                doc.rect(45, 95, 35, 18);
+                doc.text('Sign In Time', 48, 105);
 
-                doc.rect(70, 95, 35, 18);
-                doc.text('Sign Out Time', 75, 105);
+                doc.rect(80, 95, 35, 18);
+                doc.text('Sign Out Time', 83, 105);
 
-                doc.rect(105, 95, 40, 18);
-                doc.text('Service Type', 110, 105);
+                doc.rect(115, 95, 30, 18);
+                doc.text('Service Type', 118, 105);
 
                 doc.rect(145, 95, 30, 18);
                 let splitEarlyInLateOutFeeHeader = doc.splitTextToSize('Early Drop-off/Late Arrival', 25);
-                doc.text(splitEarlyInLateOutFeeHeader, 150, 101);
+                doc.text(splitEarlyInLateOutFeeHeader, 148, 101);
 
                 doc.rect(175, 95, 25, 18);
-                doc.text('Amount', 180, 105);
+                doc.text('Amount', 178, 105);
 
                 let lineItemRectHeight: number = pageHeight - 135;
 
-                doc.rect(10, 113, 25, lineItemRectHeight);
-                doc.rect(35, 113, 35, lineItemRectHeight);
-                doc.rect(70, 113, 35, lineItemRectHeight);
-                doc.rect(105, 113, 40, lineItemRectHeight);
+                doc.rect(10, 113, 35, lineItemRectHeight);
+                doc.rect(45, 113, 35, lineItemRectHeight);
+                doc.rect(80, 113, 35, lineItemRectHeight);
+                doc.rect(115, 113, 30, lineItemRectHeight);
                 doc.rect(145, 113, 30, lineItemRectHeight);
                 doc.rect(175, 113, 25, lineItemRectHeight);
 
@@ -165,27 +165,27 @@ export class DownloadInvoiceComponent implements OnInit {
 
               currentHeight = startingHeight + (20 * lineItemCount);
 
-              let splitStudentName = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].studentName, 20);
-              doc.text(splitStudentName, 15, currentHeight);
+              let splitStudentName = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].studentName, 30);
+              doc.text(splitStudentName, 13, currentHeight);
 
               let splitCheckInTime = doc.splitTextToSize(new Date(this.lineItemsToDisplay[lineItemIndex].checkIn).toLocaleString() +
                 ' by ' + this.lineItemsToDisplay[lineItemIndex].checkInBy, 30);
-              doc.text(splitCheckInTime, 40, currentHeight);
+              doc.text(splitCheckInTime, 48, currentHeight);
 
               let splitCheckOutTime = doc.splitTextToSize(new Date(this.lineItemsToDisplay[lineItemIndex].checkOut).toLocaleString() +
                 ' by ' + this.lineItemsToDisplay[lineItemIndex].checkOutBy, 30);
-              doc.text(splitCheckOutTime, 75, currentHeight);
+              doc.text(splitCheckOutTime, 83, currentHeight);
 
-              let splitServiceType = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].serviceType, 30);
-              doc.text(splitServiceType, 110, currentHeight);
+              let splitServiceType = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].serviceType, 25);
+              doc.text(splitServiceType, 118, currentHeight);
 
               let earlyInLateOutFee: string = numeral(this.lineItemsToDisplay[lineItemIndex].earlyInLateOutFee).format('($0.00)');
-              let splitEarlyInLateOutFee = doc.splitTextToSize(earlyInLateOutFee, 30);
-              doc.text(splitEarlyInLateOutFee, 150, currentHeight);
+              let splitEarlyInLateOutFee = doc.splitTextToSize(earlyInLateOutFee, 25);
+              doc.text(splitEarlyInLateOutFee, 148, currentHeight);
 
               let lineTotalCost: string = numeral(this.lineItemsToDisplay[lineItemIndex].lineTotalCost).format('($0.00)');
               let splitLineTotalCost = doc.splitTextToSize(lineTotalCost, 20);
-              doc.text(splitLineTotalCost, 180, currentHeight);
+              doc.text(splitLineTotalCost, 178, currentHeight);
 
               lineItemCount = lineItemCount + 1;
             }
