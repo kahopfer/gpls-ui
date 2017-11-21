@@ -325,7 +325,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   }
 
   deactivateStudent(student: Student) {
-    if (this.family.students.length === 1) {
+    if (this.students.length === 1) {
       this.msgs.push({
         severity: 'error',
         summary: 'Error Message',
@@ -378,7 +378,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
   }
 
   deactivateGuardian(guardian: Guardian) {
-    if (this.family.guardians.length === 1) {
+    if (this.guardians.length === 1) {
       this.msgs.push({
         severity: 'error',
         summary: 'Error Message',
@@ -400,6 +400,12 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       } else {
         if (err.status === 404) {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Guardian not found'});
+        } else if (err.status === 400) {
+          this.msgs.push({
+            severity: 'error',
+            summary: 'Error Message',
+            detail: 'A family must have at least 1 active guardian'
+          });
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
           this.msgs.push({

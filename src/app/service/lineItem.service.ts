@@ -23,9 +23,7 @@ export class LineItemService {
   }
 
   getLineItemsByFamily(familyID: string): Promise<LineItem[]> {
-    // TODO: Change back
     const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull&invoiced=null`;
-    // const url = `${this.gplsApiUrl}/lineItems?familyID=${familyID}&checkedOut=notNull`;
     return this.http.get<LineItem[]>(url, {headers: this.headers}).toPromise();
   }
 

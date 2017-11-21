@@ -75,7 +75,6 @@
         <div class="form-group">
           <label for="checkIn">Sign In Time</label>
           <br>
-          <!--TODO: Maybe allow only time input-->
           <p-calendar name="checkIn" id="checkIn" [(ngModel)]="lineItem.checkIn" #checkIn="ngModel"
                       [disabled]="lineItem.extraItem == true" [showTime]="true" hourFormat="12"
                       [required]="lineItem.extraItem == false" [showIcon]="true" [disabledDays]="[0,6]"></p-calendar>

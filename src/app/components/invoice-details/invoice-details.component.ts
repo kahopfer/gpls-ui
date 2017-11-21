@@ -53,6 +53,7 @@ export class InvoiceDetailsComponent implements OnInit {
     this.getInvoices(this.route.snapshot.params['id']);
   }
 
+  // TODO: Decide whether we want ALL students and guardians to show up here or not
   getStudentsAndGuardians(familyUnitID: string) {
     let getStudentsPromiseArray: Promise<Student>[] = [];
     let getGuardiansPromiseArray: Promise<Guardian>[] = [];

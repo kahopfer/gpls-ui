@@ -16,7 +16,6 @@ import {Family} from "../../models/family";
   styleUrls: ['./download-invoice.component.css']
 })
 export class DownloadInvoiceComponent implements OnInit {
-  //TODO: Maybe add students and guardians as input variables
   @Input() selectedInvoice: Invoice;
   lineItems: LineItem[] = [];
   lineItemsToDisplay: any[] = [];
@@ -44,13 +43,14 @@ export class DownloadInvoiceComponent implements OnInit {
 
     this.familyService.getFamily(this.selectedInvoice.familyID).then(family => {
       this.family = family;
-      let getGuardiansPromiseArray: Promise<Guardian>[] = [];
+      //TODO: Decide whether invoices should pull all guardians or only active ones
+      // let getGuardiansPromiseArray: Promise<Guardian>[] = [];
+      //
+      // for (let guardianIndex in this.family.guardians) {
+      //   getGuardiansPromiseArray.push(this.guardianService.getGuardian(this.family.guardians[guardianIndex]));
+      // }
 
-      for (let guardianIndex in this.family.guardians) {
-        getGuardiansPromiseArray.push(this.guardianService.getGuardian(this.family.guardians[guardianIndex]));
-      }
-
-      Promise.all(getGuardiansPromiseArray).then(guardians => {
+      this.guardianService.getGuardians(this.family._id).then(guardians => {
         this.lineItemService.getLineItemsByInvoiceID(id).then(lineItems => {
           this.lineItems = lineItems['lineItems'];
           let individualStudentPromiseArray: Promise<any>[] = [];
@@ -64,7 +64,7 @@ export class DownloadInvoiceComponent implements OnInit {
                 students[studentIndex]['lname'];
             }
 
-            this.guardians = guardians;
+            this.guardians = guardians['guardians'];
             let invoiceDate: string = new Date(this.selectedInvoice.invoiceDate).toLocaleDateString();
 
             let startingHeight: number = 100;
@@ -135,30 +135,30 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.rect(10, 95, 25, 18);
                 doc.text('Student', 15, 105);
 
-                doc.rect(35, 95, 30, 18);
+                doc.rect(35, 95, 35, 18);
                 doc.text('Sign In Time', 40, 105);
 
-                doc.rect(65, 95, 33, 18);
-                doc.text('Sign Out Time', 70, 105);
+                doc.rect(70, 95, 35, 18);
+                doc.text('Sign Out Time', 75, 105);
 
-                doc.rect(98, 95, 37, 18);
-                doc.text('Service Type', 103, 105);
+                doc.rect(105, 95, 40, 18);
+                doc.text('Service Type', 110, 105);
 
-                doc.rect(135, 95, 30, 18);
+                doc.rect(145, 95, 30, 18);
                 let splitEarlyInLateOutFeeHeader = doc.splitTextToSize('Early Drop-off/Late Arrival', 25);
-                doc.text(splitEarlyInLateOutFeeHeader, 140, 101);
+                doc.text(splitEarlyInLateOutFeeHeader, 150, 101);
 
-                doc.rect(165, 95, 35, 18);
-                doc.text('Amount', 170, 105);
+                doc.rect(175, 95, 25, 18);
+                doc.text('Amount', 180, 105);
 
                 let lineItemRectHeight: number = pageHeight - 135;
 
                 doc.rect(10, 113, 25, lineItemRectHeight);
-                doc.rect(35, 113, 30, lineItemRectHeight);
-                doc.rect(65, 113, 33, lineItemRectHeight);
-                doc.rect(98, 113, 37, lineItemRectHeight);
-                doc.rect(135, 113, 30, lineItemRectHeight);
-                doc.rect(165, 113, 35, lineItemRectHeight);
+                doc.rect(35, 113, 35, lineItemRectHeight);
+                doc.rect(70, 113, 35, lineItemRectHeight);
+                doc.rect(105, 113, 40, lineItemRectHeight);
+                doc.rect(145, 113, 30, lineItemRectHeight);
+                doc.rect(175, 113, 25, lineItemRectHeight);
 
                 doc.text(100, 285, 'Page ' + pageNumber);
               }
@@ -174,21 +174,18 @@ export class DownloadInvoiceComponent implements OnInit {
 
               let splitCheckOutTime = doc.splitTextToSize(new Date(this.lineItemsToDisplay[lineItemIndex].checkOut).toLocaleString() +
                 ' by ' + this.lineItemsToDisplay[lineItemIndex].checkOutBy, 30);
-              doc.text(splitCheckOutTime, 70, currentHeight);
+              doc.text(splitCheckOutTime, 75, currentHeight);
 
               let splitServiceType = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].serviceType, 30);
-              doc.text(splitServiceType, 103, currentHeight);
-
-              // let splitCheckOutBy = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].checkOutBy, 20);
-              // doc.text(splitCheckOutBy, 120, currentHeight);
+              doc.text(splitServiceType, 110, currentHeight);
 
               let earlyInLateOutFee: string = numeral(this.lineItemsToDisplay[lineItemIndex].earlyInLateOutFee).format('($0.00)');
               let splitEarlyInLateOutFee = doc.splitTextToSize(earlyInLateOutFee, 30);
-              doc.text(splitEarlyInLateOutFee, 140, currentHeight);
+              doc.text(splitEarlyInLateOutFee, 150, currentHeight);
 
               let lineTotalCost: string = numeral(this.lineItemsToDisplay[lineItemIndex].lineTotalCost).format('($0.00)');
               let splitLineTotalCost = doc.splitTextToSize(lineTotalCost, 20);
-              doc.text(splitLineTotalCost, 170, currentHeight);
+              doc.text(splitLineTotalCost, 180, currentHeight);
 
               lineItemCount = lineItemCount + 1;
             }
