@@ -37,7 +37,7 @@ import {GuardianService} from "./service/guardian.service";
 import {UserService} from "./service/user.service";
 import {CreateInvoiceDetailsComponent} from "./components/create-invoice-details/create-invoice-details.component";
 import {CreateInvoiceComponent} from "./components/create-invoice/create-invoice.component";
-import {OrderModule} from "ngx-order-pipe";
+import {OrderModule, OrderPipe} from "ngx-order-pipe";
 import {LineItemService} from "./service/lineItem.service";
 import {PriceListService} from "./service/priceList.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
@@ -120,6 +120,7 @@ import {InactiveFamilyDetailsComponent} from './components/inactive-family-detai
     PriceListService,
     InvoiceService,
     ConfirmationService,
+    OrderPipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

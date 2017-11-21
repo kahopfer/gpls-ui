@@ -9,6 +9,7 @@ import {GuardianService} from "../../service/guardian.service";
 import {Guardian} from "../../models/guardian";
 import * as numeral from 'numeral';
 import {Family} from "../../models/family";
+import {OrderPipe} from "ngx-order-pipe";
 
 @Component({
   selector: 'app-download-invoice',
@@ -23,7 +24,8 @@ export class DownloadInvoiceComponent implements OnInit {
   family: Family;
 
   constructor(private lineItemService: LineItemService, private familyService: FamilyService,
-              private studentService: StudentService, private guardianService: GuardianService) {
+              private studentService: StudentService, private guardianService: GuardianService,
+              private orderPipe: OrderPipe) {
   }
 
   ngOnInit() {
@@ -53,6 +55,7 @@ export class DownloadInvoiceComponent implements OnInit {
       this.guardianService.getGuardians(this.family._id).then(guardians => {
         this.lineItemService.getLineItemsByInvoiceID(id).then(lineItems => {
           this.lineItems = lineItems['lineItems'];
+          this.orderPipe.transform(this.lineItems, 'checkIn');
           let individualStudentPromiseArray: Promise<any>[] = [];
           for (let lineItemIndex in this.lineItems) {
             individualStudentPromiseArray.push(this.studentService.getStudent(this.lineItems[lineItemIndex].studentID));
