@@ -66,6 +66,8 @@ export class DownloadInvoiceComponent implements OnInit {
 
             this.guardians = guardians['guardians'];
             let invoiceDate: string = new Date(this.selectedInvoice.invoiceDate).toLocaleDateString();
+            let invoiceFromDate: string = new Date(this.selectedInvoice.invoiceFromDate).toLocaleDateString();
+            let invoiceToDate: string = new Date(this.selectedInvoice.invoiceToDate).toLocaleDateString();
 
             let startingHeight: number = 100;
             let currentHeight: number = startingHeight;
@@ -101,15 +103,23 @@ export class DownloadInvoiceComponent implements OnInit {
 
                 doc.setFontSize(10);
 
+                // Rectangle around date
                 doc.rect(160, 28, 30, 7);
                 doc.rect(160, 35, 30, 8);
 
-                doc.text('Date', 170, 33);
-                doc.text(invoiceDate, 165, 40);
+                doc.text('Date', 171, 33);
+                doc.text(invoiceDate, 166, 40);
+
+                // Rectangle around invoice range
+                doc.rect(85, 28, 60, 7);
+                doc.rect(85, 35, 60, 8);
+
+                doc.text('Range', 110, 33);
+                doc.text(invoiceFromDate + ' - ' + invoiceToDate, 98, 40);
 
                 // Rectangles around guardians
-                doc.rect(10, 50, 133, 7);
-                doc.rect(10, 57, 133, 25);
+                doc.rect(10, 50, 135, 7);
+                doc.rect(10, 57, 135, 25);
 
                 doc.text('To:', 13, 55);
                 let toText: string = '';
@@ -127,7 +137,7 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.rect(160, 50, 30, 7);
                 doc.rect(160, 57, 30, 8);
 
-                doc.text('Amount Due:', 165, 55);
+                doc.text('Amount Due', 166, 55);
                 let totalCost: string = numeral(this.selectedInvoice.totalCost).format('($0.00)');
                 doc.text(totalCost, 169, 62);
 
