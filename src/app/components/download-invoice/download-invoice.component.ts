@@ -10,6 +10,7 @@ import {Guardian} from "../../models/guardian";
 import * as numeral from 'numeral';
 import {Family} from "../../models/family";
 import {OrderPipe} from "ngx-order-pipe";
+import {Message} from "primeng/primeng";
 
 @Component({
   selector: 'app-download-invoice',
@@ -22,6 +23,7 @@ export class DownloadInvoiceComponent implements OnInit {
   lineItemsToDisplay: any[] = [];
   guardians: Guardian[] = [];
   family: Family;
+  msgs: Message[] = [];
 
   constructor(private lineItemService: LineItemService, private familyService: FamilyService,
               private studentService: StudentService, private guardianService: GuardianService,
@@ -209,30 +211,38 @@ export class DownloadInvoiceComponent implements OnInit {
           }).catch(err => {
             if (err.error instanceof Error) {
               console.log('An error occurred:', err.error.message);
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the students'});
             }
           });
         }).catch(err => {
           if (err.error instanceof Error) {
             console.log('An error occurred:', err.error.message);
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             console.log(err);
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the line items'});
           }
         });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the guardians'});
         }
       })
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the family'});
       }
     })
   }
