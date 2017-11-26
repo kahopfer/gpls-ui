@@ -83,7 +83,7 @@ export class DownloadInvoiceComponent implements OnInit {
 
             for (let lineItemIndex in this.lineItems) {
 
-              if (currentHeight >= (pageHeight - 40)) {
+              if (currentHeight >= (pageHeight - 60)) {
                 doc.addPage();
                 currentHeight = 0;
                 startingHeight = 100;
@@ -104,7 +104,7 @@ export class DownloadInvoiceComponent implements OnInit {
 
                 doc.setFontSize(25);
                 doc.setFontType('bold');
-                doc.text('Statement', 155, 19);
+                doc.text('Statement', 154, 19);
 
                 doc.setFontType('normal');
                 doc.setFontSize(10);
@@ -148,32 +148,33 @@ export class DownloadInvoiceComponent implements OnInit {
                 doc.text(totalCost, 169, 62);
 
 
-                doc.rect(10, 95, 35, 18);
-                doc.text('Student', 13, 105);
+                doc.rect(10, 95, 25, 18);
+                doc.text('Date', 13, 105);
 
-                doc.rect(45, 95, 35, 18);
-                doc.text('Sign In Time', 48, 105);
+                doc.rect(35, 95, 35, 18);
+                doc.text('Student', 38, 105);
 
-                doc.rect(80, 95, 35, 18);
-                doc.text('Sign Out Time', 83, 105);
+                doc.rect(70, 95, 30, 18);
+                doc.text('Service Type', 73, 105);
 
-                doc.rect(115, 95, 30, 18);
-                doc.text('Service Type', 118, 105);
+                doc.rect(100, 95, 50, 18);
+                let splitSignInSignOutHeader = doc.splitTextToSize('Sign In/Sign Out Times', 45);
+                doc.text(splitSignInSignOutHeader, 103, 105);
 
-                doc.rect(145, 95, 30, 18);
-                let splitEarlyInLateOutFeeHeader = doc.splitTextToSize('Early Drop-off/Late Arrival', 25);
-                doc.text(splitEarlyInLateOutFeeHeader, 148, 101);
+                doc.rect(150, 95, 25, 18);
+                let splitEarlyInLateOutFeeHeader = doc.splitTextToSize('Early Drop\n-off/Late Arrival', 20);
+                doc.text(splitEarlyInLateOutFeeHeader, 153, 101);
 
                 doc.rect(175, 95, 25, 18);
                 doc.text('Amount', 178, 105);
 
                 let lineItemRectHeight: number = pageHeight - 135;
 
-                doc.rect(10, 113, 35, lineItemRectHeight);
-                doc.rect(45, 113, 35, lineItemRectHeight);
-                doc.rect(80, 113, 35, lineItemRectHeight);
-                doc.rect(115, 113, 30, lineItemRectHeight);
-                doc.rect(145, 113, 30, lineItemRectHeight);
+                doc.rect(10, 113, 25, lineItemRectHeight);
+                doc.rect(35, 113, 35, lineItemRectHeight);
+                doc.rect(70, 113, 30, lineItemRectHeight);
+                doc.rect(100, 113, 50, lineItemRectHeight);
+                doc.rect(150, 113, 25, lineItemRectHeight);
                 doc.rect(175, 113, 25, lineItemRectHeight);
 
                 doc.text(100, 285, 'Page ' + pageNumber);
@@ -181,23 +182,24 @@ export class DownloadInvoiceComponent implements OnInit {
 
               currentHeight = startingHeight + (20 * lineItemCount);
 
+              let lineItemDate: string = new Date(this.lineItems[lineItemIndex].checkIn).toLocaleDateString();
+              let splitLineItemDate = doc.splitTextToSize(lineItemDate, 20);
+              doc.text(splitLineItemDate, 13, currentHeight);
+
               let splitStudentName = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].studentName, 30);
-              doc.text(splitStudentName, 13, currentHeight);
-
-              let splitCheckInTime = doc.splitTextToSize(new Date(this.lineItemsToDisplay[lineItemIndex].checkIn).toLocaleString() +
-                ' by ' + this.lineItemsToDisplay[lineItemIndex].checkInBy, 30);
-              doc.text(splitCheckInTime, 48, currentHeight);
-
-              let splitCheckOutTime = doc.splitTextToSize(new Date(this.lineItemsToDisplay[lineItemIndex].checkOut).toLocaleString() +
-                ' by ' + this.lineItemsToDisplay[lineItemIndex].checkOutBy, 30);
-              doc.text(splitCheckOutTime, 83, currentHeight);
+              doc.text(splitStudentName, 38, currentHeight);
 
               let splitServiceType = doc.splitTextToSize(this.lineItemsToDisplay[lineItemIndex].serviceType, 25);
-              doc.text(splitServiceType, 118, currentHeight);
+              doc.text(splitServiceType, 73, currentHeight);
+
+              let splitSignInAndOutTime = doc.splitTextToSize('In at ' + new Date(this.lineItemsToDisplay[lineItemIndex].checkIn).toLocaleTimeString() +
+                '\nby ' + this.lineItemsToDisplay[lineItemIndex].checkInBy + '\nOut at ' + new Date(this.lineItemsToDisplay[lineItemIndex].checkOut).toLocaleTimeString() +
+                '\nby ' + this.lineItemsToDisplay[lineItemIndex].checkOutBy, 45);
+              doc.text(splitSignInAndOutTime, 103, currentHeight);
 
               let earlyInLateOutFee: string = numeral(this.lineItemsToDisplay[lineItemIndex].earlyInLateOutFee).format('($0.00)');
-              let splitEarlyInLateOutFee = doc.splitTextToSize(earlyInLateOutFee, 25);
-              doc.text(splitEarlyInLateOutFee, 148, currentHeight);
+              let splitEarlyInLateOutFee = doc.splitTextToSize(earlyInLateOutFee, 20);
+              doc.text(splitEarlyInLateOutFee, 153, currentHeight);
 
               let lineTotalCost: string = numeral(this.lineItemsToDisplay[lineItemIndex].lineTotalCost).format('($0.00)');
               let splitLineTotalCost = doc.splitTextToSize(lineTotalCost, 20);
