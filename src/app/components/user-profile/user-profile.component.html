@@ -25,7 +25,7 @@
                  placeholder="New Password" [(ngModel)]="newPassword" #userNewPassword="ngModel" minlength="8"
                  maxlength="20" pPassword>
           <small [hidden]="userNewPassword.valid" class="text-danger">
-            New password is required (minimum 8 characters).
+            New password is required (minimum 8 characters, maximum 20 characters).
           </small>
         </div>
         <button type="submit" class="btn btn-primary" [disabled]="!changePasswordForm.form.valid">

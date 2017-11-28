@@ -30,7 +30,7 @@ export class EnrollFamilyComponent implements OnInit {
 
   ngOnInit() {
     this.enrollFamilyForm = this.formBuilder.group({
-      familyName: ['', Validators.required],
+      familyName: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
       students: this.formBuilder.array([
         this.initStudent()
       ]),
@@ -42,9 +42,9 @@ export class EnrollFamilyComponent implements OnInit {
 
   initStudent() {
     return this.formBuilder.group({
-      fname: ['', Validators.required],
-      lname: ['', Validators.required],
-      mi: ['', Validators.maxLength(1)],
+      fname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
+      lname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
+      mi: ['', [Validators.maxLength(1), Validators.pattern(/[A-Za-z]/)]],
       // birthDate: ['', Validators.required],
       notes: ['']
     })
@@ -52,9 +52,9 @@ export class EnrollFamilyComponent implements OnInit {
 
   initGuardian() {
     return this.formBuilder.group({
-      fname: ['', Validators.required],
-      lname: ['', Validators.required],
-      mi: ['', Validators.maxLength(1)],
+      fname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
+      lname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
+      mi: ['', [Validators.maxLength(1), Validators.pattern(/[A-Za-z]/)]],
       relationship: ['', Validators.required],
       primPhone: ['', [Validators.required, Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],
       secPhone: ['', [Validators.pattern("\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4}")]],

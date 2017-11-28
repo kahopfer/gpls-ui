@@ -18,10 +18,10 @@
         <div class="form-group">
           <label for="familyname">Family Name</label>
           <input type="text" name="familyname" class="form-control" required id="familyname" placeholder="Family Name"
-                 value="{{family.familyName}}"
+                 value="{{family.familyName}}" pattern="[A-Za-z'-]+" maxlength="35"
                  [(ngModel)]="editableFamily.familyName" #familyFamilyName="ngModel">
           <small *ngIf="!familyFamilyName.valid" class="text-danger">
-            Family name is required.
+            Family name is required (cannot contain any numbers or special characters, maximum 35 characters).
           </small>
         </div>
         <button type="submit" class="btn btn-primary" [disabled]="!updateFamilyForm.form.valid">
@@ -104,25 +104,28 @@
       <div class="form-group">
         <label for="studentFname">First Name</label>
         <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"
-               [(ngModel)]="student.fname" [readonly]="!admin || !student.active" #studentFname="ngModel">
+               [(ngModel)]="student.fname" pattern="[A-Za-z'-]+" maxlength="35" [readonly]="!admin || !student.active"
+               #studentFname="ngModel">
         <small [hidden]="studentFname.valid" class="text-danger">
-          First name is required.
+          First name is required (cannot contain any numbers or special characters, maximum 35 characters).
         </small>
       </div>
       <div class="form-group">
         <label for="studentMi">Middle Initial</label>
         <input type="text" name="mi" class="form-control" id="studentMi" placeholder="Middle Initial"
-               [(ngModel)]="student.mi" [readonly]="!admin || !student.active" maxlength="1" #studentMi="ngModel">
+               [(ngModel)]="student.mi" pattern="[A-Za-z]" [readonly]="!admin || !student.active" maxlength="1"
+               #studentMi="ngModel">
         <small [hidden]="studentMi.valid" class="text-danger">
-          Maximum 1 character.
+          Cannot contain any numbers or special characters, maximum 1 character.
         </small>
       </div>
       <div class="form-group">
         <label for="studentLname">Last Name</label>
         <input type="text" name="lname" class="form-control" required id="studentLname" placeholder="Last Name"
-               [(ngModel)]="student.lname" [readonly]="!admin || !student.active" #studentLname="ngModel">
+               [(ngModel)]="student.lname" pattern="[A-Za-z'-]+" maxlength="35" [readonly]="!admin || !student.active"
+               #studentLname="ngModel">
         <small [hidden]="studentLname.valid" class="text-danger">
-          Last name is required.
+          Last name is required (cannot contain any numbers or special characters, maximum 35 characters).
         </small>
       </div>
       <div class="form-group">
@@ -150,25 +153,28 @@
       <div class="form-group">
         <label for="guardianFname">First Name</label>
         <input type="text" name="fname" class="form-control" required id="guardianFname" placeholder="First Name"
-               [(ngModel)]="guardian.fname" [readonly]="!admin || !guardian.active" #guardianFname="ngModel">
+               [(ngModel)]="guardian.fname" pattern="[A-Za-z'-]+" maxlength="35" [readonly]="!admin || !guardian.active"
+               #guardianFname="ngModel">
         <small [hidden]="guardianFname.valid" class="text-danger">
-          First name is required.
+          First name is required (cannot contain any numbers or special characters, maximum 35 characters).
         </small>
       </div>
       <div class="form-group">
         <label for="guardianMi">Middle Initial</label>
         <input type="text" name="mi" class="form-control" id="guardianMi" placeholder="Middle Initial"
-               [(ngModel)]="guardian.mi" [readonly]="!admin || !guardian.active" #guardianMi="ngModel" maxlength="1">
+               [(ngModel)]="guardian.mi" pattern="[A-Za-z]" [readonly]="!admin || !guardian.active"
+               #guardianMi="ngModel" maxlength="1">
         <small [hidden]="guardianMi.valid" class="text-danger">
-          Maximum 1 character.
+          Cannot contain any numbers or special characters, maximum 1 character.
         </small>
       </div>
       <div class="form-group">
         <label for="guardianLname">Last Name</label>
         <input type="text" name="lname" class="form-control" required id="guardianLname" placeholder="Last Name"
-               [(ngModel)]="guardian.lname" [readonly]="!admin || !guardian.active" #guardianLname="ngModel">
+               [(ngModel)]="guardian.lname" pattern="[A-Za-z'-]+" maxlength="35" [readonly]="!admin || !guardian.active"
+               #guardianLname="ngModel">
         <small [hidden]="guardianLname.valid" class="text-danger">
-          Last name is required.
+          Last name is required (cannot contain any numbers or special characters, maximum 35 characters).
         </small>
       </div>
       <div class="form-group">

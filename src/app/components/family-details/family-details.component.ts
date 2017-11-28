@@ -329,7 +329,7 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       this.msgs.push({
         severity: 'error',
         summary: 'Error Message',
-        detail: 'A family must have at least 1 active child'
+        detail: 'A family must have at least 1 active student'
       });
       return;
     }
