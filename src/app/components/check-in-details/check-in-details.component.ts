@@ -172,6 +172,12 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
               summary: 'Error Message',
               detail: 'Missing a required field in the students'
             });
+          } else if (err.status === 409) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Time is overlapping with existing time'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
             this.msgs.push({

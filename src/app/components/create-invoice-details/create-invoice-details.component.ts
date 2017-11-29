@@ -240,6 +240,13 @@ export class CreateInvoiceDetailsComponent implements OnInit {
               summary: 'Error Message',
               detail: 'Check in time must be earlier than check out time'
             });
+          }
+          if (err.status === 409) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Time is overlapping with existing time'
+            });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
             this.msgs.push({
@@ -280,6 +287,12 @@ export class CreateInvoiceDetailsComponent implements OnInit {
               severity: 'error',
               summary: 'Error Message',
               detail: 'Check in time must be earlier than check out time'
+            });
+          } else if (err.status === 409) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Time is overlapping with existing time'
             });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);

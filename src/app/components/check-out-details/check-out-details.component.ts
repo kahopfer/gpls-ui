@@ -227,6 +227,12 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
             } else {
               if (err.status === 400) {
                 this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
+              } else if (err.status === 409) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Time is overlapping with existing time'
+                });
               } else {
                 console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
                 this.msgs.push({
@@ -259,12 +265,20 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
           console.log('An error occurred:', err.error.message);
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while updating the line items'
-          });
+          if (err.status === 409) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Time is overlapping with existing time'
+            });
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'An error occurred while updating the line items'
+            });
+          }
         }
       })
     }).catch(err => {
