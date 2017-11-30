@@ -5,14 +5,14 @@
     <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
     <input #gb type="text" pInputText size="50" placeholder="Global Filter">
   </div>
-  <p-dataTable [value]="students | orderBy: order" [rows]="10" [paginator]="true" [pageLinks]="3"
+  <p-dataTable [value]="students | orderBy: order" [rows]="10" [paginator]="true" [pageLinks]="3" [headerCheckboxToggleAllPages]="true"
                [(selection)]="selectedStudents" [loading]="studentsLoading" loadingIcon="fa-spinner" [globalFilter]="gb"
                #dt>
     <p-header>Select students to sign in</p-header>
     <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
-    <p-column field="fname" header="First Name" [sortable]="true"></p-column>
+    <p-column field="fname" header="First Name" [sortable]="true" [style]="{'word-wrap':'break-word'}"></p-column>
     <!--<p-column field="mi" header="Middle Initial"></p-column>-->
-    <p-column field="lname" header="Last Name" [sortable]="true"></p-column>
+    <p-column field="lname" header="Last Name" [sortable]="true" [style]="{'word-wrap':'break-word'}"></p-column>
     <p-footer>
       <button type="button" class="btn btn-success" [disabled]="selectedStudents.length === 0"
               (click)="goToCheckInDetails()">

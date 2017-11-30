@@ -9,6 +9,6 @@
                [globalFilter]="gb" selectionMode="single" [responsive]="true" [loading]="loading"
                loadingIcon="fa-spinner" (onRowSelect)="onRowSelect($event) " #dt>
     <p-header>Inactive Families</p-header>
-    <p-column field="familyName" header="Family Name"></p-column>
+    <p-column field="familyName" header="Family Name" [style]="{'word-wrap':'break-word'}"></p-column>
   </p-dataTable>
 </div>

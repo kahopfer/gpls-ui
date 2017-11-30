@@ -71,11 +71,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             });
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An unexpected server error occurred'
-            });
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+              }
+            }
           }
         }
       })
@@ -85,15 +93,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         console.log('An error occurred:', err.error.message);
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
-        if (err.status === 400) {
-          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Old password is incorrect'});
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while changing your password'
-          });
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
         }
       }
     })

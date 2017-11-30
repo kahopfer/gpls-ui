@@ -45,9 +45,9 @@
                [loading]="studentsLoading" loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)"
                [metaKeySelection]="false" [responsive]="true">
     <p-header>Students</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="notes" header="Notes"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="notes" header="Notes" [style]="{'word-wrap':'break-word'}"></p-column>
     <p-footer *ngIf="admin === true">
       <div class="ui-helper-clearfix" style="width:100%">
         <button type="button" pButton class="ui-button-success" icon="fa-plus" style="float:left"
@@ -61,9 +61,9 @@
                [(selection)]="selectedStudent" [loading]="inactiveStudentsLoading" loadingIcon="fa-spinner"
                (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false" [responsive]="true">
     <p-header>Inactive Students</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="notes" header="Notes"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="notes" header="Notes" [style]="{'word-wrap':'break-word'}"></p-column>
   </p-dataTable>
   <br>
   <p-tabMenu [model]="guardianItems" [activeItem]="guardianItems[0]"></p-tabMenu>
@@ -71,11 +71,11 @@
                [(selection)]="selectedGuardian" [loading]="guardiansLoading" [metaKeySelection]="false"
                loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
     <p-header>Guardians</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="relationship" header="Relationship"></p-column>
-    <p-column field="primPhone" header="Primary Phone"></p-column>
-    <p-column field="secPhone" header="Secondary Phone"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="relationship" header="Relationship" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="primPhone" header="Primary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="secPhone" header="Secondary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
     <p-footer *ngIf="admin === true">
       <div class="ui-helper-clearfix" style="width:100%">
         <button type="button" pButton class="ui-button-success" icon="fa-plus" style="float:left"
@@ -89,11 +89,11 @@
                [(selection)]="selectedGuardian" [loading]="inactiveGuardiansLoading" [metaKeySelection]="false"
                loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
     <p-header>Inactive Guardians</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="relationship" header="Relationship"></p-column>
-    <p-column field="primPhone" header="Primary Phone"></p-column>
-    <p-column field="secPhone" header="Secondary Phone"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="relationship" header="Relationship" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="primPhone" header="Primary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="secPhone" header="Secondary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
   </p-dataTable>
   <br>
 
@@ -131,7 +131,7 @@
       <div class="form-group">
         <label for="studentNotes">Notes</label>
         <textarea type="text" name="notes" [readonly]="!admin || !student.active" class="form-control" id="studentNotes"
-                  placeholder="Write any special notes about the student here (optional)"
+                  placeholder="Write any special notes about the student here (optional)" maxlength="140"
                   [(ngModel)]="student.notes"></textarea>
       </div>
       <p-footer *ngIf="admin === true">

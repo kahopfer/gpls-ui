@@ -40,7 +40,7 @@
             <div class="form-group">
               <label for="lineItemNotes-{{i}}">Notes</label>
               <textarea name="lineItemNotes-{{i}}" type="text" class="form-control" id="lineItemNotes-{{i}}"
-                        #lineItemNotes ngModel
+                        #lineItemNotes ngModel maxlength="140"
                         placeholder="Write any notes about {{student.fname}} {{student.lname}}'s day here (optional)"></textarea>
             </div>
             <div *ngIf="students.length > 1 && i !== students.length - 1">

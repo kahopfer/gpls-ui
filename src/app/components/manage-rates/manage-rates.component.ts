@@ -36,7 +36,7 @@ export class ManageRatesComponent implements OnInit {
   getNonExtraPriceList() {
     this.nonExtraPriceListLoading = true;
     this.priceListService.getNonExtraPriceList().then(priceList => {
-      this.nonExtraPriceList = priceList['priceLists'];
+      this.nonExtraPriceList = priceList['data']['priceLists'];
       this.nonExtraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -44,11 +44,19 @@ export class ManageRatesComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the price list'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.nonExtraPriceListLoading = false;
     });
@@ -57,7 +65,7 @@ export class ManageRatesComponent implements OnInit {
   getExtraPriceList() {
     this.extraPriceListLoading = true;
     this.priceListService.getExtraPriceList().then(priceList => {
-      this.extraPriceList = priceList['priceLists'];
+      this.extraPriceList = priceList['data']['priceLists'];
       this.extraPriceListLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -65,11 +73,19 @@ export class ManageRatesComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the price list'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.extraPriceListLoading = false;
     });
@@ -85,19 +101,19 @@ export class ManageRatesComponent implements OnInit {
         console.log('An error occurred:', err.error.message);
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
-        if (err.status === 400) {
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'You cannot delete rates that are in uninvoiced line items'
-          });
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while deleting the rate'
-          });
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
         }
       }
     });
@@ -132,19 +148,19 @@ export class ManageRatesComponent implements OnInit {
           console.log('An error occurred:', err.error.message);
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
-          if (err.status === 400) {
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'The item value cannot be less than zero'
-            });
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An error occurred while updating the rate information'
-            });
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
           }
         }
       })
@@ -159,19 +175,19 @@ export class ManageRatesComponent implements OnInit {
           console.log('An error occurred:', err.error.message);
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
-          if (err.status === 400) {
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'The item value cannot be less than zero'
-            });
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An error occurred while creating the new rate'
-            });
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
           }
         }
       })
@@ -181,7 +197,7 @@ export class ManageRatesComponent implements OnInit {
   onPriceListSelect(event) {
     this.newPriceList = false;
     this.priceListService.getPriceList(event.data._id).then(priceList => {
-      this.priceList = priceList;
+      this.priceList = priceList['data'];
       this.displayPriceListDialog = true;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -189,11 +205,19 @@ export class ManageRatesComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the rate information'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     });
     this.displayPriceListDialog = true;

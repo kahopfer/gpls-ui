@@ -27,7 +27,7 @@ export class CheckInComponent implements OnInit {
   getStudents() {
     this.studentsLoading = true;
     this.studentService.getCheckedOutStudents().then(students => {
-      this.students = students['students'];
+      this.students = students['data']['students'];
       this.studentsLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -35,11 +35,19 @@ export class CheckInComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the students'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.studentsLoading = false;
     });

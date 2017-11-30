@@ -43,7 +43,7 @@ export class InvoicesComponent implements OnInit {
     let familyNamePromiseArray: Promise<any>[] = [];
 
     this.invoiceService.getInvoices().then(invoices => {
-      this.invoices = invoices['invoices'];
+      this.invoices = invoices['data']['invoices'];
 
       for (let invoiceIndex in this.invoices) {
         familyNamePromiseArray.push(this.familyService.getFamily(this.invoices[invoiceIndex].familyID));
@@ -51,7 +51,7 @@ export class InvoicesComponent implements OnInit {
       Promise.all(familyNamePromiseArray).then(families => {
         this.invoicesToDisplay = this.invoices;
         for (let familyIndex in families) {
-          this.invoicesToDisplay[familyIndex].familyName = families[familyIndex]['familyName'];
+          this.invoicesToDisplay[familyIndex].familyName = families[familyIndex]['data']['familyName'];
         }
         this.invoicesLoading = false;
       }).catch(err => {
@@ -60,11 +60,19 @@ export class InvoicesComponent implements OnInit {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while loading the family names for the invoices'
-          });
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
+          }
         }
         this.invoicesLoading = false;
       })
@@ -74,11 +82,19 @@ export class InvoicesComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the invoices'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.invoicesLoading = false;
     })
@@ -95,15 +111,19 @@ export class InvoicesComponent implements OnInit {
         console.log('An error occurred:', err.error.message);
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
-        if (err.status === 400) {
-          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'You cannot delete an unpaid invoice'});
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while deleting the invoice'
-          });
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
         }
       }
       this.invoicesLoading = false;
@@ -124,7 +144,7 @@ export class InvoicesComponent implements OnInit {
   markAsPaid(invoice: Invoice) {
     this.invoicesLoading = true;
     this.invoiceService.getInvoice(invoice._id).then(invoice1 => {
-      invoice1['paid'] = true;
+      invoice1['data']['paid'] = true;
       this.invoiceService.updateInvoice(invoice1).then(() => {
         this.selectedInvoice = null;
         this.invoicesLoading = false;
@@ -135,11 +155,19 @@ export class InvoicesComponent implements OnInit {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while updating the invoice'
-          });
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
+          }
         }
         this.invoicesLoading = false;
       })
@@ -149,11 +177,19 @@ export class InvoicesComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while getting the invoice'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.invoicesLoading = false;
     })

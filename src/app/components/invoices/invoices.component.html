@@ -5,18 +5,18 @@
              #dt>
   <p-header>All Invoices</p-header>
   <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
-  <p-column field="familyName" header="Family Name" [sortable]="true"[filter]="true" filterPlaceholder="Search"></p-column>
-  <p-column field="totalCost" header="Total Cost">
+  <p-column field="familyName" header="Family Name" [style]="{'word-wrap':'break-word'}" [sortable]="true"[filter]="true" filterPlaceholder="Search"></p-column>
+  <p-column field="totalCost" header="Total Cost" [style]="{'word-wrap':'break-word'}">
     <ng-template let-col let-rate="rowData" pTemplate="body">
       {{rate[col.field]|currency}}
     </ng-template>
   </p-column>
-  <p-column field="invoiceDate" header="Invoice Date" [sortable]="true">
+  <p-column field="invoiceDate" header="Invoice Date" [style]="{'word-wrap':'break-word'}" [sortable]="true">
     <ng-template let-col let-rate="rowData" pTemplate="body">
       {{rate[col.field]|date }}
     </ng-template>
   </p-column>
-  <p-column field="paid" header="Paid" [filter]="true" filterMatchMode="equals">
+  <p-column field="paid" header="Paid" [style]="{'word-wrap':'break-word'}" [filter]="true" filterMatchMode="equals">
     <ng-template pTemplate="filter" let-col>
       <p-dropdown [options]="paidOptions" [style]="{'width':'100%'}"
                   (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"

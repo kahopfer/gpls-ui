@@ -81,12 +81,12 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(students => {
       for (let studentIndex in students) {
-        if (students[studentIndex]['checkedIn'] === false) {
+        if (students[studentIndex]['data']['checkedIn'] === false) {
           // Just in case someone reloads the page with the student just checked out still in the query params
           console.log("Already checked out");
           continue;
         }
-        this.students.push(students[studentIndex])
+        this.students.push(students[studentIndex]['data'])
       }
       this.getGuardians();
     }).catch(err => {
@@ -95,11 +95,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the students'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }
@@ -113,7 +121,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
     Promise.all(promiseArray).then(guardians => {
       for (let guardianIndex in guardians) {
-        this.guardianArray.push(guardians[guardianIndex]['guardians']);
+        this.guardianArray.push(guardians[guardianIndex]['data']['guardians']);
       }
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -121,23 +129,45 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the guardians'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }
 
   getExtraItems(): void {
     this.priceListService.getExtraPriceList().then(priceList => {
-      this.extraItems = priceList['priceLists'];
+      this.extraItems = priceList['data']['priceLists'];
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
+        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     });
   }
@@ -165,7 +195,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       // Go through all the line items returned
       for (let lineItemIndex in lineItems) {
         // Temporary line item used to stage the changes
-        let temporaryLineItem: LineItem = lineItems[lineItemIndex]['lineItems'][0];
+        let temporaryLineItem: LineItem = lineItems[lineItemIndex]['data']['lineItems'][0];
         // Set temp line item values
         temporaryLineItem.checkOut = new Date();
         // temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
@@ -225,21 +255,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
               console.log('An error occurred:', err.error.message);
               this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
             } else {
-              if (err.status === 400) {
-                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
-              } else if (err.status === 409) {
-                this.msgs.push({
-                  severity: 'error',
-                  summary: 'Error Message',
-                  detail: 'Time is overlapping with existing time'
-                });
-              } else {
-                console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-                this.msgs.push({
-                  severity: 'error',
-                  summary: 'Error Message',
-                  detail: 'An error occurred while creating the extra line items'
-                });
+              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+              try {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+              } catch (e) {
+                if (err.status === 401) {
+                  this.msgs.push({
+                    severity: 'error',
+                    summary: 'Error Message',
+                    detail: 'Unauthorized. Please try logging out and logging back in again.'
+                  });
+                } else {
+                  this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+                }
               }
             }
           });
@@ -248,15 +276,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
             console.log('An error occurred:', err.error.message);
             this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
-            if (err.status === 400) {
-              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Missing a required field'});
-            } else {
-              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              this.msgs.push({
-                severity: 'error',
-                summary: 'Error Message',
-                detail: 'An error occurred while updating the students'
-              });
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+              }
             }
           }
         });
@@ -265,19 +297,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
           console.log('An error occurred:', err.error.message);
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
-          if (err.status === 409) {
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'Time is overlapping with existing time'
-            });
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An error occurred while updating the line items'
-            });
+          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
           }
         }
       })
@@ -287,11 +319,19 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while retrieving the line items'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     });
   }

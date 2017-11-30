@@ -57,7 +57,7 @@ export class InactiveFamilyDetailsComponent implements OnInit {
   getStudents(familyUnitID: string) {
     this.studentsLoading = true;
     this.studentService.getInactiveStudents(familyUnitID).then(students => {
-      this.students = students['students'];
+      this.students = students['data']['students'];
       this.studentsLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -65,11 +65,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the students'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.studentsLoading = false;
     });
@@ -78,7 +86,7 @@ export class InactiveFamilyDetailsComponent implements OnInit {
   getGuardians(familyUnitID: string) {
     this.guardiansLoading = true;
     this.guardianService.getInactiveGuardians(familyUnitID).then(guardians => {
-      this.guardians = guardians['guardians'];
+      this.guardians = guardians['data']['guardians'];
       this.guardiansLoading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -86,11 +94,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the guardians'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.guardiansLoading = false;
     });
@@ -98,14 +114,26 @@ export class InactiveFamilyDetailsComponent implements OnInit {
 
   getFamily(id: string) {
     this.familyService.getFamily(id).then(family => {
-      this.family = family;
+      this.family = family['data'];
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An occurred while loading the family'});
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }
@@ -129,19 +157,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         console.log('An error occurred:', err.error.message);
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
-        if (err.status === 400) {
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'You cannot delete a family with either uninvoiced line items or unpaid invoices'
-          });
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while deleting the family'
-          });
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
         }
       }
     });
@@ -168,11 +196,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while reactivating the family'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.family.active = false;
     });
@@ -181,7 +217,7 @@ export class InactiveFamilyDetailsComponent implements OnInit {
   onStudentSelect(event) {
     this.newStudent = false;
     this.studentService.getStudent(event.data._id).then(student => {
-      this.student = student;
+      this.student = student['data'];
       this.displayStudentDialog = true;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -189,11 +225,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the student'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     });
     this.displayStudentDialog = true;
@@ -202,7 +246,7 @@ export class InactiveFamilyDetailsComponent implements OnInit {
   onGuardianSelect(event) {
     this.newGuardian = false;
     this.guardianService.getGuardian(event.data._id).then(guardian => {
-      this.guardian = guardian;
+      this.guardian = guardian['data'];
       this.displayGuardianDialog = true;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -210,11 +254,19 @@ export class InactiveFamilyDetailsComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while loading the guardian'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     });
     this.displayGuardianDialog = true;

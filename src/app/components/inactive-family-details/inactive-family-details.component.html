@@ -13,20 +13,20 @@
                loadingIcon="fa-spinner" (onRowSelect)="onStudentSelect($event)" [metaKeySelection]="false"
                [responsive]="true">
     <p-header>Students</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="notes" header="Notes"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="notes" header="Notes" [style]="{'word-wrap':'break-word'}"></p-column>
   </p-dataTable>
   <br>
   <p-dataTable [value]="guardians" selectionMode="single" [(selection)]="selectedGuardian"
                [loading]="guardiansLoading" [metaKeySelection]="false"
                loadingIcon="fa-spinner" (onRowSelect)="onGuardianSelect($event)" [responsive]="true">
     <p-header>Guardians</p-header>
-    <p-column field="fname" header="First Name"></p-column>
-    <p-column field="lname" header="Last Name"></p-column>
-    <p-column field="relationship" header="Relationship"></p-column>
-    <p-column field="primPhone" header="Primary Phone"></p-column>
-    <p-column field="secPhone" header="Secondary Phone"></p-column>
+    <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="relationship" header="Relationship" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="primPhone" header="Primary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
+    <p-column field="secPhone" header="Secondary Phone" [style]="{'word-wrap':'break-word'}"></p-column>
   </p-dataTable>
   <br>
 
@@ -52,7 +52,7 @@
         <label for="studentNotes">Notes</label>
         <textarea type="text" name="notes" readonly class="form-control" id="studentNotes"
                   placeholder="Write any special notes about the student here (optional)"
-                  [(ngModel)]="student.notes"></textarea>
+                  [(ngModel)]="student.notes" maxlength="140"></textarea>
       </div>
     </p-dialog>
   </form>

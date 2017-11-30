@@ -46,7 +46,7 @@ export class EnrollFamilyComponent implements OnInit {
       lname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
       mi: ['', [Validators.maxLength(1), Validators.pattern(/[A-Za-z]/)]],
       // birthDate: ['', Validators.required],
-      notes: ['']
+      notes: ['', Validators.maxLength(140)]
     })
   }
 
@@ -162,11 +162,19 @@ export class EnrollFamilyComponent implements OnInit {
             this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An error occurred while enrolling the ' + model.value.familyName + ' family'
-            });
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+              }
+            }
           }
         });
       }).catch(err => {
@@ -175,11 +183,19 @@ export class EnrollFamilyComponent implements OnInit {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({
-            severity: 'error',
-            summary: 'Error Message',
-            detail: 'An error occurred while enrolling the guardian'
-          });
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
+          }
         }
       });
     }).catch((err) => {
@@ -188,11 +204,19 @@ export class EnrollFamilyComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while enrolling the student'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }

@@ -1,18 +1,21 @@
 <div class="container">
+  <!--TODO: add notification for line items in different days-->
+  <!--TODO: Add word wrap on all fields-->
+  <!--TODO: Add alert that there is an annual registration fee-->
   <div class="row justify-content-center">
     <div class="col-6">
       <p-dataTable [value]="students" [loading]="studentsLoading" loadingIcon="fa-spinner">
         <p-header>Students</p-header>
-        <p-column field="fname" header="First Name"></p-column>
-        <p-column field="lname" header="Last Name"></p-column>
+        <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
       </p-dataTable>
     </div>
     <div class="col-6">
       <app-context-help [pageName]="'create-invoice-details'"></app-context-help>
       <p-dataTable [value]="guardians" [loading]="guardiansLoading" loadingIcon="fa-spinner">
         <p-header>Guardians</p-header>
-        <p-column field="fname" header="First Name"></p-column>
-        <p-column field="lname" header="Last Name"></p-column>
+        <p-column field="fname" header="First Name" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="lname" header="Last Name" [style]="{'word-wrap':'break-word'}"></p-column>
       </p-dataTable>
     </div>
   </div>
@@ -21,25 +24,25 @@
       <br>
       <h5>Select a line item to edit or delete</h5>
       <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
-      <p-dataTable [value]="lineItemsToDisplay" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
+      <p-dataTable [value]="lineItemsToDisplay | orderBy: 'checkIn' : true" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
                    [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
-        <p-column field="studentName" header="Student Name"></p-column>
-        <p-column field="checkIn" header="Sign In Time">
+        <p-column field="studentName" header="Student Name" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="checkIn" header="Sign In Time" [style]="{'word-wrap':'break-word'}">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="checkInBy" header="Signed In By"></p-column>
-        <p-column field="checkOut" header="Sign Out Time">
+        <p-column field="checkInBy" header="Signed In By" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="checkOut" header="Sign Out Time" [style]="{'word-wrap':'break-word'}">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
-        <p-column field="checkOutBy" header="Signed Out By"></p-column>
-        <p-column field="notes" header="Notes"></p-column>
-        <p-column field="serviceType" header="Service Type"></p-column>
+        <p-column field="checkOutBy" header="Signed Out By" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="notes" header="Notes" [style]="{'word-wrap':'break-word'}"></p-column>
+        <p-column field="serviceType" header="Service Type" [style]="{'word-wrap':'break-word'}"></p-column>
         <p-footer>
           <div class="ui-helper-clearfix" style="width:100%">
             <button type="button" pButton icon="fa-plus" class="ui-button-success" style="float:left"
@@ -132,7 +135,7 @@
         </div>
         <div class="form-group">
           <label for="notes">Notes</label>
-          <textarea type="text" name="notes" class="form-control" id="notes"
+          <textarea type="text" name="notes" class="form-control" id="notes" maxlength="140"
                     placeholder="Write any notes about the line item here (optional)"
                     [(ngModel)]="lineItem.notes"></textarea>
         </div>

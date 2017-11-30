@@ -46,7 +46,7 @@ export class DownloadInvoiceComponent implements OnInit {
     const federalTaxID: string = 'Federal Tax ID#43-0781056';
 
     this.familyService.getFamily(this.selectedInvoice.familyID).then(family => {
-      this.family = family;
+      this.family = family['data'];
       //TODO: Decide whether invoices should pull all guardians or only active ones
       // let getGuardiansPromiseArray: Promise<Guardian>[] = [];
       //
@@ -56,7 +56,7 @@ export class DownloadInvoiceComponent implements OnInit {
 
       this.guardianService.getGuardians(this.family._id).then(guardians => {
         this.lineItemService.getLineItemsByInvoiceID(id).then(lineItems => {
-          this.lineItems = lineItems['lineItems'];
+          this.lineItems = lineItems['data']['lineItems'];
           this.orderPipe.transform(this.lineItems, 'checkIn');
           let individualStudentPromiseArray: Promise<any>[] = [];
           for (let lineItemIndex in this.lineItems) {
@@ -65,11 +65,11 @@ export class DownloadInvoiceComponent implements OnInit {
           Promise.all(individualStudentPromiseArray).then(students => {
             this.lineItemsToDisplay = this.lineItems;
             for (let studentIndex in students) {
-              this.lineItemsToDisplay[studentIndex].studentName = students[studentIndex]['fname'] + ' ' +
-                students[studentIndex]['lname'];
+              this.lineItemsToDisplay[studentIndex].studentName = students[studentIndex]['data']['fname'] + ' ' +
+                students[studentIndex]['data']['lname'];
             }
 
-            this.guardians = guardians['guardians'];
+            this.guardians = guardians['data']['guardians'];
             let invoiceDate: string = new Date(this.selectedInvoice.invoiceDate).toLocaleDateString();
             let invoiceFromDate: string = new Date(this.selectedInvoice.invoiceFromDate).toLocaleDateString();
             let invoiceToDate: string = new Date(this.selectedInvoice.invoiceToDate).toLocaleDateString();
@@ -216,7 +216,19 @@ export class DownloadInvoiceComponent implements OnInit {
               this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the students'});
+              try {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+              } catch (e) {
+                if (err.status === 401) {
+                  this.msgs.push({
+                    severity: 'error',
+                    summary: 'Error Message',
+                    detail: 'Unauthorized. Please try logging out and logging back in again.'
+                  });
+                } else {
+                  this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+                }
+              }
             }
           });
         }).catch(err => {
@@ -224,9 +236,20 @@ export class DownloadInvoiceComponent implements OnInit {
             console.log('An error occurred:', err.error.message);
             this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
-            console.log(err);
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the line items'});
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+              }
+            }
           }
         });
       }).catch(err => {
@@ -235,7 +258,19 @@ export class DownloadInvoiceComponent implements OnInit {
           this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the guardians'});
+          try {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+          } catch (e) {
+            if (err.status === 401) {
+              this.msgs.push({
+                severity: 'error',
+                summary: 'Error Message',
+                detail: 'Unauthorized. Please try logging out and logging back in again.'
+              });
+            } else {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+            }
+          }
         }
       })
     }).catch(err => {
@@ -244,7 +279,19 @@ export class DownloadInvoiceComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred while loading the family'});
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }

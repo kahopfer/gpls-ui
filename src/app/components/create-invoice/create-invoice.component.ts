@@ -32,7 +32,7 @@ export class CreateInvoiceComponent implements OnInit {
   getFamilies(): void {
     this.loading = true;
     this.familyService.getFamilies().then(families => {
-      this.families = families['families'];
+      this.families = families['data']['families'];
       this.loading = false;
     }).catch(err => {
       if (err.error instanceof Error) {
@@ -40,11 +40,19 @@ export class CreateInvoiceComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while getting the list of families'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
       this.loading = false;
     });
@@ -71,10 +79,10 @@ export class CreateInvoiceComponent implements OnInit {
     Promise.all(getLineItemsPromiseArray).then(lineitems => {
       let createInvoicesPromiseArray: Promise<any>[] = [];
       for (let lineItemIndex in lineitems) {
-        if (lineitems[lineItemIndex]['lineItems'].length > 0) {
+        if (lineitems[lineItemIndex]['data']['lineItems'].length > 0) {
           let invoice: Invoice = {
             _id: null,
-            familyID: lineitems[lineItemIndex]['lineItems'][0].familyID,
+            familyID: lineitems[lineItemIndex]['data']['lineItems'][0].familyID,
             lineItemsID: null,
             totalCost: 0,
             paid: false,
@@ -94,11 +102,19 @@ export class CreateInvoiceComponent implements OnInit {
             this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            this.msgs.push({
-              severity: 'error',
-              summary: 'Error Message',
-              detail: 'An error occurred while creating the invoice'
-            });
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+              }
+            }
           }
         })
       } else {
@@ -114,11 +130,19 @@ export class CreateInvoiceComponent implements OnInit {
         this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
       } else {
         console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-        this.msgs.push({
-          severity: 'error',
-          summary: 'Error Message',
-          detail: 'An error occurred while retrieving the line items'
-        });
+        try {
+          this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+        } catch (e) {
+          if (err.status === 401) {
+            this.msgs.push({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Unauthorized. Please try logging out and logging back in again.'
+            });
+          } else {
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
+          }
+        }
       }
     })
   }
