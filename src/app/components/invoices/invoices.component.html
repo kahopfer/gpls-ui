@@ -5,7 +5,7 @@
              #dt>
   <p-header>All Invoices</p-header>
   <p-column [style]="{'width':'38px'}" selectionMode="single"></p-column>
-  <p-column field="familyName" header="Family Name" [style]="{'word-wrap':'break-word'}" [sortable]="true"[filter]="true" filterPlaceholder="Search"></p-column>
+  <p-column field="familyName" header="Family Name" [style]="{'word-wrap':'break-word'}" [sortable]="true" [filter]="true" filterPlaceholder="Search"></p-column>
   <p-column field="totalCost" header="Total Cost" [style]="{'word-wrap':'break-word'}">
     <ng-template let-col let-rate="rowData" pTemplate="body">
       {{rate[col.field]|currency}}

@@ -28,13 +28,13 @@
                    (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
         <p-header>Line Items</p-header>
         <p-column field="studentName" header="Student Name" [style]="{'word-wrap':'break-word'}"></p-column>
-        <p-column field="checkIn" header="Sign In Time" [style]="{'word-wrap':'break-word'}">
+        <p-column field="checkIn" header="Sign In Time" [style]="{'word-wrap':'break-word'}" [sortable]="true">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
         </p-column>
         <p-column field="checkInBy" header="Signed In By" [style]="{'word-wrap':'break-word'}"></p-column>
-        <p-column field="checkOut" header="Sign Out Time" [style]="{'word-wrap':'break-word'}">
+        <p-column field="checkOut" header="Sign Out Time" [style]="{'word-wrap':'break-word'}" [sortable]="true">
           <ng-template let-col let-rate="rowData" pTemplate="body">
             {{rate[col.field]|date:'medium' }}
           </ng-template>
