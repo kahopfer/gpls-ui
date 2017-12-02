@@ -1,6 +1,164 @@
 <p-sidebar [(visible)]="display" position="right" [baseZIndex]="10000">
   <h1 class="text-left" style="font-weight: normal">Help</h1>
-  <p class="text-left">{{helpMessage}}</p>
+  <hr>
+  <div *ngIf="addUser" class="text-left">
+    <h4>Add User</h4>
+    <ol>
+      <li>Complete all required fields</li>
+      <li>Click the "Save" button</li>
+    </ol>
+  </div>
+  <div *ngIf="signIn" class="text-left">
+    <h4>Sign In</h4>
+    <p>After logging into the web application your screen will default to the "Sign In" screen. It is here that you can
+      select a student to sign in.</p>
+    <ol>
+      <li>Select one or more students from the table.</li>
+      <li>Click the green "Sign In" button located at the bottom of the screen.</li>
+    </ol>
+  </div>
+  <div *ngIf="signInDetails" class="text-left">
+    <h4>Sign In Details</h4>
+    <p>After you click "Sign In" the next screen you will see will contain a drop down box for each student signed
+      in.</p>
+    <ol>
+      <li>Select the person who is signing in the student. If all students are being signed in by an employee, select
+        the available check box.
+      </li>
+      <li>Click the "Sign In" button to complete the sign in process.</li>
+    </ol>
+  </div>
+  <div *ngIf="signOut" class="text-left">
+    <h4>Sign Out</h4>
+    <p>To sign out a student choose the "Sign Out" option at the top menu bar. This will then take you to the Sign Out
+      screen. This screen only shows what students are currently signed in.</p>
+    <ol>
+      <li>Select one, multiple or all students from the list.</li>
+      <li>Click the green "Sign Out" button at the bottom of the screen.</li>
+    </ol>
+  </div>
+  <div *ngIf="signOutDetails" class="text-left">
+    <h4>Sign Out Details</h4>
+    <p>The next screen will list all the students selected with a drop down box, sign boxes for extra items and a notes
+      field.</p>
+    <ol>
+      <li>Select who is signing out the student from the drop down box. If the student is being signed out by a staff
+        member, click the available check box.
+      </li>
+      <li>Select extra items from the provided checklist and add notes if necessary.*</li>
+      <li>Click the "Sign Out" button at the bottom of the screen again.</li>
+    </ol>
+    <p>NOTE: The sign boxes and notes section are optional fields and do not need to be filled to continue.</p>
+  </div>
+  <div *ngIf="createInvoice" class="text-left">
+    <h4>Create Invoice</h4>
+  </div>
+  <div *ngIf="createInvoiceDetails" class="text-left">
+    <h4>Create Invoice Details</h4>
+  </div>
+  <div *ngIf="enrollFamily" class="text-left">
+    <h4>Enroll Family</h4>
+    <p>Select the "Enroll a New Family" button from the Families screen to open the Enroll a New Family form.</p>
+    <ol>
+      <li>Enter the Family Name into the provided field.</li>
+      <li>Complete the required student information.</li>
+      <li>To add multiple students, select "Add another student +."</li>
+      <li>Complete the required information for the guardian. To add additional guardians, select "Add another guardian
+        +."
+      </li>
+      <li>Select the "Save" button to add the family to the system.</li>
+    </ol>
+    <p>Note: Families must contain at least one guardian and one student.</p>
+  </div>
+  <div *ngIf="familyDetailsAdmin" class="text-left">
+    <h4>Family Details</h4>
+    <p></p>
+  </div>
+  <div *ngIf="familyDetailsRegular" class="text-left">
+    <h4>Family Details</h4>
+    <p>The family details page will show a list of all active and inactive students that belong to this family. It will
+      list their first and last names as well as a notes section for all students available to this family. Below that
+      is a Guardians section. In the guardians section you will see a list of all guardians that are in the system to
+      pickup a student for this family. This section will list First and last name, relation to the student and primary
+      and secondary phone numbers.</p>
+  </div>
+  <div *ngIf="familyListAdmin" class="text-left">
+    <h4>Family List</h4>
+    <p>The Families screen allows administrators to enroll, modify, deactivate, re-activate, and delete families. The
+      administrator’s version of the Families screen is identical to the regular user’s version, with the exception of
+      the "Enroll a New Family" button. Select Families from the menu bar to view a list of currently enrolled
+      families.</p>
+  </div>
+  <div *ngIf="familyListRegular" class="text-left">
+    <h4>Family List</h4>
+    <p>Click on Families in the menu bar at the top of the screen to view family information. On this page the families
+      are listed alphabetically by last name. Here you can click on one family and it will take you to the family
+      details page.</p>
+  </div>
+  <div *ngIf="invoiceDetails" class="text-left">
+    <h4>Invoice Details</h4>
+  </div>
+  <div *ngIf="invoiceList" class="text-left">
+    <h4>Invoice List</h4>
+  </div>
+  <div *ngIf="invoices" class="text-left">
+    <h4>Invoices</h4>
+  </div>
+  <div *ngIf="manageRates" class="text-left">
+    <h4>Manage Rates</h4>
+  </div>
+  <div *ngIf="resetPassword" class="text-left">
+    <h4>Reset Password</h4>
+    <ol>
+      <li>Verify that the listed username belongs to the user whose password needs to be reset.</li>
+      <li>Enter the new password into the available field.</li>
+      <li>Click the "Reset Password" button.</li>
+    </ol>
+  </div>
+  <div *ngIf="userList" class="text-left">
+    <h4>User List</h4>
+    <p>The user management screen allows Administrators to add users to the system, delete users from the system, and
+      reset passwords for existing users. To access the user management screen, click the navigation menu and select
+      "Manage Users."</p>
+    <ol>
+      <li>Select the "Create a New User" button from the user management screen to load the "Add a New User" form.</li>
+      <li>Select the "Reset Password for Selected User" button from the user management screen to load the "Reset
+        Password" form.
+      </li>
+      <li>Select the "Delete Selected User" button from the user management screen to load the "Delete User Confirmation"
+        dialog box.
+      </li>
+      <li>To permanently delete a user from the system, select yes.</li>
+      <li>To cancel the operation and return to the previous screen, select no.</li>
+    </ol>
+  </div>
+  <div *ngIf="userProfile" class="text-left">
+    <h4>User Profile</h4>
+    <p>The Current Profile page displays your profile information. This screen will show your first and last name, your
+      username, and an area where you can change your password.</p>
+    <b>To view your profile:</b>
+    <ol>
+      <li>Click on the navigation menu and select <b>View My Profile.</b></li>
+    </ol>
+    <b>To change your password:</b>
+    <ol>
+      <li>Enter your old password.</li>
+      <li>Enter a new password.*</li>
+      <li>Click the "Change Password" button.</li>
+    </ol>
+    <p>Note: Passwords must be 8-20 characters long.</p>
+    <p>A success message should appear near the top right-hand corner.</p>
+  </div>
+  <div *ngIf="inactiveFamilyList" class="text-left">
+    <h4>Inactive Family List</h4>
+  </div>
+  <div *ngIf="inactiveFamilyDetails" class="text-left">
+    <h4>Inactive Family Details</h4>
+  </div>
+  <div *ngIf="unknown" class="text-left">
+    <h4>Unknown</h4>
+    <p>Sorry, there is no help available for this page.</p>
+  </div>
 </p-sidebar>
 <div style="position: relative; z-index: 1">
   <button type="button" class="btn btn-secondary pull-right" (click)="display = true">
