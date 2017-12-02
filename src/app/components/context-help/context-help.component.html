@@ -1,163 +1,326 @@
 <p-sidebar [(visible)]="display" position="right" [baseZIndex]="10000">
-  <h1 class="text-left" style="font-weight: normal">Help</h1>
-  <hr>
-  <div *ngIf="addUser" class="text-left">
-    <h4>Add User</h4>
-    <ol>
-      <li>Complete all required fields</li>
-      <li>Click the "Save" button</li>
-    </ol>
-  </div>
-  <div *ngIf="signIn" class="text-left">
-    <h4>Sign In</h4>
-    <p>After logging into the web application your screen will default to the "Sign In" screen. It is here that you can
-      select a student to sign in.</p>
-    <ol>
-      <li>Select one or more students from the table.</li>
-      <li>Click the green "Sign In" button located at the bottom of the screen.</li>
-    </ol>
-  </div>
-  <div *ngIf="signInDetails" class="text-left">
-    <h4>Sign In Details</h4>
-    <p>After you click "Sign In" the next screen you will see will contain a drop down box for each student signed
-      in.</p>
-    <ol>
-      <li>Select the person who is signing in the student. If all students are being signed in by an employee, select
-        the available check box.
-      </li>
-      <li>Click the "Sign In" button to complete the sign in process.</li>
-    </ol>
-  </div>
-  <div *ngIf="signOut" class="text-left">
-    <h4>Sign Out</h4>
-    <p>To sign out a student choose the "Sign Out" option at the top menu bar. This will then take you to the Sign Out
-      screen. This screen only shows what students are currently signed in.</p>
-    <ol>
-      <li>Select one, multiple or all students from the list.</li>
-      <li>Click the green "Sign Out" button at the bottom of the screen.</li>
-    </ol>
-  </div>
-  <div *ngIf="signOutDetails" class="text-left">
-    <h4>Sign Out Details</h4>
-    <p>The next screen will list all the students selected with a drop down box, sign boxes for extra items and a notes
-      field.</p>
-    <ol>
-      <li>Select who is signing out the student from the drop down box. If the student is being signed out by a staff
-        member, click the available check box.
-      </li>
-      <li>Select extra items from the provided checklist and add notes if necessary.*</li>
-      <li>Click the "Sign Out" button at the bottom of the screen again.</li>
-    </ol>
-    <p>NOTE: The sign boxes and notes section are optional fields and do not need to be filled to continue.</p>
-  </div>
-  <div *ngIf="createInvoice" class="text-left">
-    <h4>Create Invoice</h4>
-  </div>
-  <div *ngIf="createInvoiceDetails" class="text-left">
-    <h4>Create Invoice Details</h4>
-  </div>
-  <div *ngIf="enrollFamily" class="text-left">
-    <h4>Enroll Family</h4>
-    <p>Select the "Enroll a New Family" button from the Families screen to open the Enroll a New Family form.</p>
-    <ol>
-      <li>Enter the Family Name into the provided field.</li>
-      <li>Complete the required student information.</li>
-      <li>To add multiple students, select "Add another student +."</li>
-      <li>Complete the required information for the guardian. To add additional guardians, select "Add another guardian
-        +."
-      </li>
-      <li>Select the "Save" button to add the family to the system.</li>
-    </ol>
-    <p>Note: Families must contain at least one guardian and one student.</p>
-  </div>
-  <div *ngIf="familyDetailsAdmin" class="text-left">
-    <h4>Family Details</h4>
-    <p></p>
-  </div>
-  <div *ngIf="familyDetailsRegular" class="text-left">
-    <h4>Family Details</h4>
-    <p>The family details page will show a list of all active and inactive students that belong to this family. It will
-      list their first and last names as well as a notes section for all students available to this family. Below that
-      is a Guardians section. In the guardians section you will see a list of all guardians that are in the system to
-      pickup a student for this family. This section will list First and last name, relation to the student and primary
-      and secondary phone numbers.</p>
-  </div>
-  <div *ngIf="familyListAdmin" class="text-left">
-    <h4>Family List</h4>
-    <p>The Families screen allows administrators to enroll, modify, deactivate, re-activate, and delete families. The
-      administrator’s version of the Families screen is identical to the regular user’s version, with the exception of
-      the "Enroll a New Family" button. Select Families from the menu bar to view a list of currently enrolled
-      families.</p>
-  </div>
-  <div *ngIf="familyListRegular" class="text-left">
-    <h4>Family List</h4>
-    <p>Click on Families in the menu bar at the top of the screen to view family information. On this page the families
-      are listed alphabetically by last name. Here you can click on one family and it will take you to the family
-      details page.</p>
-  </div>
-  <div *ngIf="invoiceDetails" class="text-left">
-    <h4>Invoice Details</h4>
-  </div>
-  <div *ngIf="invoiceList" class="text-left">
-    <h4>Invoice List</h4>
-  </div>
-  <div *ngIf="invoices" class="text-left">
-    <h4>Invoices</h4>
-  </div>
-  <div *ngIf="manageRates" class="text-left">
-    <h4>Manage Rates</h4>
-  </div>
-  <div *ngIf="resetPassword" class="text-left">
-    <h4>Reset Password</h4>
-    <ol>
-      <li>Verify that the listed username belongs to the user whose password needs to be reset.</li>
-      <li>Enter the new password into the available field.</li>
-      <li>Click the "Reset Password" button.</li>
-    </ol>
-  </div>
-  <div *ngIf="userList" class="text-left">
-    <h4>User List</h4>
-    <p>The user management screen allows Administrators to add users to the system, delete users from the system, and
-      reset passwords for existing users. To access the user management screen, click the navigation menu and select
-      "Manage Users."</p>
-    <ol>
-      <li>Select the "Create a New User" button from the user management screen to load the "Add a New User" form.</li>
-      <li>Select the "Reset Password for Selected User" button from the user management screen to load the "Reset
-        Password" form.
-      </li>
-      <li>Select the "Delete Selected User" button from the user management screen to load the "Delete User Confirmation"
-        dialog box.
-      </li>
-      <li>To permanently delete a user from the system, select yes.</li>
-      <li>To cancel the operation and return to the previous screen, select no.</li>
-    </ol>
-  </div>
-  <div *ngIf="userProfile" class="text-left">
-    <h4>User Profile</h4>
-    <p>The Current Profile page displays your profile information. This screen will show your first and last name, your
-      username, and an area where you can change your password.</p>
-    <b>To view your profile:</b>
-    <ol>
-      <li>Click on the navigation menu and select <b>View My Profile.</b></li>
-    </ol>
-    <b>To change your password:</b>
-    <ol>
-      <li>Enter your old password.</li>
-      <li>Enter a new password.*</li>
-      <li>Click the "Change Password" button.</li>
-    </ol>
-    <p>Note: Passwords must be 8-20 characters long.</p>
-    <p>A success message should appear near the top right-hand corner.</p>
-  </div>
-  <div *ngIf="inactiveFamilyList" class="text-left">
-    <h4>Inactive Family List</h4>
-  </div>
-  <div *ngIf="inactiveFamilyDetails" class="text-left">
-    <h4>Inactive Family Details</h4>
-  </div>
-  <div *ngIf="unknown" class="text-left">
-    <h4>Unknown</h4>
-    <p>Sorry, there is no help available for this page.</p>
+  <div style="height: 100%; overflow-y: auto">
+    <h1 class="text-left" style="font-weight: normal">Help</h1>
+    <hr>
+    <div *ngIf="addUser" class="text-left">
+      <h4>Create a New User</h4>
+      <ol>
+        <li>Select the "Create a New User" button from the user management screen to load the "Add a New User" form.
+        </li>
+        <li>Complete all required fields</li>
+        <li>Click the "Save" button</li>
+      </ol>
+    </div>
+    <div *ngIf="signIn" class="text-left">
+      <h4>Sign a Student In</h4>
+      <p>After logging into the web application your screen will default to the "Sign In" screen. It is here that you
+        can
+        select a student to sign in.</p>
+      <ol>
+        <li>Select one or more students from the table.</li>
+        <li>Click the green "Sign In" button located at the bottom of the screen.</li>
+      </ol>
+    </div>
+    <div *ngIf="signInDetails" class="text-left">
+      <h4>Sign In Details</h4>
+      <p>After you click "Sign In" the next screen you will see will contain a drop down box for each student signed
+        in.</p>
+      <ol>
+        <li>Select the person who is signing in the student. If all students are being signed in by an employee, select
+          the available check box.
+        </li>
+        <li>Click the "Sign In" button to complete the sign in process.</li>
+      </ol>
+    </div>
+    <div *ngIf="signOut" class="text-left">
+      <h4>Sign a Student Out</h4>
+      <p>To sign out a student choose the "Sign Out" option at the top menu bar. This will then take you to the Sign Out
+        screen. This screen only shows what students are currently signed in.</p>
+      <ol>
+        <li>Select one, multiple or all students from the list.</li>
+        <li>Click the green "Sign Out" button at the bottom of the screen.</li>
+      </ol>
+    </div>
+    <div *ngIf="signOutDetails" class="text-left">
+      <h4>Sign Out Details</h4>
+      <p>The next screen will list all the students selected with a drop down box, sign boxes for extra items and a
+        notes
+        field.</p>
+      <ol>
+        <li>Select who is signing out the student from the drop down box. If the student is being signed out by a staff
+          member, click the available check box.
+        </li>
+        <li>Select extra items from the provided checklist and add notes if necessary.*</li>
+        <li>Click the "Sign Out" button at the bottom of the screen again.</li>
+      </ol>
+      <p>NOTE: The sign boxes and notes section are optional fields and <u>do not</u> need to be filled to continue.</p>
+    </div>
+    <div *ngIf="createInvoice" class="text-left">
+      <h4>Create an Invoice</h4>
+      <p>Select "Create Invoice" to load a list of existing families.</p>
+      <p>You can generate a batch of invoices for all active families by selecting an invoice range and clicking the
+        "Create All Invoices" button. Click on a family name to load the <strong>Create Invoice</strong> screen for a
+        single family.
+      </p>
+    </div>
+    <div *ngIf="createInvoiceDetails" class="text-left">
+      <h4>Create an Invoice</h4>
+      <p>The Create Invoice screen lists line items containing the student’s name, sign-in and sign-out times,
+        responsible parties, notes, and the types of service used. Enter a date range into the <strong>Invoice
+          Range</strong> field by using the provided calendar. Then click the "Create Invoice" button to generate an
+        itemized invoice for the selected family.</p>
+      <h5>Add Line Item</h5>
+      <p>Click the "Add new line item" button from the Create Invoice screen to display a dialog box.</p>
+      <ol>
+        <li>Complete all required fields.</li>
+        <li>Click the "Save" button to add the new line item.</li>
+        <li>Click the 'x' in the top right-hand corner of the dialog box to cancel the operation and return to the
+          previous screen.
+        </li>
+      </ol>
+      <h5>Modify an Existing Line Item</h5>
+      <p>Modify an existing line item by clicking on the desired row from the <strong>Line Items</strong> table. The
+        current details
+        for the line item will display in a dialog window.</p>
+      <ol>
+        <li>Make any desired changes to the line item details.</li>
+        <li>Click the "Save" button to add the new line item.</li>
+        <li>Click the 'x' in the top right-hand corner of the dialog box to cancel the operation and return to the
+          previous screen.
+        </li>
+        <li>Click the "Delete" button to permanently delete the line item.</li>
+      </ol>
+    </div>
+    <div *ngIf="enrollFamily" class="text-left">
+      <h4>Enroll a New Family</h4>
+      <p>Select the "Enroll a New Family" button from the Families screen to open the Enroll a New Family form.</p>
+      <ol>
+        <li>Enter the Family Name into the provided field.</li>
+        <li>Complete the required student information.</li>
+        <li>To add multiple students, select "Add another student +."</li>
+        <li>Complete the required information for the guardian. To add additional guardians, select "Add another
+          guardian
+          +."
+        </li>
+        <li>Select the "Save" button to add the family to the system.</li>
+      </ol>
+      <p>Note: Families must contain at least one guardian and one student.</p>
+    </div>
+    <div *ngIf="familyDetailsAdmin" class="text-left">
+      <h4>Edit Family Details</h4>
+      <p>This screen shows all active and inactive students and guardians associated with the selected family.</p>
+      <h5>Edit Family Name</h5>
+      <ol>
+        <li>Select the "Edit Family Name" button.</li>
+        <li>Make the desired changes to the family name.</li>
+        <li>Click the "Save" button.</li>
+      </ol>
+      <h5>Add a New Student</h5>
+      <ol>
+        <li>Click the "Add new student" button.</li>
+        <li>Enter all required information.</li>
+        <li>Click the "Save" button.</li>
+        <li>To cancel the operation, click the 'x' in the top right-hand corner of the dialog box.</li>
+      </ol>
+      <h5>Edit Student Details</h5>
+      <ol>
+        <li>Select the student's name from the <strong>Students</strong> table.</li>
+        <li>Make the desired changes.</li>
+        <li>Click the "Save" button.</li>
+        <li>To cancel the operation, click the 'x' in the top right-hand corner of the dialog box.</li>
+      </ol>
+      <h5>Add a New Guardian</h5>
+      <ol>
+        <li>Click the "Add new guardian" button.</li>
+        <li>Enter all required information.</li>
+        <li>Click the "Save" button.</li>
+        <li>To cancel the operation, click the 'x' in the top right-hand corner of the dialog box.</li>
+      </ol>
+      <h5>Edit Guardian Details</h5>
+      <ol>
+        <li>Select the guardian's name from the <strong>Guardians</strong> table.</li>
+        <li>Make the desired changes.</li>
+        <li>Click the "Save" button.</li>
+        <li>To cancel the operation, click the 'x' in the top right-hand corner of the dialog box.</li>
+      </ol>
+      <h4>Deactivate and Re-activate</h4>
+      <p>Under the family details screen students and their guardians are listed as either "Active" or "Inactive".
+        Inactive families are not visible on the system.</p>
+      <h5>Deactivate a Family</h5>
+      <ol>
+        <li>From the family details screen, click the "Deactivate This Family" button.</li>
+        <li>Select "Yes" to deactivate a family.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+      <h5>Deactivate a Student</h5>
+      <ol>
+        <li>From the <strong>Student Details</strong> screen, click the "Deactivate" button.</li>
+        <li>Select "Yes" to deactivate a family.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+      <h5>Re-activate a Student</h5>
+      <ol>
+        <li>Select the student you wish to re-activate from the <strong>Inactive Students</strong> tab</li>
+        <li>From the <strong>Student Details</strong> screen, click the "Reactivate" button.</li>
+        <li>Select "Yes" to re-activate the student.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+      <h5>Re-activate a Guardian</h5>
+      <ol>
+        <li>Select the guardian you wish to re-activate from the <strong>Inactive Guardians</strong> tab.</li>
+        <li>From the <strong>Guardian Details</strong> screen, click the "Reactivate" button.</li>
+        <li>Select "Yes" to re-activate the guardian.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+      <h5>Delete a Family</h5>
+      <ol>
+        <li>Select the "Delete This Family" button from the family details page.</li>
+        <li>Select "Yes" to delete the family.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+    </div>
+    <div *ngIf="familyDetailsRegular" class="text-left">
+      <h4>Family Details</h4>
+      <p>The family details page will show a list of all active and inactive students that belong to this family. It
+        will
+        list their first and last names as well as a notes section for all students available to this family. Below that
+        is a Guardians section. In the guardians section you will see a list of all guardians that are in the system to
+        pickup a student for this family. This section will list First and last name, relation to the student and
+        primary
+        and secondary phone numbers.</p>
+    </div>
+    <div *ngIf="familyListAdmin" class="text-left">
+      <h4>Manage Families</h4>
+      <p>The Families screen allows administrators to enroll, modify, deactivate, re-activate, and delete families. The
+        administrator's version of the Families screen is identical to the regular user's version, with the exception of
+        the "Enroll a New Family" button. Select Families from the menu bar to view a list of currently enrolled
+        families. From the Families screen click on the name of the family you wish to edit.</p>
+    </div>
+    <div *ngIf="familyListRegular" class="text-left">
+      <h4>View Families</h4>
+      <p>Click on Families in the menu bar at the top of the screen to view family information. On this page the
+        families
+        are listed alphabetically by last name. Here you can click on one family and it will take you to the family
+        details page.</p>
+    </div>
+    <div *ngIf="invoiceDetails" class="text-left">
+      <h4>Invoices</h4>
+      <p>To download a .pdf copy of an invoice, select the option button that corresponds with the desired invoice and
+        click the "Download Selected Invoice" button. The name of the downloaded invoice will follow the format [family
+        name]_mm_dd_yyyy.pdf (ex. Cliff_11_16_2017.pdf)</p>
+      <p>To mark an invoice as paid, select the option that corresponds with the desired invoice and select the "Mark
+        Selected Invoice as Paid" button. Once an invoice has been marked as "paid" the operation cannot be undone. If
+        this is done in error, the invoice must be deleted and regenerated from the Create Invoice screen.</p>
+      <p>To delete an invoice, select the option button that corresponds with the desired invoice and select the "Delete
+        Selected Invoice" button. This action is also permanent and cannot be undone.</p>
+      <p>A dialog box will appear to confirm the delete request. Select "Yes" to complete the operation, or "No" to
+        cancel
+        the operation and return to the previous screen.</p>
+    </div>
+    <div *ngIf="invoiceList" class="text-left">
+      <h4>Invoice List</h4>
+    </div>
+    <div *ngIf="invoices" class="text-left">
+      <h4>Invoices</h4>
+      <p>Generated invoices will be available for download from the Invoices screen. The Invoices screen contains two
+        tabs: View all Invoices and View by Family. The View all Invoices tab displays a list of all invoices that have
+        been generated in the system. This view displays the family for which the invoice was generated, the amount
+        charged, the date the invoice was generated, and whether or not the balance was paid. Invoices can be sorted by
+        date in ascending or descending order. Additionally, there is a Paid filter to display only invoices that have
+        been paid (true) or remain unpaid (false).</p>
+      <p>To download a .pdf copy of an invoice, select the option button that corresponds with the desired invoice and
+        click the "Download Selected Invoice" button. The name of the downloaded invoice will follow the format [family
+        name]_mm_dd_yyyy.pdf (ex. Cliff_11_16_2017.pdf)</p>
+      <p>To mark an invoice as paid, select the option that corresponds with the desired invoice and select the "Mark
+        Selected Invoice as Paid" button. Once an invoice has been marked as "paid" the operation cannot be undone. If
+        this is done in error, the invoice must be deleted and regenerated from the Create Invoice screen.</p>
+      <p>To delete an invoice, select the option button that corresponds with the desired invoice and select the "Delete
+        Selected Invoice" button. This action is also permanent and cannot be undone.</p>
+      <p>A dialog box will appear to confirm the delete request. Select "Yes" to complete the operation, or "No" to
+        cancel
+        the operation and return to the previous screen.</p>
+    </div>
+    <div *ngIf="manageRates" class="text-left">
+      <h4>Manage Rates</h4>
+      <p>The Manage Rates screen allows Administrators to edit child care rates and add extra items.</p>
+      <h5>Modify a Childcare Rate</h5>
+      <ol>
+        <li>Select the row you wish to change from the <strong>Childcare Rates</strong> table.</li>
+        <li>Change the <strong>Item Value</strong>.</li>
+        <li>Click the "Save" button to update the rate information.</li>
+        <li>Click the 'x' in the top right-hand corner of the dialog box to cancel the operation.</li>
+      </ol>
+      <h5>Extra Items</h5>
+      <ol>
+        <li>Select the row you wish to change from the <strong>Extra Items</strong> table.</li>
+        <li>Change the <strong>Item Value</strong>.</li>
+        <li>Click the "Save" button to update the rate information.</li>
+        <li>Click the 'x' in the top right-hand corner of the dialog box to cancel the operation.</li>
+        <li>Select the "Delete" button from the Rate Information window.</li>
+        <li>Select "Yes" to delete the rate.</li>
+        <li>Select "No" to cancel the operation and return to the previous screen.</li>
+      </ol>
+    </div>
+    <div *ngIf="resetPassword" class="text-left">
+      <h4>Reset a User's Password</h4>
+      <ol>
+        <li>Select the "Reset Password for Selected User" button from the user management screen to load the "Reset
+          Password" form.
+        </li>
+        <li>Verify that the listed username belongs to the user whose password needs to be reset.</li>
+        <li>Enter the new password into the available field.</li>
+        <li>Click the "Reset Password" button.</li>
+      </ol>
+    </div>
+    <div *ngIf="userList" class="text-left">
+      <h4>Manage Users</h4>
+      <p>The user management screen allows Administrators to add users to the system, delete users from the system, and
+        reset passwords for existing users. To access the user management screen, click the navigation menu and select
+        "Manage Users."</p>
+      <h5>Delete a User</h5>
+      <ol>
+        <li>Select the "Delete Selected User" button from the user management screen to load the "Delete User
+          Confirmation"
+          dialog box.
+        </li>
+        <li>To permanently delete a user from the system, select yes.</li>
+        <li>To cancel the operation and return to the previous screen, select no.</li>
+      </ol>
+    </div>
+    <div *ngIf="userProfile" class="text-left">
+      <h4>Manage Your Profile</h4>
+      <p>The Current Profile page displays your profile information. This screen will show your first and last name,
+        your
+        username, and an area where you can change your password.</p>
+      <h5>To view your profile:</h5>
+      <ol>
+        <li>Click on the navigation menu and select <strong>View My Profile.</strong></li>
+      </ol>
+      <h5>To change your password:</h5>
+      <ol>
+        <li>Enter your old password.</li>
+        <li>Enter a new password.*</li>
+        <li>Click the "Change Password" button.</li>
+      </ol>
+      <p>Note: Passwords must be 8-20 characters long.</p>
+      <p>A success message should appear near the top right-hand corner.</p>
+    </div>
+    <div *ngIf="inactiveFamilyList" class="text-left">
+      <h4>Inactive Family List</h4>
+      <ol>
+        <li>Click <strong>View Inactive Families</strong> from the Navigation Bar</li>
+        <li>Select the inactive family you would like to re-activate.</li>
+        <li>Click the "Reactivate This Family" button to re-activate the family.</li>
+        <li>Select the "Delete This Family" button to delete the family.</li>
+      </ol>
+    </div>
+    <div *ngIf="inactiveFamilyDetails" class="text-left">
+      <h4>Inactive Family Details</h4>
+    </div>
+    <div *ngIf="unknown" class="text-left">
+      <h4>Unknown</h4>
+      <p>Sorry, there is no help available for this page.</p>
+    </div>
   </div>
 </p-sidebar>
 <div style="position: relative; z-index: 1">
