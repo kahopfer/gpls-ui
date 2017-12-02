@@ -145,7 +145,7 @@ export class InvoicesComponent implements OnInit {
     this.invoicesLoading = true;
     this.invoiceService.getInvoice(invoice._id).then(invoice1 => {
       invoice1['data']['paid'] = true;
-      this.invoiceService.updateInvoice(invoice1).then(() => {
+      this.invoiceService.updateInvoice(invoice1['data']).then(() => {
         this.selectedInvoice = null;
         this.invoicesLoading = false;
         this.getInvoices();
