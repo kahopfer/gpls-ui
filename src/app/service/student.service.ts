@@ -74,13 +74,13 @@ export class StudentService {
     }).toPromise();
   }
 
-  updateCheckedIn(student: Student): Promise<string> {
-    const url = `${this.gplsApiUrl}/students/updateCheckedIn/${student._id}`;
-    return this.http.put(url, student, {
-      headers: this.headers,
-      responseType: 'text'
-    }).toPromise();
-  }
+  // updateCheckedIn(student: Student): Promise<string> {
+  //   const url = `${this.gplsApiUrl}/students/updateCheckedIn/${student._id}`;
+  //   return this.http.put(url, student, {
+  //     headers: this.headers,
+  //     responseType: 'text'
+  //   }).toPromise();
+  // }
 
   // deleteStudent(id: string): Promise<string> {
   //   const url = `${this.gplsApiUrl}/students/${id}`;

@@ -173,8 +173,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateStudentCheckedInStatus(form: NgForm) {
-    // This promise array will be used to update the checked in status of each student
-    let updateStudentPromiseArray: Promise<any>[] = [];
 
     // This promise array will be used to get a list of all line items without a check out time
     let getLineItemPromiseArray: Promise<any>[] = [];
@@ -199,7 +197,7 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         // Set temp line item values
         temporaryLineItem.checkOut = new Date();
         // temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
-        temporaryLineItem.serviceType = 'Child Care';
+        // temporaryLineItem.serviceType = 'Child Care';
         // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
         if (this.allCheckedOutByEmployee) {
           temporaryLineItem.checkOutBy = this.fullName;
@@ -212,14 +210,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       }
       // Update the line items
       Promise.all(updateLineItemPromiseArray).then(() => {
-
-        for (let studentIndex in this.students) {
-          this.students[studentIndex].checkedIn = false;
-          updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
-        }
-
-        // Then update each student's checked in status
-        Promise.all(updateStudentPromiseArray).then(() => {
 
           for (let studentIndex in this.students) {
             // Go through extra items
@@ -271,27 +261,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
               }
             }
           });
-        }).catch(err => {
-          if (err.error instanceof Error) {
-            console.log('An error occurred:', err.error.message);
-            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
-          } else {
-            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-            try {
-              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
-            } catch (e) {
-              if (err.status === 401) {
-                this.msgs.push({
-                  severity: 'error',
-                  summary: 'Error Message',
-                  detail: 'Unauthorized. Please try logging out and logging back in again.'
-                });
-              } else {
-                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
-              }
-            }
-          }
-        });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);

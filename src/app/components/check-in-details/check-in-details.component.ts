@@ -140,7 +140,6 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateStudentCheckedInStatus(form: NgForm) {
-    let updateStudentPromiseArray: Promise<any>[] = [];
     let createLineItemPromiseArray: Promise<any>[] = [];
 
     for (let studentIndex in this.students) {
@@ -152,7 +151,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
         extraItem: false,
         checkIn: date,
         checkOut: null,
-        serviceType: null,
+        serviceType: 'Child Care',
         earlyInLateOutFee: 0.00,
         lineTotalCost: 0.00,
         checkInBy: null,
@@ -170,34 +169,7 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
     }
 
     Promise.all(createLineItemPromiseArray).then(() => {
-      for (let studentIndex in this.students) {
-        this.students[studentIndex].checkedIn = true;
-        updateStudentPromiseArray.push(this.studentService.updateCheckedIn(this.students[studentIndex]));
-      }
-
-      Promise.all(updateStudentPromiseArray).then(() => {
-        this.router.navigate(['/sign-in']);
-      }).catch(err => {
-        if (err.error instanceof Error) {
-          console.log('An error occurred:', err.error.message);
-          this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
-        } else {
-          console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-          try {
-            this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
-          } catch (e) {
-            if (err.status === 401) {
-              this.msgs.push({
-                severity: 'error',
-                summary: 'Error Message',
-                detail: 'Unauthorized. Please try logging out and logging back in again.'
-              });
-            } else {
-              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
-            }
-          }
-        }
-      });
+      this.router.navigate(['/sign-in']);
     }).catch(err => {
       if (err.error instanceof Error) {
         console.log('An error occurred:', err.error.message);
@@ -218,6 +190,8 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.students = [];
+      this.getStudents();
     });
   }
 
