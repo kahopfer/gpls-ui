@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CheckOutDetailsComponent } from './check-out-details.component';
+import {CheckOutDetailsComponent} from './check-out-details.component';
 
 describe('CheckOutDetailsComponent', () => {
   let component: CheckOutDetailsComponent;
@@ -8,9 +8,9 @@ describe('CheckOutDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CheckOutDetailsComponent ]
+      declarations: [CheckOutDetailsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

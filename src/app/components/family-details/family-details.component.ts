@@ -83,40 +83,40 @@ export class FamilyDetailsComponent implements OnInit, OnDestroy {
       this.studentItems = [
         {
           label: 'Active Students', command: () => {
-          this.showActiveStudents();
-        }
+            this.showActiveStudents();
+          }
         },
         {
           label: 'Inactive Students', command: () => {
-          this.showInactiveStudents();
-        }
+            this.showInactiveStudents();
+          }
         }
       ];
       this.guardianItems = [
         {
           label: 'Active Guardians', command: () => {
-          this.showActiveGuardians();
-        }
+            this.showActiveGuardians();
+          }
         },
         {
           label: 'Inactive Guardians', command: () => {
-          this.showInactiveGuardians();
-        }
+            this.showInactiveGuardians();
+          }
         }
       ];
     } else {
       this.studentItems = [
         {
           label: 'Active Students', command: () => {
-          this.showActiveStudents();
-        }
+            this.showActiveStudents();
+          }
         }
       ];
       this.guardianItems = [
         {
           label: 'Active Guardians', command: () => {
-          this.showActiveGuardians();
-        }
+            this.showActiveGuardians();
+          }
         }
       ];
     }

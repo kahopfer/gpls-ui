@@ -50,7 +50,6 @@ export class AddUserComponent implements OnInit {
     }
 
     this.userService.createUser(userToCreate).then(() => {
-      // this.router.navigate(['/users']);
       this.location.back();
     }).catch(err => {
       if (err.error instanceof Error) {

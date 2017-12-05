@@ -55,15 +55,6 @@
                     Last name is required (cannot contain any numbers or special characters, maximum 35 characters).
                   </small>
                 </div>
-                <!--<div class="form-group">-->
-                <!--<label for="studentBirthDate">Birth Date</label>-->
-                <!--<p-calendar id="studentBirthDate" formControlName="birthDate" [monthNavigator]="true"-->
-                <!--[yearNavigator]="true" yearRange="1990:2050"></p-calendar>-->
-                <!--{{birthDate|date}}-->
-                <!--<small [hidden]="student.controls.birthDate.valid" class="text-danger">-->
-                <!--Birth date is required.-->
-                <!--</small>-->
-                <!--</div>-->
                 <div class="form-group">
                   <label for="studentNotes">Notes</label>
                   <textarea type="text" formControlName="notes" class="form-control" id="studentNotes" maxlength="140"
@@ -171,12 +162,10 @@
           </a>
         </div>
         <br>
-        <!--<div class="margin-20">-->
         <button type="submit" class="btn btn-primary" [disabled]="!enrollFamilyForm.valid">
           <i class="fa fa-check"></i>
           Save
         </button>
-        <!--</div>-->
         <button type="button" class="btn btn-secondary pull-right" (click)="cancel()">
           <i class="fa fa-ban"></i>
           Cancel

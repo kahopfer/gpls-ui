@@ -100,7 +100,6 @@
   <form *ngIf="student" #studentDetailsForm="ngForm" (ngSubmit)="saveStudent(student)">
     <p-dialog header="Student Details" [(visible)]="displayStudentDialog" [responsive]="true" showEffect="fade"
               [modal]="true" [width]="400" [resizable]="false">
-      <!--[modal]="true" [minWidth]="240" [width]="400" [minHeight]="485" [height]="560">-->
       <div class="form-group">
         <label for="studentFname">First Name</label>
         <input type="text" name="fname" class="form-control" required id="studentFname" placeholder="First Name"

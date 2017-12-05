@@ -40,7 +40,6 @@ export class CheckInDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.studentIdSub = this.route.queryParams.subscribe(params => {
-      // TODO: Maybe figure out better way to do this
       // For some reason, when the page is initially loaded, the query params are stored as an array...
       // ...however, when it is reloaded, they are stored as a string
       if (!isNullOrUndefined(params['id'])) {

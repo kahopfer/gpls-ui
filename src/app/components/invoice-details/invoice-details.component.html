@@ -34,7 +34,8 @@
           {{rate[col.field]|date }}
         </ng-template>
       </p-column>
-      <p-column field="paid" header="Paid" [style]="{'word-wrap':'break-word'}" [filter]="true" filterMatchMode="equals">
+      <p-column field="paid" header="Paid" [style]="{'word-wrap':'break-word'}" [filter]="true"
+                filterMatchMode="equals">
         <ng-template pTemplate="filter" let-col>
           <p-dropdown [options]="paidOptions" [style]="{'width':'100%'}"
                       (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"

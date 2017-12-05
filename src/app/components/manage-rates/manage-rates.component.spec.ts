@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ManageRatesComponent } from './manage-rates.component';
+import {ManageRatesComponent} from './manage-rates.component';
 
 describe('ManageRatesComponent', () => {
   let component: ManageRatesComponent;
@@ -8,9 +8,9 @@ describe('ManageRatesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManageRatesComponent ]
+      declarations: [ManageRatesComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

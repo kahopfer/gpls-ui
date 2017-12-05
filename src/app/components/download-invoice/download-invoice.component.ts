@@ -34,9 +34,7 @@ export class DownloadInvoiceComponent implements OnInit {
   }
 
   downloadInvoice(id: string) {
-    const doc = new jsPDF({
-      // orientation: 'landscape'
-    });
+    const doc = new jsPDF({});
     let pageHeight: number = doc.internal.pageSize.height;
     const schoolName: string = 'Green Park Lutheran School';
     const addressLine1: string = '4248 Green Park Road';
@@ -47,12 +45,6 @@ export class DownloadInvoiceComponent implements OnInit {
 
     this.familyService.getFamily(this.selectedInvoice.familyID).then(family => {
       this.family = family['data'];
-      //TODO: Decide whether invoices should pull all guardians or only active ones
-      // let getGuardiansPromiseArray: Promise<Guardian>[] = [];
-      //
-      // for (let guardianIndex in this.family.guardians) {
-      //   getGuardiansPromiseArray.push(this.guardianService.getGuardian(this.family.guardians[guardianIndex]));
-      // }
 
       this.guardianService.getGuardians(this.family._id).then(guardians => {
         this.lineItemService.getLineItemsByInvoiceID(id).then(lineItems => {

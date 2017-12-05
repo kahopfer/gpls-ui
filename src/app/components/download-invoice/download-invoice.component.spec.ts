@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DownloadInvoiceComponent } from './download-invoice.component';
+import {DownloadInvoiceComponent} from './download-invoice.component';
 
 describe('DownloadInvoiceComponent', () => {
   let component: DownloadInvoiceComponent;
@@ -8,9 +8,9 @@ describe('DownloadInvoiceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DownloadInvoiceComponent ]
+      declarations: [DownloadInvoiceComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

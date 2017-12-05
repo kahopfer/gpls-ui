@@ -193,6 +193,5 @@ export class InvoicesComponent implements OnInit {
       }
       this.invoicesLoading = false;
     })
-
   }
 }

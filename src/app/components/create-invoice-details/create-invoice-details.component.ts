@@ -274,7 +274,6 @@ export class CreateInvoiceDetailsComponent implements OnInit {
     // If the lineItem is not new, then update the selected lineItem
     if (this.newLineItem === false) {
       if (!this.lineItem.extraItem) {
-        // this.lineItem.serviceType = LineItemService.determineServiceType(this.lineItem.checkIn, this.lineItem.checkOut);
         this.lineItem.serviceType = 'Child Care';
       }
       this.lineItemService.updateLineItem(lineItem).then(() => {
@@ -310,7 +309,6 @@ export class CreateInvoiceDetailsComponent implements OnInit {
         this.lineItem.checkInBy = 'Other';
         this.lineItem.checkOutBy = 'Other';
       } else {
-        // this.lineItem.serviceType = LineItemService.determineServiceType(this.lineItem.checkIn, this.lineItem.checkOut);
         this.lineItem.serviceType = 'Child Care';
       }
 

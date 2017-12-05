@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { EnrollFamilyComponent } from './enroll-family.component';
+import {EnrollFamilyComponent} from './enroll-family.component';
 
 describe('EnrollFamilyComponent', () => {
   let component: EnrollFamilyComponent;
@@ -8,9 +8,9 @@ describe('EnrollFamilyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EnrollFamilyComponent ]
+      declarations: [EnrollFamilyComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

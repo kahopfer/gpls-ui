@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ContextHelpComponent } from './context-help.component';
+import {ContextHelpComponent} from './context-help.component';
 
 describe('ContextHelpComponent', () => {
   let component: ContextHelpComponent;
@@ -8,9 +8,9 @@ describe('ContextHelpComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContextHelpComponent ]
+      declarations: [ContextHelpComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

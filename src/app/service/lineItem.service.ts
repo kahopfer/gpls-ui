@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {GPLS_API_URL} from "../app.constants";
 import {LineItem} from "../models/lineItem";
 import 'rxjs/add/operator/toPromise';
-import * as moment from 'moment';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
@@ -64,34 +63,5 @@ export class LineItemService {
       headers: this.headers,
       responseType: 'text'
     }).toPromise();
-  }
-
-  static determineServiceType(checkIn: Date, checkOut: Date): string {
-    let format = 'HH:mm:ss';
-
-    let checkInMoment = moment(checkIn, format);
-    let checkOutMoment = moment(checkOut, format);
-
-    let checkInDate = moment(checkIn).format('YYYY-MM-DD');
-
-    let beforeCareStartTime = moment('00:00:00', format).format(format);
-    let beforeCareEndTime = moment('12:00:00', format).format(format);
-
-    let afterCareStartTime = moment('12:00:00', format).format(format);
-    let afterCareEndTime = moment('23:59:59', format).format(format);
-
-    let beforeCareStartToCompare = moment(checkInDate + ' ' + beforeCareStartTime);
-    let beforeCareEndToCompare = moment(checkInDate + ' ' + beforeCareEndTime);
-
-    let afterCareStartToCompare = moment(checkInDate + ' ' + afterCareStartTime);
-    let afterCareEndToCompare = moment(checkInDate + ' ' + afterCareEndTime);
-
-    if (checkInMoment.isBetween(beforeCareStartToCompare, beforeCareEndToCompare) && checkOutMoment.isBetween(beforeCareStartToCompare, beforeCareEndToCompare)) {
-      return 'Before Care';
-    } else if (checkInMoment.isBetween(afterCareStartToCompare, afterCareEndToCompare) && checkOutMoment.isBetween(afterCareStartToCompare, afterCareEndToCompare)) {
-      return 'After Care';
-    } else {
-      return 'Unknown';
-    }
   }
 }

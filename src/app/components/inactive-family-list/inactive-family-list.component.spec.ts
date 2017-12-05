@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InactiveFamilyListComponent } from './inactive-family-list.component';
+import {InactiveFamilyListComponent} from './inactive-family-list.component';
 
 describe('InactiveFamilyListComponent', () => {
   let component: InactiveFamilyListComponent;
@@ -8,9 +8,9 @@ describe('InactiveFamilyListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InactiveFamilyListComponent ]
+      declarations: [InactiveFamilyListComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

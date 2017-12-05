@@ -41,7 +41,8 @@
       <div class="form-group">
         <label for="itemName">Item Name</label>
         <input type="text" name="itemName" class="form-control" required id="itemName" placeholder="Item Name"
-               [(ngModel)]="priceList.itemName"  [readonly]="!newPriceList" pattern="[A-Za-z '-]+" maxlength="35" #itemName="ngModel">
+               [(ngModel)]="priceList.itemName" [readonly]="!newPriceList" pattern="[A-Za-z '-()]+" maxlength="35"
+               #itemName="ngModel">
         <small [hidden]="itemName.valid" class="text-danger">
           Item name is required (cannot contain any numbers or special characters, maximum 35 characters).
         </small>

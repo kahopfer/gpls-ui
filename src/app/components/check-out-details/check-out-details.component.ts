@@ -45,7 +45,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.studentIdSub = this.route.queryParams.subscribe(params => {
-      // TODO: Maybe figure out better way to do this
       // For some reason, when the page is initially loaded, the query params are stored as an array...
       // ...however, when it is reloaded, they are stored as a string
       if (!isNullOrUndefined(params['id'])) {
@@ -196,8 +195,6 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
         let temporaryLineItem: LineItem = lineItems[lineItemIndex]['data']['lineItems'][0];
         // Set temp line item values
         temporaryLineItem.checkOut = new Date();
-        // temporaryLineItem.serviceType = LineItemService.determineServiceType(new Date(temporaryLineItem.checkIn), temporaryLineItem.checkOut);
-        // temporaryLineItem.serviceType = 'Child Care';
         // Note: line items should be in the same order as the students, so the lineItemIndex will match the studentIndex
         if (this.allCheckedOutByEmployee) {
           temporaryLineItem.checkOutBy = this.fullName;
@@ -211,56 +208,56 @@ export class CheckOutDetailsComponent implements OnInit, OnDestroy {
       // Update the line items
       Promise.all(updateLineItemPromiseArray).then(() => {
 
-          for (let studentIndex in this.students) {
-            // Go through extra items
-            for (let extraItemIndex in this.extraItems) {
-              // If an extra item was checked...
-              if (form.value['extraItem-' + studentIndex + '-' + extraItemIndex]) {
-                let date: Date = new Date();
-                // ...then add it to the promise array
-                let lineItemToCreate: LineItem = {
-                  _id: null,
-                  familyID: this.students[studentIndex].familyUnitID,
-                  studentID: this.students[studentIndex]._id,
-                  extraItem: true,
-                  checkIn: date,
-                  checkOut: date,
-                  serviceType: this.extraItems[extraItemIndex].itemName,
-                  earlyInLateOutFee: 0.00,
-                  lineTotalCost: 0.00,
-                  checkInBy: 'Other',
-                  checkOutBy: 'Other',
-                  notes: null,
-                  invoiceID: null
-                };
-                createLineItemExtraPromiseArray.push(this.lineItemService.createLineItem(lineItemToCreate).toPromise());
+        for (let studentIndex in this.students) {
+          // Go through extra items
+          for (let extraItemIndex in this.extraItems) {
+            // If an extra item was checked...
+            if (form.value['extraItem-' + studentIndex + '-' + extraItemIndex]) {
+              let date: Date = new Date();
+              // ...then add it to the promise array
+              let lineItemToCreate: LineItem = {
+                _id: null,
+                familyID: this.students[studentIndex].familyUnitID,
+                studentID: this.students[studentIndex]._id,
+                extraItem: true,
+                checkIn: date,
+                checkOut: date,
+                serviceType: this.extraItems[extraItemIndex].itemName,
+                earlyInLateOutFee: 0.00,
+                lineTotalCost: 0.00,
+                checkInBy: 'Other',
+                checkOutBy: 'Other',
+                notes: null,
+                invoiceID: null
+              };
+              createLineItemExtraPromiseArray.push(this.lineItemService.createLineItem(lineItemToCreate).toPromise());
+            }
+          }
+        }
+
+        Promise.all(createLineItemExtraPromiseArray).then(() => {
+          this.router.navigate(['/sign-out']);
+        }).catch(err => {
+          if (err.error instanceof Error) {
+            console.log('An error occurred:', err.error.message);
+            this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
+          } else {
+            console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+            try {
+              this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
+            } catch (e) {
+              if (err.status === 401) {
+                this.msgs.push({
+                  severity: 'error',
+                  summary: 'Error Message',
+                  detail: 'Unauthorized. Please try logging out and logging back in again.'
+                });
+              } else {
+                this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
               }
             }
           }
-
-          Promise.all(createLineItemExtraPromiseArray).then(() => {
-            this.router.navigate(['/sign-out']);
-          }).catch(err => {
-            if (err.error instanceof Error) {
-              console.log('An error occurred:', err.error.message);
-              this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An unexpected error occurred'});
-            } else {
-              console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
-              try {
-                this.msgs.push({severity: 'error', summary: 'Error Message', detail: JSON.parse(err.error).error});
-              } catch (e) {
-                if (err.status === 401) {
-                  this.msgs.push({
-                    severity: 'error',
-                    summary: 'Error Message',
-                    detail: 'Unauthorized. Please try logging out and logging back in again.'
-                  });
-                } else {
-                  this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'An error occurred'});
-                }
-              }
-            }
-          });
+        });
       }).catch(err => {
         if (err.error instanceof Error) {
           console.log('An error occurred:', err.error.message);

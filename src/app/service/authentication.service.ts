@@ -2,7 +2,7 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import 'rxjs/add/operator/map'
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {GPLS_API_URL} from "../app.constants";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class AuthenticationService {
@@ -48,48 +48,48 @@ export class AuthenticationService {
     const url = `${this.gplsApiUrl}/auth`;
     return this.http.post(url, {username: username, password: password}, {headers: this.headers})
       .map(response => {
-        // login successful if there's a jwt token in the response
-        let token = response && response['token'];
+          // login successful if there's a jwt token in the response
+          let token = response && response['token'];
 
-        let firstname = response && response['firstname'];
-        let lastname = response && response['lastname'];
-        let authorities = response && response['authorities'];
-        let admin: boolean = false;
-        username = response && response['username'];
+          let firstname = response && response['firstname'];
+          let lastname = response && response['lastname'];
+          let authorities = response && response['authorities'];
+          let admin: boolean = false;
+          username = response && response['username'];
 
-        for (let i in authorities) {
-          if (authorities[i].authority === 'ROLE_ADMIN') {
-            admin = true;
+          for (let i in authorities) {
+            if (authorities[i].authority === 'ROLE_ADMIN') {
+              admin = true;
+            }
           }
+
+          this.getAdmin.emit(admin);
+
+          // set token property
+          this.token = token;
+
+          // store username and jwt token in local storage to keep user logged in between page refreshes
+          localStorage.setItem('currentUser', JSON.stringify({
+            username: username,
+            token: token,
+            firstname: firstname,
+            lastname: lastname,
+            admin: admin
+          }));
+
+          // Used to show navbar
+          this.loggedIn.next(true);
+
+          // Used to display name on navbar
+          this.getLoggedInName.emit(firstname + ' ' + lastname);
+
+          this.getUsername.emit(username);
+
+          this.getFirstName.emit(firstname);
+
+          this.getLastName.emit(lastname);
         }
-
-        this.getAdmin.emit(admin);
-
-        // set token property
-        this.token = token;
-
-        // store username and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('currentUser', JSON.stringify({
-          username: username,
-          token: token,
-          firstname: firstname,
-          lastname: lastname,
-          admin: admin
-        }));
-
-        // Used to show navbar
-        this.loggedIn.next(true);
-
-        // Used to display name on navbar
-        this.getLoggedInName.emit(firstname + ' ' + lastname);
-
-        this.getUsername.emit(username);
-
-        this.getFirstName.emit(firstname);
-
-        this.getLastName.emit(lastname);
-      }
-    );
+      );
   }
 
   logout(): void {

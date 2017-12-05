@@ -4,10 +4,11 @@ import {FormControl, NG_VALIDATORS} from "@angular/forms";
 @Directive({
   selector: '[validateDateRange][ngModel]',
   providers: [
-    { provide: NG_VALIDATORS, useValue: validateDateRange, multi: true }
+    {provide: NG_VALIDATORS, useValue: validateDateRange, multi: true}
   ]
 })
-export class DateRangeValidator{}
+export class DateRangeValidator {
+}
 
 export function validateDateRange(c: FormControl) {
   let isValid: boolean;

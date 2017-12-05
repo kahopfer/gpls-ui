@@ -63,5 +63,4 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       }
     })
   }
-
 }

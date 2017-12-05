@@ -45,7 +45,6 @@ export class EnrollFamilyComponent implements OnInit {
       fname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
       lname: ['', [Validators.required, Validators.pattern(/[A-Za-z'-]+/), Validators.maxLength(35)]],
       mi: ['', [Validators.maxLength(1), Validators.pattern(/[A-Za-z]/)]],
-      // birthDate: ['', Validators.required],
       notes: ['', Validators.maxLength(140)]
     })
   }

@@ -1,6 +1,4 @@
 <div class="container">
-  <!--TODO: add notification for line items in different days-->
-  <!--TODO: Add alert that there is an annual registration fee-->
   <div class="row justify-content-center">
     <div class="col-6">
       <p-dataTable [value]="students" [loading]="studentsLoading" loadingIcon="fa-spinner">
@@ -23,9 +21,10 @@
       <br>
       <h5>Select a line item to edit or delete</h5>
       <p-growl [(value)]="msgs" [baseZIndex]="9999" [sticky]="true"></p-growl>
-      <p-dataTable [value]="lineItemsToDisplay | orderBy: 'checkIn' : true" selectionMode="single" [rows]="5" [paginator]="true" [pageLinks]="3"
-                   [(selection)]="selectedLineItem" [loading]="lineItemsLoading" loadingIcon="fa-spinner"
-                   (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false" [responsive]="true">
+      <p-dataTable [value]="lineItemsToDisplay | orderBy: 'checkIn' : true" selectionMode="single" [rows]="5"
+                   [paginator]="true" [pageLinks]="3" [(selection)]="selectedLineItem" [loading]="lineItemsLoading"
+                   loadingIcon="fa-spinner" (onRowSelect)="onLineItemSelect($event)" [metaKeySelection]="false"
+                   [responsive]="true">
         <p-header>Line Items</p-header>
         <p-column field="studentName" header="Student Name" [style]="{'word-wrap':'break-word'}"></p-column>
         <p-column field="checkIn" header="Sign In Time" [style]="{'word-wrap':'break-word'}" [sortable]="true">
@@ -161,7 +160,6 @@
     <p-confirmDialog></p-confirmDialog>
   </div>
   <br>
-  <!--TODO: Try to make invoice range input wider-->
   <div class="row justify-content-center">
     <form class="form-inline" #createInvoiceForm="ngForm" (submit)="confirmCreateInvoice()">
       <div class="form-group">

@@ -63,12 +63,4 @@ export class GuardianService {
       responseType: 'text'
     }).toPromise();
   }
-
-  // deleteGuardian(id: string): Promise<string> {
-  //   const url = `${this.gplsApiUrl}/guardians/${id}`;
-  //   return this.http.delete(url, {
-  //     headers: this.headers,
-  //     responseType: 'text'
-  //   }).toPromise();
-  // }
 }
