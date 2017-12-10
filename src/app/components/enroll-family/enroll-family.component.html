@@ -13,7 +13,7 @@
         <div class="form-group">
           <label for="familyname">Family Name</label>
           <input type="text" formControlName="familyName" class="form-control" required id="familyname"
-                 placeholder="Family Name">
+                 placeholder="Family Name" pattern="[A-Za-z'-]+" maxlength="35">
           <small *ngIf="!enrollFamilyForm.controls.familyName.valid" class="text-danger">
             Family name is required (cannot contain any numbers or special characters, maximum 35 characters).
           </small>
@@ -34,7 +34,7 @@
                 <div class="form-group">
                   <label for="studentFname">First Name</label>
                   <input type="text" formControlName="fname" class="form-control" required id="studentFname"
-                         placeholder="First Name">
+                         placeholder="First Name" pattern="[A-Za-z'-]+" maxlength="35">
                   <small [hidden]="student.controls.fname.valid" class="text-danger">
                     First name is required (cannot contain any numbers or special characters, maximum 35 characters).
                   </small>
@@ -42,7 +42,7 @@
                 <div class="form-group">
                   <label for="studentMi">Middle Initial</label>
                   <input type="text" formControlName="mi" class="form-control" id="studentMi"
-                         placeholder="Middle Initial">
+                         placeholder="Middle Initial" maxlength="1" pattern="[A-Za-z]">
                   <small [hidden]="student.controls.mi.valid" class="text-danger">
                     Cannot contain any numbers or special characters, maximum 1 character.
                   </small>
@@ -50,7 +50,7 @@
                 <div class="form-group">
                   <label for="studentLname">Last Name</label>
                   <input type="text" formControlName="lname" class="form-control" required id="studentLname"
-                         placeholder="Last Name">
+                         placeholder="Last Name" pattern="[A-Za-z'-]+">
                   <small [hidden]="student.controls.lname.valid" class="text-danger">
                     Last name is required (cannot contain any numbers or special characters, maximum 35 characters).
                   </small>
@@ -87,7 +87,7 @@
                 <div class="form-group">
                   <label for="guardianFname">First Name</label>
                   <input type="text" formControlName="fname" class="form-control" required id="guardianFname"
-                         placeholder="First Name">
+                         placeholder="First Name" pattern="[A-Za-z'-]+" maxlength="35">
                   <small [hidden]="guardian.controls.fname.valid" class="text-danger">
                     First name is required (cannot contain any numbers or special characters, maximum 35 characters).
                   </small>
@@ -95,7 +95,7 @@
                 <div class="form-group">
                   <label for="guardianMi">Middle Initial</label>
                   <input type="text" formControlName="mi" class="form-control" id="guardianMi"
-                         placeholder="Middle Initial">
+                         placeholder="Middle Initial" maxlength="1" pattern="[A-Za-z]">
                   <small [hidden]="guardian.controls.mi.valid" class="text-danger">
                     Cannot contain any numbers or special characters, maximum 1 character.
                   </small>
@@ -103,7 +103,7 @@
                 <div class="form-group">
                   <label for="guardianLname">Last Name</label>
                   <input type="text" formControlName="lname" class="form-control" required id="guardianLname"
-                         placeholder="Last Name">
+                         placeholder="Last Name" pattern="[A-Za-z'-]+" maxlength="35">
                   <small [hidden]="guardian.controls.lname.valid" class="text-danger">
                     Last name is required (cannot contain any numbers or special characters, maximum 35 characters).
                   </small>
@@ -146,7 +146,8 @@
                 <div class="form-group">
                   <label for="guardianEmail">Email</label>
                   <input type="text" formControlName="email" class="form-control" required id="guardianEmail"
-                         placeholder="Email">
+                         placeholder="Email"
+                         pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$">
                   <small [hidden]="guardian.controls.email.valid" class="text-danger">
                     Email address is required (must match pattern example@example.com).
                   </small>
