@@ -26,9 +26,9 @@
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" name="username" class="form-control" required id="username" placeholder="Username"
-                 [(ngModel)]="username" #userUsername="ngModel" maxlength="20">
+                 [(ngModel)]="username" #userUsername="ngModel" maxlength="20" pattern="^\S+$">
           <small [hidden]="userUsername.valid" class="text-danger">
-            Username is required (maximum 20 characters).
+            Username is required (maximum 20 characters, cannot contain spaces).
           </small>
         </div>
         <div class="form-group">
