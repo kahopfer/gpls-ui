@@ -45,8 +45,13 @@ export class DownloadInvoiceComponent implements OnInit {
 
     this.familyService.getFamily(this.selectedInvoice.familyID).then(family => {
       this.family = family['data'];
-
-      this.guardianService.getGuardians(this.family._id).then(guardians => {
+      let getGuardiansPromiseArray: Promise<any>[] = [];
+      if (this.family.active) {
+        getGuardiansPromiseArray.push(this.guardianService.getGuardians(this.family._id));
+      } else {
+        getGuardiansPromiseArray.push(this.guardianService.getInactiveGuardians(this.family._id));
+      }
+      Promise.all(getGuardiansPromiseArray).then(guardians => {
         this.lineItemService.getLineItemsByInvoiceID(id).then(lineItems => {
           this.lineItems = lineItems['data']['lineItems'];
           this.orderPipe.transform(this.lineItems, 'checkIn');
@@ -60,8 +65,9 @@ export class DownloadInvoiceComponent implements OnInit {
               this.lineItemsToDisplay[studentIndex].studentName = students[studentIndex]['data']['fname'] + ' ' +
                 students[studentIndex]['data']['lname'];
             }
-
-            this.guardians = guardians['data']['guardians'];
+            for (let guardianIndex in guardians) {
+              this.guardians = guardians[guardianIndex]['data']['guardians'];
+            }
             let invoiceDate: string = new Date(this.selectedInvoice.invoiceDate).toLocaleDateString();
             let invoiceFromDate: string = new Date(this.selectedInvoice.invoiceFromDate).toLocaleDateString();
             let invoiceToDate: string = new Date(this.selectedInvoice.invoiceToDate).toLocaleDateString();
